@@ -1,0 +1,24 @@
+{
+  "name": "react-native-paged-contacts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wix/react-native-paged-contacts.git"
+  },
+  "version": "0.1.0",
+  "description": "React Native Paged Contacts",
+  "nativePackage": true,
+  "keywords": [
+    "react-native",
+    "react",
+    "react-component",
+    "addressbook",
+    "contacts"
+  ],
+  "bugs": {
+    "url": "https://github.com/wix/react-native-paged-contacts/issues"
+  },
+  "homepage": "https://github.com/wix/react-native-paged-contacts",
+  "main": "index.js",
+  "author": "Leo Natan <lnatan@wix.com>",
+  "license": "MIT"
+}
