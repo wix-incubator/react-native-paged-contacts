@@ -3,11 +3,13 @@
 #import "RCTPagedContactsModule.h"
 
 #import "WXContactsManager.h"
+@import ObjectiveC;
 
 @implementation RCTPagedContactsModule
 {
 	dispatch_queue_t _managerDispatchQueue;
 	NSMutableDictionary<NSString*, WXContactsManager*>* _managerMapping;
+	NSDateFormatter* _jsonDateFormatter;
 }
 
 - (instancetype)init
@@ -18,6 +20,8 @@
 	{
 		_managerDispatchQueue = dispatch_queue_create("_managerDispatchQueue", NULL);
 		_managerMapping = [NSMutableDictionary new];
+		_jsonDateFormatter = [NSDateFormatter new];
+		_jsonDateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
 	}
 	
 	return self;
@@ -29,12 +33,34 @@ RCT_EXPORT_MODULE();
 {
 	return @{
 			 @"identifier": CNContactIdentifierKey,
+			 
+			 @"namePrefix": CNContactNamePrefixKey,
 			 @"givenName": CNContactGivenNameKey,
 			 @"middleName": CNContactMiddleNameKey,
 			 @"familyName": CNContactFamilyNameKey,
+			 @"previousFamilyName": CNContactPreviousFamilyNameKey,
+			 @"nameSuffix": CNContactNameSuffixKey,
+			 @"nickname": CNContactNicknameKey,
+			 @"organizationName": CNContactOrganizationNameKey,
+			 @"departmentName": CNContactDepartmentNameKey,
+			 @"jobTitle": CNContactJobTitleKey,
+			 @"phoneticGivenName": CNContactPhoneticGivenNameKey,
+			 @"phoneticMiddleName": CNContactPhoneticMiddleNameKey,
+			 @"phoneticFamilyName": CNContactPhoneticFamilyNameKey,
+			 @"phoneticOrganizationName": CNContactPhoneticOrganizationNameKey,
+			 @"birthday": CNContactBirthdayKey,
+			 @"nonGregorianBirthday": CNContactNonGregorianBirthdayKey,
+			 @"note": CNContactNoteKey,
+			 @"imageData": CNContactImageDataKey,
+			 @"thumbnailImageData": CNContactThumbnailImageDataKey,
 			 @"phoneNumbers": CNContactPhoneNumbersKey,
 			 @"emailAddresses": CNContactEmailAddressesKey,
-			 @"thumbnailImageData": CNContactThumbnailImageDataKey,
+			 @"postalAddresses": CNContactPostalAddressesKey,
+			 @"dates": CNContactDatesKey,
+			 @"urlAddresses": CNContactUrlAddressesKey,
+			 @"socialProfiles": CNContactSocialProfilesKey,
+			 @"instantMessageAddresses": CNContactInstantMessageAddressesKey,
+			 @"relations": CNContactRelationsKey,
 			 };
 }
 
@@ -91,6 +117,25 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 	resolve(@(manager.contactsCount));
 }
 
+- (NSDictionary<NSString*, id>*)_flattenObject:(id)obj
+{
+	NSMutableDictionary<NSString*, id>* rv = [NSMutableDictionary new];
+	
+	unsigned int count = 0;
+	objc_property_t *list = class_copyPropertyList(object_getClass(obj), &count);
+	
+	for(unsigned int i = 0; i < count; i++)
+	{
+		objc_property_t prop = list[i];
+		NSString* propName = @(property_getName(prop));
+		rv[propName] = [obj valueForKey:propName];
+	}
+	
+	free(list);
+	
+	return rv;
+}
+
 - (id)_transformValueToJSValue:(id)value
 {
 	if([value isKindOfClass:[NSArray class]])
@@ -103,15 +148,27 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 	}
 	else if([value isKindOfClass:[CNLabeledValue class]])
 	{
-		return [self _transformValueToJSValue:[(CNLabeledValue*)value value]];
+		return @{[CNLabeledValue localizedStringForLabel:[(CNLabeledValue*)value label]]: [self _transformValueToJSValue:[(CNLabeledValue*)value value]]};
 	}
 	else if([value isKindOfClass:[CNPhoneNumber class]])
 	{
 		return [(CNPhoneNumber*)value stringValue];
 	}
+	else if([value isKindOfClass:[CNPostalAddress class]] || [value isKindOfClass:[CNSocialProfile class]] || [value isKindOfClass:[CNInstantMessageAddress class]])
+	{
+		return [value valueForKey:@"dictionaryRepresentation"];
+	}
+	else if([value isKindOfClass:[CNContactRelation class]])
+	{
+		return [(CNContactRelation*)value name];
+	}
 	else if([value isKindOfClass:[NSData class]])
 	{
 		return [(NSData*)value base64EncodedStringWithOptions:0];
+	}
+	else if([value isKindOfClass:[NSDateComponents class]])
+	{
+		return [[(NSDateComponents*)value calendar] dateFromComponents:value];
 	}
 	else if([value respondsToSelector:@selector(stringValue)])
 	{
@@ -130,12 +187,16 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 		
 		rvC[@"identifier"] = contact.identifier;
 		[keysToFetch enumerateObjectsUsingBlock:^(NSString * _Nonnull key, NSUInteger idx, BOOL * _Nonnull stop) {
-			rvC[key] = [self _transformValueToJSValue:[contact valueForKey:key]];
+			id value = [self _transformValueToJSValue:[contact valueForKey:key]];
+			if(value != nil && ([value respondsToSelector:@selector(length)] == NO || [(NSString*)value length] > 0))
+			{
+				rvC[key] = value;
+			}
 		}];
 		
 		[rv addObject:rvC];
 	}];
-
+	
 	return rv;
 }
 
@@ -153,6 +214,6 @@ RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(
 	NSArray* contacts = [manager contactsWithIdentifiers:identifiers keysToFetch:keysToFetch];
 	
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch]);
-}    
+}
 
 @end
