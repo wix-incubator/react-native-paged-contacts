@@ -124,6 +124,11 @@
 	return contacts;
 }
 
+- (CNContact*)contactWithIdentifier:(NSString*)identifier keysToFetch:(nullable NSArray<NSString*>*)keysToFetch
+{
+	return [_store unifiedContactWithIdentifier:identifier keysToFetch:keysToFetch error:NULL];
+}
+
 - (NSUInteger)contactsCount
 {
 	return self._chachedIdentifiers.count;

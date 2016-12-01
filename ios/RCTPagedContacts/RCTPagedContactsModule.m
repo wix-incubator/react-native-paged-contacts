@@ -37,7 +37,7 @@ RCT_EXPORT_MODULE();
 	return @{
 			 @"identifier": CNContactIdentifierKey,
 			 @"displayName": @"displayName",
-			 
+			
 			 @"namePrefix": CNContactNamePrefixKey,
 			 @"givenName": CNContactGivenNameKey,
 			 @"middleName": CNContactMiddleNameKey,
@@ -182,7 +182,7 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 	return value;
 }
 
-- (NSArray<NSDictionary*>*)_transformCNContactsToContactDatas:(NSArray<CNContact*>*) contacts keysToFetch:(NSArray<NSString*>*)keysToFetch
+- (NSArray<NSDictionary*>*)_transformCNContactsToContactDatas:(NSArray<CNContact*>*) contacts keysToFetch:(NSArray<NSString*>*)keysToFetch managerForObscureContacts:(WXContactsManager*)manager
 {
 	NSMutableArray* rv = [NSMutableArray new];
 	
@@ -196,9 +196,19 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 			NSString* displayName = [_displayNameFormatter stringFromContact:contact];
 			if(displayName.length == 0)
 			{
-				BOOL hasEmailsKey = [contact isKeyAvailable:CNContactEmailAddressesKey];
-				BOOL hasPhonesKey = [contact isKeyAvailable:CNContactPhoneNumbersKey];
-				
+				if([contact isKeyAvailable:CNContactEmailAddressesKey] && contact.emailAddresses.count > 0)
+				{
+					displayName = contact.emailAddresses.firstObject.value;
+				}
+				else if([contact isKeyAvailable:CNContactPhoneNumbersKey] && contact.phoneNumbers.count > 0)
+				{
+					displayName = contact.phoneNumbers.firstObject.value.stringValue;
+				}
+				else
+				{
+					CNContact* fulfilledContact = [manager contactWithIdentifier:contact.identifier keysToFetch:@[CNContactEmailAddressesKey, CNContactPhoneNumbersKey]];
+					displayName = fulfilledContact.emailAddresses.count > 0 ? fulfilledContact.emailAddresses.firstObject.value : fulfilledContact.phoneNumbers.firstObject.value.stringValue;
+				}
 			}
 			rvC[@"displayName"] = displayName;
 		}
@@ -219,7 +229,7 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 		
 		[rv addObject:rvC];
 	}];
-	
+
 	return rv;
 }
 
@@ -243,7 +253,7 @@ RCT_EXPORT_METHOD(getContactsWithRange:(NSString*)identifier offset:(NSUInteger)
 	WXContactsManager* manager = [self _managerForIdentifier:identifier];
 	NSArray<CNContact*>* contacts = [manager contactsWithRange:NSMakeRange(offset, batchSize) keysToFetch:realKeysToFetch];
 	
-	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch]);
+	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch managerForObscureContacts:manager]);
 }
 
 RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(NSArray<NSString*>*)identifiers keysToFetch:(NSArray<NSString*>*)keysToFetch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
@@ -253,7 +263,7 @@ RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(
 	WXContactsManager* manager = [self _managerForIdentifier:identifier];
 	NSArray* contacts = [manager contactsWithIdentifiers:identifiers keysToFetch:realKeysToFetch];
 	
-	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch]);
-}
+	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch managerForObscureContacts:manager]);
+}    
 
 @end

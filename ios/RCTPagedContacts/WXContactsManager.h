@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSArray<CNContact*>*)contactsWithRange:(NSRange)range keysToFetch:(nullable NSArray<NSString*>*)keysToFetch;
 - (NSArray<CNContact*>*)contactsWithIdentifiers:(NSArray<NSString*>*)identifiers keysToFetch:(nullable NSArray<NSString*>*)keysToFetch;
+- (CNContact*)contactWithIdentifier:(NSString*)identifier keysToFetch:(nullable NSArray<NSString*>*)keysToFetch;
 
 @end
 
