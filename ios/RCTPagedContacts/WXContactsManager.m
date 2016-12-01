@@ -41,7 +41,7 @@
 		
 		CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:@[CNContactIdentifierKey]];
 		request.unifyResults = YES;
-		request.sortOrder = CNContactSortOrderUserDefault;
+		request.sortOrder = CNContactSortOrderGivenName;
 		if(_nameMatch != nil)
 		{
 			request.predicate = [CNContact predicateForContactsMatchingName:_nameMatch];
@@ -82,8 +82,6 @@
 
 - (NSArray<CNContact*>*)contactsWithRange:(NSRange)range keysToFetch:(NSArray<NSString*>*)keysToFetch
 {
-	keysToFetch = [NSSet setWithArray:[keysToFetch arrayByAddingObject:CNContactIdentifierKey]].allObjects;
-	
 	NSMutableArray* contacts = [NSMutableArray new];
 	
 	NSArray* identifiers = [self._chachedIdentifiers subarrayWithRange:range];
@@ -107,8 +105,6 @@
 
 - (NSArray<CNContact*>*)contactsWithIdentifiers:(NSArray<NSString*>*)identifiers keysToFetch:(NSArray<NSString*>*)keysToFetch
 {
-	keysToFetch = [NSSet setWithArray:[keysToFetch arrayByAddingObject:CNContactIdentifierKey]].allObjects;
-	
 	NSMutableArray* contacts = [NSMutableArray new];
 	
 	CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:@[CNContactIdentifierKey]];

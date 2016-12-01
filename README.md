@@ -17,6 +17,8 @@ Paged contacts manager for React Native.
 
 ####Available Keys to Fetch
 
+- `PagedContacts.identifier`
+- `PagedContacts.displayName`
 - `PagedContacts.namePrefix`
 - `PagedContacts.givenName`
 - `PagedContacts.middleName`
@@ -49,25 +51,23 @@ Paged contacts manager for React Native.
 
 Import the library and create a new `PagedContacts` instance.
 
-```
+```javascript
 import {PagedContacts} from 'react-native-paged-contacts';
 let pg = new PagedContacts();
 ```
 
 First request authorization, and, if granted, request the contacts.
 
-```
-pg.requestAccess().then((res) => {
-  if(res !== true)
+```javascript
+pg.requestAccess().then((granted) => {
+  if(granted !== true)
   {
     return; 
   }
 
   pg.getContactsCount().then( (count) => {
-    pg.getContactsWithRange(0, count, [PagedContacts.givenName, PagedContacts.familyName, PagedContacts.thumbnailImageData, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]).then((r) => {
-      r.forEach((e) => {
-        console.log(JSON.stringify(e));
-      })
+    pg.getContactsWithRange(0, count, [PagedContacts.displayName, PagedContacts.thumbnailImageData, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]).then((contacts) => {
+      //Use contacts here
     });
   });
 });
@@ -77,30 +77,72 @@ This is a very intensive way of obtaining specific keys of all contacts. Instead
 
 ###Example of a Contact Result
 
-```
+```json
 {
+  "familyName": "Zakroff",
+  "nonGregorianBirthday": "1961-12-25T22:00:00.000Z",
+  "birthday": "1961-12-26T00:00:00.000Z",
+  "contactRelations": [
+    {
+      "label": "sister",
+      "value": "Kate Bell"
+    }
+  ],
+  "nickname": "Hanky Panky",
+  "displayName": "Prof. Hank M. Zakroff Esq.",
+  "organizationName": "Financial Services Inc.",
+  "departmentName": "Legal",
+  "namePrefix": "Prof.",
+  "nameSuffix": "Esq.",
   "socialProfiles": [
     {
-      "facebook": {
-        "urlString": "http:\/\/www.facebook.com\/LeoNatan",
-        "username": "LeoNatan",
-        "service": "Facebook"
+      "label": "twitter",
+      "value": {
+        "urlString": "http:\/\/twitter.com\/HankyPanky",
+        "username": "HankyPanky",
+        "service": "Twitter"
       }
     },
     {
-      "twitter": {
-        "urlString": "http:\/\/twitter.com\/LeoNatan",
-        "username": "LeoNatan",
-        "service": "Twitter"
+      "label": "facebook",
+      "value": {
+        "urlString": "http:\/\/www.facebook.com\/HankZakoff",
+        "username": "HankZakoff",
+        "service": "Facebook"
       }
     }
   ],
-  "namePrefix": "Dr.",
-  "jobTitle": "Portfolio Manager",
-  "note": "This is a sample note.",
+  "dates": [
+    {
+      "label": "anniversary",
+      "value": "0001-12-01T00:00:00.000Z"
+    },
+    {
+      "label": "other",
+      "value": "2014-09-25T00:00:00.000Z"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "label": "work",
+      "value": "(555) 766-4823"
+    },
+    {
+      "label": "other",
+      "value": "(707) 555-1854"
+    }
+  ],
+  "identifier": "60CB0169-0747-4494-9F10-22F387226676",
+  "urlAddresses": [
+    {
+      "label": "homepage",
+      "value": "https:\/\/google.com"
+    }
+  ],
   "postalAddresses": [
     {
-      "work": {
+      "label": "work",
+      "value": {
         "ISOCountryCode": "us",
         "state": "CA",
         "street": "1741 Kearny Street",
@@ -110,71 +152,42 @@ This is a very intensive way of obtaining specific keys of all contacts. Instead
       }
     },
     {
-      "home": {
+      "label": "home",
+      "value": {
         "ISOCountryCode": "il",
         "state": "",
-        "street": "Sderot Yerushalayim 151",
+        "street": "151 Jerusalem Avenue",
         "city": "Tel Aviv - Jaffa",
         "country": "Israel",
-        "postalCode": "68151"
+        "postalCode": "68152"
       }
     }
   ],
+  "middleName": "M.",
+  "jobTitle": "Partner",
+  "note": "Best lawyer ever!",
   "emailAddresses": [
     {
-      "work": "hank-zakroff@mac.com"
-    },
-    {
-      "iCloud": "hank@icloud.com"
-    }
-  ],
-  "phoneNumbers": [
-    {
-      "work": "(555) 766-4823"
-    },
-    {
-      "other": "(707) 555-1854"
+      "label": "work",
+      "value": "hank-zakroff@mac.com"
     }
   ],
   "givenName": "Hank",
-  "middleName": "M.",
-  "identifier": "1965A24F-361A-4FCB-804D-3A01E024D2FE",
-  "birthday": "1980-10-25T00:00:00.000Z",
-  "organizationName": "Financial Services Inc.",
   "instantMessageAddresses": [
     {
-      "ICQ": {
-        "service": "ICQ",
-        "username": "12345678"
+      "label": "Facebook",
+      "value": {
+        "service": "Facebook",
+        "username": "HankZakoff"
       }
     },
     {
-      "Skype": {
+      "label": "Skype",
+      "value": {
         "service": "Skype",
-        "username": "HankMMMM"
+        "username": "HZakoff"
       }
     }
-  ],
-  "urlAddresses": [
-    {
-      "homepage": "https:\/\/www.google.com"
-    }
-  ],
-  "contactRelations": [
-    {
-      "partner": "Kate Bell"
-    }
-  ],
-  "nickname": "Hanky Panky",
-  "familyName": "Zakroff",
-  "dates": [
-    {
-      "anniversary": "0001-11-28T00:00:00.000Z"
-    },
-    {
-      "Work Start": "2001-07-18T00:00:00.000Z"
-    }
-  ],
-  "departmentName": "RND"
+  ]
 }
 ```

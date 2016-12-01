@@ -40,6 +40,7 @@ export class PagedContacts {
 }
 
 PagedContacts.identifier = ReactNative.NativeModules.PagedContactsModule.identifier;
+PagedContacts.displayName = ReactNative.NativeModules.PagedContactsModule.displayName;
 PagedContacts.namePrefix = ReactNative.NativeModules.PagedContactsModule.namePrefix;
 PagedContacts.givenName = ReactNative.NativeModules.PagedContactsModule.givenName;
 PagedContacts.middleName = ReactNative.NativeModules.PagedContactsModule.middleName;

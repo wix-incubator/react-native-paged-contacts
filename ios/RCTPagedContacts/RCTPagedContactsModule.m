@@ -10,6 +10,7 @@
 	dispatch_queue_t _managerDispatchQueue;
 	NSMutableDictionary<NSString*, WXContactsManager*>* _managerMapping;
 	NSDateFormatter* _jsonDateFormatter;
+	CNContactFormatter* _displayNameFormatter;
 }
 
 - (instancetype)init
@@ -22,6 +23,8 @@
 		_managerMapping = [NSMutableDictionary new];
 		_jsonDateFormatter = [NSDateFormatter new];
 		_jsonDateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
+		_displayNameFormatter = [CNContactFormatter new];
+		_displayNameFormatter.style = CNContactFormatterStyleFullName;
 	}
 	
 	return self;
@@ -33,6 +36,7 @@ RCT_EXPORT_MODULE();
 {
 	return @{
 			 @"identifier": CNContactIdentifierKey,
+			 @"displayName": @"displayName",
 			 
 			 @"namePrefix": CNContactNamePrefixKey,
 			 @"givenName": CNContactGivenNameKey,
@@ -148,7 +152,7 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 	}
 	else if([value isKindOfClass:[CNLabeledValue class]])
 	{
-		return @{[CNLabeledValue localizedStringForLabel:[(CNLabeledValue*)value label]]: [self _transformValueToJSValue:[(CNLabeledValue*)value value]]};
+		return @{@"label": [CNLabeledValue localizedStringForLabel:[(CNLabeledValue*)value label]], @"value": [self _transformValueToJSValue:[(CNLabeledValue*)value value]]};
 	}
 	else if([value isKindOfClass:[CNPhoneNumber class]])
 	{
@@ -186,9 +190,28 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 		NSMutableDictionary<NSString*, id>* rvC = [NSMutableDictionary new];
 		
 		rvC[@"identifier"] = contact.identifier;
+		
+		if([keysToFetch containsObject:@"displayName"])
+		{
+			NSString* displayName = [_displayNameFormatter stringFromContact:contact];
+			if(displayName.length == 0)
+			{
+				BOOL hasEmailsKey = [contact isKeyAvailable:CNContactEmailAddressesKey];
+				BOOL hasPhonesKey = [contact isKeyAvailable:CNContactPhoneNumbersKey];
+				
+			}
+			rvC[@"displayName"] = displayName;
+		}
 		[keysToFetch enumerateObjectsUsingBlock:^(NSString * _Nonnull key, NSUInteger idx, BOOL * _Nonnull stop) {
+			if([key isEqualToString:@"displayName"])
+			{
+				return;
+			}
+			
 			id value = [self _transformValueToJSValue:[contact valueForKey:key]];
-			if(value != nil && ([value respondsToSelector:@selector(length)] == NO || [(NSString*)value length] > 0))
+			if(value != nil
+			   && ([value respondsToSelector:@selector(length)] == NO || [(NSString*)value length] > 0)
+			   && ([value respondsToSelector:@selector(count)]  == NO || [(NSArray*)value count]   > 0))
 			{
 				rvC[key] = value;
 			}
@@ -200,18 +223,35 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 	return rv;
 }
 
+- (NSArray*)_keysToFetchIncludingManadatoryKeys:(NSArray*)keysToFetch
+{
+	NSMutableSet* rvSet = [NSMutableSet setWithArray:keysToFetch];
+	[rvSet addObject:CNContactIdentifierKey];
+	if([keysToFetch containsObject:@"displayName"])
+	{
+		[rvSet removeObject:@"displayName"];
+		[rvSet addObject:[CNContactFormatter descriptorForRequiredKeysForStyle:CNContactFormatterStyleFullName]];
+	}
+	
+	return rvSet.allObjects;
+}
+
 RCT_EXPORT_METHOD(getContactsWithRange:(NSString*)identifier offset:(NSUInteger)offset batchSize:(NSUInteger)batchSize keysToFetch:(NSArray<NSString*>*)keysToFetch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
+	NSArray* realKeysToFetch = [self _keysToFetchIncludingManadatoryKeys:keysToFetch];
+	
 	WXContactsManager* manager = [self _managerForIdentifier:identifier];
-	NSArray<CNContact*>* contacts = [manager contactsWithRange:NSMakeRange(offset, batchSize) keysToFetch:keysToFetch];
+	NSArray<CNContact*>* contacts = [manager contactsWithRange:NSMakeRange(offset, batchSize) keysToFetch:realKeysToFetch];
 	
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch]);
 }
 
 RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(NSArray<NSString*>*)identifiers keysToFetch:(NSArray<NSString*>*)keysToFetch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
+	NSArray* realKeysToFetch = [self _keysToFetchIncludingManadatoryKeys:keysToFetch];
+	
 	WXContactsManager* manager = [self _managerForIdentifier:identifier];
-	NSArray* contacts = [manager contactsWithIdentifiers:identifiers keysToFetch:keysToFetch];
+	NSArray* contacts = [manager contactsWithIdentifiers:identifiers keysToFetch:realKeysToFetch];
 	
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch]);
 }
