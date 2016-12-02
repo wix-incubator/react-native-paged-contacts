@@ -1,11 +1,19 @@
-var ReactNative = require('react-native')
+import {
+  NativeModules,
+  Platform
+} from 'react-native';
+import * as keys from './src/keys';
+
+const PagedContactsModule = NativeModules.ReactNativePagedContacts;
 
 function guid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        let r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-        return v.toString(16);
-    });
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }
+
+export const KeysToFetch = keys;
 
 export class PagedContacts {
     constructor(nameMatch) {
@@ -17,26 +25,34 @@ export class PagedContacts {
         return ReactNative.NativeModules.PagedContactsModule.requestAccess(this._uuid);
     }
 
-    setNameMatch(str) {
-        this._nameMatch = str;
-        ReactNative.NativeModules.PagedContactsModule.setNameMatch(this._uuid, str);
-    }
+  async requestAccess() {
+    return PagedContactsModule.requestAccess(this._uuid);
+  }
 
-    async getContactsCount() {
-        return ReactNative.NativeModules.PagedContactsModule.contactsCount(this._uuid);
-    }
+  setNameMatch(str) {
+    this._nameMatch = str;
+    PagedContactsModule.setNameMatch(this._uuid, str);
+  }
 
-    async getContactsWithRange(offset, batchSize, keysToFetch) {
-        return ReactNative.NativeModules.PagedContactsModule.getContactsWithRange(this._uuid, offset, batchSize, keysToFetch);
-    }
+  async getContactsCount() {
+    const result = await PagedContactsModule.contactsCount(this._uuid);
+    return result.count;
+  }
 
-    async getContactsWithIdentifiers(identifiers, keysToFetch) {
-        return ReactNative.NativeModules.PagedContactsModule.getContactsWithIdentifiers(this._uuid, identifiers, keysToFetch);
-    }
+  async getContactsWithRange(offset, batchSize, keysToFetch) {
+    const result = await PagedContactsModule.getContactsWithRange(this._uuid, offset, batchSize, keysToFetch);
+    return result.contacts;
+  }
 
-    dispose() {
-        ReactNative.NativeModules.PagedContactsModule.dispose(this._uuid);
+  async getContactsWithIdentifiers(identifiers, keysToFetch) {
+    return PagedContactsModule.getContactsWithIdentifiers(this._uuid, identifiers, keysToFetch);
+  }
+
+  dispose() {
+    if (Platform.OS === 'ios') {
+      PagedContactsModule.dispose(this._uuid);
     }
+  }
 }
 
 PagedContacts.identifier = ReactNative.NativeModules.PagedContactsModule.identifier;

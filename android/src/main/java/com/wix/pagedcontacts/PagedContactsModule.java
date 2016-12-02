@@ -1,0 +1,74 @@
+package com.wix.pagedcontacts;
+
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.LifecycleEventListener;
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.ContactsProvider;
+import com.wix.pagedcontacts.contacts.QueryParams;
+
+public class PagedContactsModule extends ReactContextBaseJavaModule {
+    private static final String TAG = "PagedContactsModule";
+    private final ReactApplicationContext context;
+    private final ContactsProvider contactsProvider;
+
+    public PagedContactsModule(ReactApplicationContext context) {
+        super(context);
+        this.context = context;
+        contactsProvider = new ContactsProvider(context);
+        context.addLifecycleEventListener(new LifecycleEventListener() {
+            @Override
+            public void onHostResume() {
+                syncContactsOnAppResumed();
+            }
+
+            @Override
+            public void onHostPause() {
+
+            }
+
+            @Override
+            public void onHostDestroy() {
+
+            }
+
+            private void syncContactsOnAppResumed() {
+                contactsProvider.sync();
+            }
+        });
+    }
+
+    @Override
+    public String getName() {
+        return "ReactNativePagedContacts";
+    }
+
+//    @Override
+//    public Map<String, Object> getConstants() {
+//        final Map<String, Object> constants = new HashMap<>();
+//        constants.put(DURATION_SHORT_KEY, Toast.LENGTH_SHORT);
+//        constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);
+//        return constants;
+//    }
+
+    @ReactMethod
+    public void contactsCount(String uuid, Promise promise) {
+        final int count = contactsProvider.getContactsCount();
+        WritableMap args = Arguments.createMap();
+        args.putInt("count", count);
+        promise.resolve(args);
+    }
+
+    @ReactMethod
+    public void getContactsWithRange(String uuid, int offset, int size, ReadableArray array, Promise promise) {
+        WritableArray contacts = contactsProvider.getContactsWithRange(new QueryParams(array, offset, size));
+        WritableMap args = Arguments.createMap();
+        args.putArray("contacts", contacts);
+        promise.resolve(args);
+    }
+}
