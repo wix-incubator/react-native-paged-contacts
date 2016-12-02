@@ -54,7 +54,7 @@ public class Contact {
         addStringField(params, map, Field.note, note);
         addStringField(params, map, Field.birthday, birthday);
 
-        if (params.fetchField(Field.phoneNumber) && phoneNumbers.size() > 0) {
+        if (params.fetchField(Field.phoneNumbers) && phoneNumbers.size() > 0) {
             map.putArray("phoneNumbers", getWritableArray(phoneNumbers));
         }
 

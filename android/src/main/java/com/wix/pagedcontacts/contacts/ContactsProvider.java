@@ -65,36 +65,11 @@ public class ContactsProvider {
     }
 
     private Cursor queryContactsWithRange(QueryParams params) {
-        String selection = ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=? OR " +
-                           ContactsContract.Data.MIMETYPE + "=?";
-        String[] selectionArgs = {ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Nickname.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Website.CONTENT_ITEM_TYPE,
-                ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE
-        };
         return context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
                 params.getProjection(),
-                selection,
-                selectionArgs,
-                null
+                params.getSelection(),
+                params.getSelectionArgs(),
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
         );
     }
 
