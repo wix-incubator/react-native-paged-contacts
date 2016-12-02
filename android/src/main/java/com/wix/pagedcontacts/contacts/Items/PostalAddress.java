@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 
 import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class PostalAddress extends ContactItem {
     public String type;
@@ -38,7 +39,6 @@ public class PostalAddress extends ContactItem {
         if (type == null) {
             return label;
         }
-
         switch (type) {
             case StructuredPostal.TYPE_HOME:
                 return "home";
@@ -52,7 +52,7 @@ public class PostalAddress extends ContactItem {
     }
 
     @Override
-    protected void fillMap(WritableMap map) {
+    protected void fillMap(WritableMap map, QueryParams params) {
         addToMap(map, "country", country);
         addToMap(map, "formattedAddress", formattedAddress);
         addToMap(map, "postalCode", postcode);

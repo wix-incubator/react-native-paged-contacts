@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class Date extends ContactItem {
     private String startDate;
@@ -32,7 +33,7 @@ public class Date extends ContactItem {
     }
 
     @Override
-    protected void fillMap(WritableMap map) {
+    protected void fillMap(WritableMap map, QueryParams queryParams) {
         map.putString(type, startDate);
     }
 }

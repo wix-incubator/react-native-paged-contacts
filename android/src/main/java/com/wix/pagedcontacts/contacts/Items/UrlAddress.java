@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds.Website;
 
 import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class UrlAddress extends ContactItem {
     private String url;
@@ -44,7 +45,7 @@ public class UrlAddress extends ContactItem {
     }
 
     @Override
-    protected void fillMap(WritableMap map) {
+    protected void fillMap(WritableMap map, QueryParams params) {
         map.putString(type, url);
     }
 }

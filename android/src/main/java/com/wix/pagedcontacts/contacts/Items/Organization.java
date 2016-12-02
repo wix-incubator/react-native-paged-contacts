@@ -5,6 +5,7 @@ import android.provider.ContactsContract;
 
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
+import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class Organization extends ContactItem {
     private String organizationName;
@@ -29,10 +30,10 @@ public class Organization extends ContactItem {
     }
 
     @Override
-    protected void fillMap(WritableMap map) {
-        addToMap(map, Field.phoneticOrganizationName.getKey(), phoneticOrganizationName);
-        addToMap(map, Field.organizationName.getKey(), organizationName);
-        addToMap(map, Field.jobTitle.getKey(), jobTitle);
-        addToMap(map, Field.departmentName.getKey(), departmentName);
+    protected void fillMap(WritableMap map, QueryParams params) {
+        addField(map, params, Field.phoneticOrganizationName, phoneticOrganizationName);
+        addField(map, params, Field.organizationName, organizationName);
+        addField(map, params, Field.jobTitle, jobTitle);
+        addField(map, params, Field.departmentName, departmentName);
     }
 }

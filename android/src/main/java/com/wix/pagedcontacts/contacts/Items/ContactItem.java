@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.Field;
+import com.wix.pagedcontacts.contacts.QueryParams;
 
 abstract class ContactItem {
     Cursor cursor;
@@ -16,13 +18,13 @@ abstract class ContactItem {
     ContactItem() {
     }
 
-    WritableMap toMap() {
+    WritableMap toMap(QueryParams params) {
         WritableMap map = Arguments.createMap();
-        fillMap(map);
+        fillMap(map, params);
         return map;
     }
 
-    protected abstract void fillMap(WritableMap map);
+    protected abstract void fillMap(WritableMap map, QueryParams params);
 
     @Nullable
     Integer getInt(String key) {
@@ -48,9 +50,9 @@ abstract class ContactItem {
         }
     }
 
-    protected void putString(WritableMap map, String key, String value) {
-        if (value != null) {
-            map.putString(key, value);
+    void addField(WritableMap map, QueryParams params, Field field, String value) {
+        if (value != null && params.fetchField(field)) {
+            map.putString(field.getKey(), value);
         }
     }
 }

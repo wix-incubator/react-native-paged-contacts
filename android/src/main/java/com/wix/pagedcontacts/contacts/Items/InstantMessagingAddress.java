@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 
 import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class InstantMessagingAddress extends ContactItem {
     private String data;
@@ -50,7 +51,7 @@ public class InstantMessagingAddress extends ContactItem {
     }
 
     @Override
-    protected void fillMap(WritableMap map) {
+    protected void fillMap(WritableMap map, QueryParams params) {
         map.putString("service", protocol);
         map.putString("username", data);
     }

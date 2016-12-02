@@ -5,6 +5,7 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
+import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class Name extends ContactItem {
     private String namePrefix;
@@ -36,15 +37,14 @@ public class Name extends ContactItem {
         phoneticFamilyName = getString(StructuredName.PHONETIC_FAMILY_NAME);
     }
 
-    @Override
-    public void fillMap(WritableMap map) {
-        putString(map, Field.givenName.getKey(), givenName);
-        putString(map, Field.namePrefix.getKey(), namePrefix);
-        putString(map, Field.middleName.getKey(), middleName);
-        putString(map, Field.familyName.getKey(), familyName);
-        putString(map, Field.nameSuffix.getKey(), nameSuffix);
-        putString(map, Field.phoneticGivenName.getKey(), phoneticGivenName);
-        putString(map, Field.phoneticMiddleName.getKey(), phoneticMiddleName);
-        putString(map, Field.phoneticFamilyName.getKey(), phoneticFamilyName);
+    public void fillMap(WritableMap map, QueryParams params) {
+        addField(map, params, Field.givenName, givenName);
+        addField(map, params, Field.namePrefix, namePrefix);
+        addField(map, params, Field.middleName, middleName);
+        addField(map, params, Field.familyName, familyName);
+        addField(map, params, Field.nameSuffix, nameSuffix);
+        addField(map, params, Field.phoneticGivenName, phoneticGivenName);
+        addField(map, params, Field.phoneticMiddleName, phoneticMiddleName);
+        addField(map, params, Field.phoneticFamilyName, phoneticFamilyName);
     }
 }

@@ -103,7 +103,7 @@ public class ContactCursorReader {
                 }
                 break;
             case ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE:
-                contact.contactRelations.add(new Relation(cursor));
+                contact.relations.add(new Relation(cursor));
                 break;
             case ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE:
                 contact.emails.add(new Email(cursor));

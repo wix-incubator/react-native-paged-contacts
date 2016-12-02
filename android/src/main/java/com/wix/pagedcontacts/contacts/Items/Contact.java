@@ -25,7 +25,7 @@ public class Contact {
     public String note;
     public String birthday;
     public List<Date> dates;
-    public List<Relation> contactRelations;
+    public List<Relation> relations;
     public List<Email> emails;
     public Map<String, PostalAddress> postalAddresses;
     public List<InstantMessagingAddress> instantMessagingAddresses;
@@ -37,74 +37,56 @@ public class Contact {
         dates = new ArrayList<>();
         emails = new ArrayList<>();
         postalAddresses = new HashMap<>();
-        contactRelations = new ArrayList<>();
+        relations = new ArrayList<>();
         organization = new Organization();
         name = new Name();
         instantMessagingAddresses = new ArrayList<>();
         urlAddresses = new ArrayList<>();
+        photo = new Photo();
     }
 
     public WritableMap toMap(QueryParams params) {
         WritableMap map = createMap();
-        map.putString("displayName", displayName);
-
+        addStringField(params, map, Field.displayName, displayName);
         addStringField(params, map, Field.nickname, nickname);
-        name.fillMap(map);
-        organization.fillMap(map);
+        name.fillMap(map, params);
+        organization.fillMap(map, params);
         addStringField(params, map, Field.note, note);
         addStringField(params, map, Field.birthday, birthday);
-
-        if (params.fetchField(Field.phoneNumbers) && phoneNumbers.size() > 0) {
-            map.putArray("phoneNumbers", getWritableArray(phoneNumbers));
+        addItemsArray(map, phoneNumbers, Field.phoneNumbers, params);
+        addItemsArray(map, dates, Field.dates, params);
+        addItemsArray(map, relations, Field.relations, params);
+        addItemsArray(map, emails, Field.emailAddresses, params);
+        if (postalAddresses.size() > 0) {
+            map.putArray(Field.postalAddresses.getKey(), getPostalAddresses(params));
         }
-
-        if (params.fetchField(Field.dates) && dates.size() > 0) {
-            map.putArray("dates", getWritableArray(dates));
-        }
-
-        if (params.fetchField(Field.relation) && contactRelations.size() > 0) {
-            map.putArray("contactRelations", getWritableArray(contactRelations));
-        }
-
-        if (params.fetchField(Field.emailAddresses) && emails.size() > 0) {
-            map.putArray("emailAddresses", getWritableArray(emails));
-        }
-
-        if (params.fetchField(Field.postalAddresses) && postalAddresses.size() > 0) {
-            map.putArray("postalAddresses", getPostalAddresses());
-        }
-
-        if (params.fetchField(Field.instantMessageAddresses) && instantMessagingAddresses.size() > 0) {
-            map.putArray("instantMessageAddresses", getWritableArray(instantMessagingAddresses));
-        }
-
-        if (params.fetchField(Field.urlAddresses) && urlAddresses.size() > 0) {
-            map.putArray(Field.urlAddresses.getKey(), getWritableArray(urlAddresses));
-        }
-
-        if (params.fetchField(Field.imageData)) {
-            addStringField(params, map, Field.imageData, photo.getImageData());
-        }
-        if (params.fetchField(Field.thumbnailImageData)) {
-            addStringField(params, map, Field.thumbnailImageData, photo.getThumbnailImageDate());
-        }
+        addItemsArray(map, instantMessagingAddresses, Field.instantMessageAddresses, params);
+        addItemsArray(map, urlAddresses, Field.urlAddresses, params);
+        addStringField(params, map, Field.imageData, photo.getImageData());
+        addStringField(params, map, Field.thumbnailImageData, photo.getThumbnailImageDate());
         return map;
     }
 
-    private WritableArray getPostalAddresses() {
+    private void addItemsArray(WritableMap map, List<? extends ContactItem> items, Field field, QueryParams params) {
+        if (items.size() > 0) {
+            map.putArray(field.getKey(), getWritableArray(items, params));
+        }
+    }
+
+    private WritableArray getPostalAddresses(QueryParams params) {
         WritableArray result = Arguments.createArray();
         for (String addressType : postalAddresses.keySet()) {
             WritableMap address = Arguments.createMap();
-            address.putMap(addressType, postalAddresses.get(addressType).toMap());
+            address.putMap(addressType, postalAddresses.get(addressType).toMap(params));
             result.pushMap(address);
         }
         return result;
     }
 
-    private WritableArray getWritableArray(List<? extends ContactItem> items) {
+    private WritableArray getWritableArray(List<? extends ContactItem> items, QueryParams params) {
         WritableArray result = Arguments.createArray();
         for (ContactItem item : items) {
-            result.pushMap(item.toMap());
+            result.pushMap(item.toMap(params));
         }
         return result;
     }

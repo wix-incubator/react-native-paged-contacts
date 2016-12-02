@@ -28,7 +28,8 @@ public class QueryParams {
         for (int i = 0; i < keysToFetch.size(); i++) {
             Field field = Field.fromKey(keysToFetch.getString(i));
             Collections.addAll(projection, field.getProjection());
-            selectionArgs.add(field.getContentItemType());
+            field.addContentItemType(selectionArgs);
+            fields.add(field);
         }
         projection.add(ContactsContract.Contacts.Data.MIMETYPE);
         projection.add(ContactsContract.Data.CONTACT_ID);

@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class PhoneNumber extends ContactItem {
     public String type;
@@ -37,7 +38,7 @@ public class PhoneNumber extends ContactItem {
     }
 
     @Override
-    protected void fillMap(WritableMap map) {
+    protected void fillMap(WritableMap map, QueryParams params) {
         map.putString(type, number);
     }
 }
