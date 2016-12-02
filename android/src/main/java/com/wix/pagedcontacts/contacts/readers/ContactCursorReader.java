@@ -8,12 +8,12 @@ import android.provider.ContactsContract.CommonDataKinds.Note;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
-import android.text.TextUtils;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.Items.Contact;
 import com.wix.pagedcontacts.contacts.Items.Date;
+import com.wix.pagedcontacts.contacts.Items.DisplayName;
 import com.wix.pagedcontacts.contacts.Items.Email;
 import com.wix.pagedcontacts.contacts.Items.InstantMessagingAddress;
 import com.wix.pagedcontacts.contacts.Items.Name;
@@ -35,7 +35,6 @@ public class ContactCursorReader {
     private Integer contactIdIndex;
     private int nicknameIndex;
     private int mimeTypeIndex;
-    private int displayNameIndex;
     private int noteIndex;
 
     private Map<String, Contact> contacts;
@@ -74,7 +73,7 @@ public class ContactCursorReader {
     private Contact read(Cursor cursor, String contactId) {
         Contact contact = getContact(contactId);
         findColumnIndices(cursor);
-        setDisplayName(cursor, contact);
+        contact.displayName = new DisplayName(cursor);
         setContactId(cursor, contact);
 
         String mimeType = cursor.getString(mimeTypeIndex);
@@ -132,15 +131,6 @@ public class ContactCursorReader {
         }
     }
 
-    private void setDisplayName(Cursor cursor, Contact contact) {
-        if (contact.displayName == null) {
-            String name = cursor.getString(displayNameIndex);
-            if (!TextUtils.isEmpty(name)) {
-                contact.displayName = name;
-            }
-        }
-    }
-
     private Contact getContact(String contactId) {
         Contact contact = contacts.get(contactId);
         if (contact == null) {
@@ -157,7 +147,6 @@ public class ContactCursorReader {
     private void findColumnIndices(Cursor cursor) {
         contactIdIndex = cursor.getColumnIndex(ContactsContract.RawContacts.SOURCE_ID);
         mimeTypeIndex = cursor.getColumnIndex(ContactsContract.Data.MIMETYPE);
-        displayNameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
         nicknameIndex = cursor.getColumnIndex(Nickname.NAME);
         noteIndex = cursor.getColumnIndex(Note.NOTE);
     }

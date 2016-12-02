@@ -17,8 +17,8 @@ import static com.facebook.react.bridge.Arguments.createMap;
 
 public class Contact {
     public String contactId;
-    public String displayName;
-    public Name name;
+    public DisplayName displayName;
+    public Name name = new Name();
     public String nickname;
     public List<PhoneNumber> phoneNumbers;
     public Organization organization;
@@ -39,7 +39,6 @@ public class Contact {
         postalAddresses = new HashMap<>();
         relations = new ArrayList<>();
         organization = new Organization();
-        name = new Name();
         instantMessagingAddresses = new ArrayList<>();
         urlAddresses = new ArrayList<>();
         photo = new Photo();
@@ -47,8 +46,8 @@ public class Contact {
 
     public WritableMap toMap(QueryParams params) {
         WritableMap map = createMap();
-        addStringField(params, map, Field.displayName, displayName);
         addStringField(params, map, Field.nickname, nickname);
+        displayName.fillMap(map, params);
         name.fillMap(map, params);
         organization.fillMap(map, params);
         addStringField(params, map, Field.note, note);
@@ -95,10 +94,5 @@ public class Contact {
         if (params.fetchField(field) && !TextUtils.isEmpty(value)) {
             map.putString(field.getKey(), value);
         }
-    }
-
-    @Override
-    public String toString() {
-        return displayName;
     }
 }
