@@ -14,6 +14,10 @@ public class Note extends ContactItem {
         fillFromCursor();
     }
 
+    public Note() {
+
+    }
+
     private void fillFromCursor() {
         note = getString(ContactsContract.CommonDataKinds.Note.NOTE);
     }

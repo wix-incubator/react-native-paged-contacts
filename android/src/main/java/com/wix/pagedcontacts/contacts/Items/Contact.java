@@ -19,10 +19,10 @@ public class Contact {
     public String contactId;
     public DisplayName displayName;
     public Name name = new Name();
-    public Nickname nickname;
+    public Nickname nickname = new Nickname();
     public List<PhoneNumber> phoneNumbers = new ArrayList<>();
     public Organization organization = new Organization();
-    public Note note;
+    public Note note = new Note();
     public String birthday;
     public List<Date> dates = new ArrayList<>();
     public List<Relation> relations = new ArrayList<>();

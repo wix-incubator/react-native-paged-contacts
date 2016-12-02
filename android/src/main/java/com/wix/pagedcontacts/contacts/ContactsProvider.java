@@ -55,7 +55,7 @@ public class ContactsProvider {
                 new String[]{ContactsContract.Data.CONTACT_ID, ContactsContract.RawContacts.SOURCE_ID},
                 null,
                 null,
-                null
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
         );
     }
 
@@ -69,7 +69,7 @@ public class ContactsProvider {
                 params.getProjection(),
                 params.getSelection(),
                 params.getSelectionArgs(),
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
+                null
         );
     }
 

@@ -9,6 +9,11 @@ import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class Nickname extends ContactItem {
     private String nickname;
+
+    public Nickname() {
+
+    }
+
     public Nickname(Cursor cursor) {
         super(cursor);
         fillFromCursor();
