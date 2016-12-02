@@ -74,13 +74,8 @@ public class ContactCursorReader {
     private Contact read(Cursor cursor, String contactId) {
         Contact contact = getContact(contactId);
         findColumnIndices(cursor);
-        String name = cursor.getString(displayNameIndex);
-        if (!TextUtils.isEmpty(name)) {
-            contact.displayName = name;
-        }
-        if (contact.contactId == null) {
-            contact.contactId = getString(cursor, contactIdIndex);
-        }
+        setDisplayName(cursor, contact);
+        setContactId(cursor, contact);
 
         String mimeType = cursor.getString(mimeTypeIndex);
         switch (mimeType) {
@@ -129,6 +124,21 @@ public class ContactCursorReader {
         }
 
         return contact;
+    }
+
+    private void setContactId(Cursor cursor, Contact contact) {
+        if (contact.contactId == null) {
+            contact.contactId = getString(cursor, contactIdIndex);
+        }
+    }
+
+    private void setDisplayName(Cursor cursor, Contact contact) {
+        if (contact.displayName == null) {
+            String name = cursor.getString(displayNameIndex);
+            if (!TextUtils.isEmpty(name)) {
+                contact.displayName = name;
+            }
+        }
     }
 
     private Contact getContact(String contactId) {

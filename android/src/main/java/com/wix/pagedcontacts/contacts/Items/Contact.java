@@ -79,7 +79,7 @@ public class Contact {
         }
 
         if (params.fetchField(Field.urlAddresses) && urlAddresses.size() > 0) {
-            map.putArray(Field.urlAddresses, getWritableArray(urlAddresses));
+            map.putArray(Field.urlAddresses.getKey(), getWritableArray(urlAddresses));
         }
 
         if (params.fetchField(Field.imageData)) {
@@ -109,9 +109,9 @@ public class Contact {
         return result;
     }
 
-    private void addStringField(QueryParams params, WritableMap map, String field, String value) {
+    private void addStringField(QueryParams params, WritableMap map, Field field, String value) {
         if (params.fetchField(field) && !TextUtils.isEmpty(value)) {
-            map.putString(field, value);
+            map.putString(field.getKey(), value);
         }
     }
 

@@ -38,13 +38,13 @@ public class Name extends ContactItem {
 
     @Override
     public void fillMap(WritableMap map) {
-        putString(map, Field.givenName, givenName);
-        putString(map, Field.namePrefix, namePrefix);
-        putString(map, Field.middleName, middleName);
-        putString(map, Field.familyName, familyName);
-        putString(map, Field.nameSuffix, nameSuffix);
-        putString(map, Field.phoneticGivenName, phoneticGivenName);
-        putString(map, Field.phoneticMiddleName, phoneticMiddleName);
-        putString(map, Field.phoneticFamilyName, phoneticFamilyName);
+        putString(map, Field.givenName.getKey(), givenName);
+        putString(map, Field.namePrefix.getKey(), namePrefix);
+        putString(map, Field.middleName.getKey(), middleName);
+        putString(map, Field.familyName.getKey(), familyName);
+        putString(map, Field.nameSuffix.getKey(), nameSuffix);
+        putString(map, Field.phoneticGivenName.getKey(), phoneticGivenName);
+        putString(map, Field.phoneticMiddleName.getKey(), phoneticMiddleName);
+        putString(map, Field.phoneticFamilyName.getKey(), phoneticFamilyName);
     }
 }

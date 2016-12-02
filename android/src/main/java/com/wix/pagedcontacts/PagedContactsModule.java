@@ -10,16 +10,17 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.ContactsProvider;
+import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.QueryParams;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PagedContactsModule extends ReactContextBaseJavaModule {
-    private static final String TAG = "PagedContactsModule";
-    private final ReactApplicationContext context;
     private final ContactsProvider contactsProvider;
 
     public PagedContactsModule(ReactApplicationContext context) {
         super(context);
-        this.context = context;
         contactsProvider = new ContactsProvider(context);
         context.addLifecycleEventListener(new LifecycleEventListener() {
             @Override
@@ -48,13 +49,12 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
         return "ReactNativePagedContacts";
     }
 
-//    @Override
-//    public Map<String, Object> getConstants() {
-//        final Map<String, Object> constants = new HashMap<>();
-//        constants.put(DURATION_SHORT_KEY, Toast.LENGTH_SHORT);
-//        constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);
-//        return constants;
-//    }
+    @Override
+    public Map<String, Object> getConstants() {
+        final Map<String, Object> constants = new HashMap<>();
+        Field.exportToJs(constants);
+        return constants;
+    }
 
     @ReactMethod
     public void contactsCount(String uuid, Promise promise) {

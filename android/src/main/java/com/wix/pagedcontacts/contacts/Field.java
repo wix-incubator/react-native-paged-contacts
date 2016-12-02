@@ -1,38 +1,77 @@
 package com.wix.pagedcontacts.contacts;
 
-public class Field {
-    public static final String namePrefix = "namePrefix";
-    public static final String givenName = "givenName";
-    public static final String nickname = "nickname";
-    public static final String middleName = "middleName";
-    public static final String familyName = "familyName";
-    public static final String phoneticGivenName = "phoneticGivenName";
-    public static final String phoneticMiddleName = "phoneticMiddleName";
-    public static final String phoneticFamilyName = "phoneticFamilyName";
-    public static final String nameSuffix = "nameSuffix";
+import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Contactables;
+import android.provider.ContactsContract.CommonDataKinds.Email;
+import android.provider.ContactsContract.CommonDataKinds.Event;
+import android.provider.ContactsContract.CommonDataKinds.Im;
+import android.provider.ContactsContract.CommonDataKinds.Nickname;
+import android.provider.ContactsContract.CommonDataKinds.Note;
+import android.provider.ContactsContract.CommonDataKinds.Organization;
+import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.provider.ContactsContract.CommonDataKinds.Photo;
+import android.provider.ContactsContract.CommonDataKinds.Relation;
+import android.provider.ContactsContract.CommonDataKinds.StructuredName;
+import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
+import android.provider.ContactsContract.CommonDataKinds.Website;
 
-    public static final String phoneNumber = "phoneNumber";
+import java.util.Map;
 
-    public static final String organizationName = "organizationName";
-    public static final String phoneticOrganizationName = "phoneticOrganizationName";
-    public static final String departmentName = "departmentName";
-    public static final String jobTitle = "jobTitle";
+public enum Field {
+    displayName("displayName", new String[]{ContactsContract.Contacts.DISPLAY_NAME}),
+    namePrefix("namePrefix", new String[]{StructuredName.PREFIX}),
+    givenName("givenName", new String[]{StructuredName.GIVEN_NAME}),
+    middleName("middleName", new String[]{StructuredName.MIDDLE_NAME}),
+    familyName("familyName", new String[]{StructuredName.FAMILY_NAME}),
+    nickname("nickname", new String[]{Nickname.NAME}),
+    phoneticGivenName("phoneticGivenName", new String[]{StructuredName.PHONETIC_GIVEN_NAME}),
+    phoneticMiddleName("phoneticMiddleName", new String[]{StructuredName.PHONETIC_MIDDLE_NAME}),
+    phoneticFamilyName("phoneticFamilyName", new String[]{StructuredName.PHONETIC_FAMILY_NAME}),
+    nameSuffix("nameSuffix", new String[]{StructuredName.SUFFIX}),
+    phoneNumber("phoneNumber", new String[]{Phone.NUMBER, Phone.TYPE, Phone.LABEL}),
+    organizationName("organizationName", new String[]{Organization.COMPANY}),
+    phoneticOrganizationName("phoneticOrganizationName", new String[]{Organization.PHONETIC_NAME}),
+    departmentName("departmentName", new String[]{Organization.DEPARTMENT}),
+    jobTitle("jobTitle", new String[]{Organization.TITLE}),
+    note("note", new String[]{Note.NOTE}),
+    birthday("birthday", new String[]{Event.TYPE, Event.START_DATE, Event.LABEL}),
+    dates("dates", new String[]{Event.TYPE, Event.START_DATE, Event.LABEL}),
+    relation("relation", new String[]{Relation.NAME, Relation.TYPE, Relation.LABEL}),
+    emailAddresses("emailAddresses", new String[]{Email.DATA, Email.ADDRESS, Email.TYPE, Email.LABEL}),
+    postalAddresses("postalAddresses", new String[]{StructuredPostal.TYPE, StructuredPostal.FORMATTED_ADDRESS, StructuredPostal.LABEL, StructuredPostal.STREET, StructuredPostal.POBOX, StructuredPostal.NEIGHBORHOOD, StructuredPostal.CITY, StructuredPostal.REGION, StructuredPostal.POSTCODE, StructuredPostal.COUNTRY}),
+    instantMessageAddresses("instantMessageAddresses", new String[]{Im.DATA, Im.TYPE, Im.LABEL, Im.PROTOCOL}),
+    urlAddresses("urlAddresses", new String[]{Website.URL, Website.TYPE, Website.LABEL}),
+    imageData("imageData", new String[]{Contactables.PHOTO_URI}),
+    thumbnailImageData("thumbnailImageData", new String[]{Contactables.PHOTO_URI, Photo.PHOTO});
 
-    public static final String note = "note";
+    private String key;
+    private String[] projection;
 
-    public static final String birthday = "birthday";
-    public static final String dates = "dates";
+    Field(String key, String[] projection) {
+        this.key = key;
+        this.projection = projection;
+    }
 
-    public static final String relation = "relation";
+    public String getKey() {
+        return key;
+    }
 
-    public static final String emailAddresses = "emailAddresses";
+    public String[] getProjection() {
+        return projection;
+    }
 
-    public static final String postalAddresses = "postalAddresses";
+    public static void exportToJs(Map<String, Object> constants ) {
+        for (Field field : values()) {
+            constants.put(field.key, field.key);
+        }
+    }
 
-    public static final String instantMessageAddresses = "instantMessageAddresses";
-
-    public static final String urlAddresses = "urlAddresses";
-
-    public static final String imageData = "imageData";
-    public static final String thumbnailImageData = "thumbnailImageData";
+    public static Field fromKey(String key) {
+        for (Field field : values()) {
+            if (field.key.equals(key)) {
+                return field;
+            }
+        }
+        throw new RuntimeException("Unsupported contact key: " + key);
+    }
 }

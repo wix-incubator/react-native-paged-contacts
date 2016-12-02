@@ -30,9 +30,9 @@ public class Organization extends ContactItem {
 
     @Override
     protected void fillMap(WritableMap map) {
-        addToMap(map, Field.phoneticOrganizationName, phoneticOrganizationName);
-        addToMap(map, Field.organizationName, organizationName);
-        addToMap(map, Field.jobTitle, jobTitle);
-        addToMap(map, Field.departmentName, departmentName);
+        addToMap(map, Field.phoneticOrganizationName.getKey(), phoneticOrganizationName);
+        addToMap(map, Field.organizationName.getKey(), organizationName);
+        addToMap(map, Field.jobTitle.getKey(), jobTitle);
+        addToMap(map, Field.departmentName.getKey(), departmentName);
     }
 }

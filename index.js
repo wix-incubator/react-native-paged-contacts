@@ -55,32 +55,34 @@ export class PagedContacts {
   }
 }
 
-PagedContacts.identifier = ReactNative.NativeModules.PagedContactsModule.identifier;
-PagedContacts.displayName = ReactNative.NativeModules.PagedContactsModule.displayName;
-PagedContacts.namePrefix = ReactNative.NativeModules.PagedContactsModule.namePrefix;
-PagedContacts.givenName = ReactNative.NativeModules.PagedContactsModule.givenName;
-PagedContacts.middleName = ReactNative.NativeModules.PagedContactsModule.middleName;
-PagedContacts.familyName = ReactNative.NativeModules.PagedContactsModule.familyName;
-PagedContacts.previousFamilyName = ReactNative.NativeModules.PagedContactsModule.previousFamilyName;
-PagedContacts.nameSuffix = ReactNative.NativeModules.PagedContactsModule.nameSuffix;
-PagedContacts.nickname = ReactNative.NativeModules.PagedContactsModule.nickname;
-PagedContacts.organizationName = ReactNative.NativeModules.PagedContactsModule.organizationName;
-PagedContacts.departmentName = ReactNative.NativeModules.PagedContactsModule.departmentName;
-PagedContacts.jobTitle = ReactNative.NativeModules.PagedContactsModule.jobTitle;
-PagedContacts.phoneticGivenName = ReactNative.NativeModules.PagedContactsModule.phoneticGivenName;
-PagedContacts.phoneticMiddleName = ReactNative.NativeModules.PagedContactsModule.phoneticMiddleName;
-PagedContacts.phoneticFamilyName = ReactNative.NativeModules.PagedContactsModule.phoneticFamilyName;
-PagedContacts.phoneticOrganizationName = ReactNative.NativeModules.PagedContactsModule.phoneticOrganizationName;
-PagedContacts.birthday = ReactNative.NativeModules.PagedContactsModule.birthday;
-PagedContacts.nonGregorianBirthday = ReactNative.NativeModules.PagedContactsModule.nonGregorianBirthday;
-PagedContacts.note = ReactNative.NativeModules.PagedContactsModule.note;
-PagedContacts.imageData = ReactNative.NativeModules.PagedContactsModule.imageData;
-PagedContacts.thumbnailImageData = ReactNative.NativeModules.PagedContactsModule.thumbnailImageData;
-PagedContacts.phoneNumbers = ReactNative.NativeModules.PagedContactsModule.phoneNumbers;
-PagedContacts.emailAddresses = ReactNative.NativeModules.PagedContactsModule.emailAddresses;
-PagedContacts.postalAddresses = ReactNative.NativeModules.PagedContactsModule.postalAddresses;
-PagedContacts.dates = ReactNative.NativeModules.PagedContactsModule.dates;
-PagedContacts.urlAddresses = ReactNative.NativeModules.PagedContactsModule.urlAddresses;
-PagedContacts.relations = ReactNative.NativeModules.PagedContactsModule.relations;
-PagedContacts.socialProfiles = ReactNative.NativeModules.PagedContactsModule.socialProfiles;
-PagedContacts.instantMessageAddresses = ReactNative.NativeModules.PagedContactsModule.instantMessageAddresses;
+if (Platform.OS === 'ios') {
+  PagedContacts.identifier = PagedContactsModule.identifier;
+  PagedContacts.previousFamilyName = PagedContactsModule.previousFamilyName;
+  PagedContacts.nonGregorianBirthday = PagedContactsModule.nonGregorianBirthday;
+  PagedContacts.socialProfiles = PagedContactsModule.socialProfiles;
+}
+PagedContacts.displayName = PagedContactsModule.displayName;
+PagedContacts.namePrefix = PagedContactsModule.namePrefix;
+PagedContacts.givenName = PagedContactsModule.givenName;
+PagedContacts.middleName = PagedContactsModule.middleName;
+PagedContacts.familyName = PagedContactsModule.familyName;
+PagedContacts.nameSuffix = PagedContactsModule.nameSuffix;
+PagedContacts.nickname = PagedContactsModule.nickname;
+PagedContacts.organizationName = PagedContactsModule.organizationName;
+PagedContacts.departmentName = PagedContactsModule.departmentName;
+PagedContacts.jobTitle = PagedContactsModule.jobTitle;
+PagedContacts.phoneticGivenName = PagedContactsModule.phoneticGivenName;
+PagedContacts.phoneticMiddleName = PagedContactsModule.phoneticMiddleName;
+PagedContacts.phoneticFamilyName = PagedContactsModule.phoneticFamilyName;
+PagedContacts.phoneticOrganizationName = PagedContactsModule.phoneticOrganizationName;
+PagedContacts.birthday = PagedContactsModule.birthday;
+PagedContacts.note = PagedContactsModule.note;
+PagedContacts.imageData = PagedContactsModule.imageData;
+PagedContacts.thumbnailImageData = PagedContactsModule.thumbnailImageData;
+PagedContacts.phoneNumbers = PagedContactsModule.phoneNumbers;
+PagedContacts.emailAddresses = PagedContactsModule.emailAddresses;
+PagedContacts.postalAddresses = PagedContactsModule.postalAddresses;
+PagedContacts.dates = PagedContactsModule.dates;
+PagedContacts.urlAddresses = PagedContactsModule.urlAddresses;
+PagedContacts.relations = PagedContactsModule.relations;
+PagedContacts.instantMessageAddresses = PagedContactsModule.instantMessageAddresses;
