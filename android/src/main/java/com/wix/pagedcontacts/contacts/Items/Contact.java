@@ -19,38 +19,26 @@ public class Contact {
     public String contactId;
     public DisplayName displayName;
     public Name name = new Name();
-    public String nickname;
-    public List<PhoneNumber> phoneNumbers;
-    public Organization organization;
-    public String note;
+    public Nickname nickname;
+    public List<PhoneNumber> phoneNumbers = new ArrayList<>();
+    public Organization organization = new Organization();
+    public Note note;
     public String birthday;
-    public List<Date> dates;
-    public List<Relation> relations;
-    public List<Email> emails;
-    public Map<String, PostalAddress> postalAddresses;
-    public List<InstantMessagingAddress> instantMessagingAddresses;
-    public List<UrlAddress> urlAddresses;
-    public Photo photo;
-
-    public Contact() {
-        phoneNumbers = new ArrayList<>();
-        dates = new ArrayList<>();
-        emails = new ArrayList<>();
-        postalAddresses = new HashMap<>();
-        relations = new ArrayList<>();
-        organization = new Organization();
-        instantMessagingAddresses = new ArrayList<>();
-        urlAddresses = new ArrayList<>();
-        photo = new Photo();
-    }
+    public List<Date> dates = new ArrayList<>();
+    public List<Relation> relations = new ArrayList<>();
+    public List<Email> emails = new ArrayList<>();
+    public Map<String, PostalAddress> postalAddresses = new HashMap<>();
+    public List<InstantMessagingAddress> instantMessagingAddresses = new ArrayList<>();
+    public List<UrlAddress> urlAddresses = new ArrayList<>();
+    public Photo photo = new Photo();
 
     public WritableMap toMap(QueryParams params) {
         WritableMap map = createMap();
-        addStringField(params, map, Field.nickname, nickname);
         displayName.fillMap(map, params);
+        nickname.fillMap(map, params);
         name.fillMap(map, params);
         organization.fillMap(map, params);
-        addStringField(params, map, Field.note, note);
+        note.fillMap(map, params);
         addStringField(params, map, Field.birthday, birthday);
         addItemsArray(map, phoneNumbers, Field.phoneNumbers, params);
         addItemsArray(map, dates, Field.dates, params);

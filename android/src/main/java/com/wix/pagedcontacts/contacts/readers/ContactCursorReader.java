@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Nickname;
-import android.provider.ContactsContract.CommonDataKinds.Note;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
@@ -17,6 +16,7 @@ import com.wix.pagedcontacts.contacts.Items.DisplayName;
 import com.wix.pagedcontacts.contacts.Items.Email;
 import com.wix.pagedcontacts.contacts.Items.InstantMessagingAddress;
 import com.wix.pagedcontacts.contacts.Items.Name;
+import com.wix.pagedcontacts.contacts.Items.Note;
 import com.wix.pagedcontacts.contacts.Items.Organization;
 import com.wix.pagedcontacts.contacts.Items.PhoneNumber;
 import com.wix.pagedcontacts.contacts.Items.Photo;
@@ -30,12 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ContactCursorReader {
-    private static final String TAG = "CursorReader";
-
     private Integer contactIdIndex;
-    private int nicknameIndex;
     private int mimeTypeIndex;
-    private int noteIndex;
 
     private Map<String, Contact> contacts;
     private Context context;
@@ -82,7 +78,7 @@ public class ContactCursorReader {
                 contact.name = new Name(cursor);
                 break;
             case Nickname.CONTENT_ITEM_TYPE:
-                contact.nickname = getString(cursor, nicknameIndex);
+                contact.nickname = new com.wix.pagedcontacts.contacts.Items.Nickname(cursor);
                 break;
             case Phone.CONTENT_ITEM_TYPE:
                 contact.phoneNumbers.add(new PhoneNumber(cursor));
@@ -90,8 +86,8 @@ public class ContactCursorReader {
             case ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE:
                 contact.organization = new Organization(cursor);
                 break;
-            case Note.CONTENT_ITEM_TYPE:
-                contact.note = getString(cursor, noteIndex);
+            case ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE:
+                contact.note = new Note(cursor);
                 break;
             case ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE:
                 final int type = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE));
@@ -147,8 +143,6 @@ public class ContactCursorReader {
     private void findColumnIndices(Cursor cursor) {
         contactIdIndex = cursor.getColumnIndex(ContactsContract.RawContacts.SOURCE_ID);
         mimeTypeIndex = cursor.getColumnIndex(ContactsContract.Data.MIMETYPE);
-        nicknameIndex = cursor.getColumnIndex(Nickname.NAME);
-        noteIndex = cursor.getColumnIndex(Note.NOTE);
     }
 
     private String getString(Cursor cursor, int index) {
