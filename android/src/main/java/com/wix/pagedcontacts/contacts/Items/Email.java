@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class Email extends ContactItem {
@@ -23,7 +24,7 @@ public class Email extends ContactItem {
     }
 
     private String getEmailType(Integer type, String label) {
-        if (label != null) {
+        if (label != null || type == null) {
             return label;
         }
         switch (type) {
@@ -40,6 +41,8 @@ public class Email extends ContactItem {
 
     @Override
     protected void fillMap(WritableMap map, QueryParams params) {
-        map.putString(type, address);
+        if (params.fetchField(Field.emailAddresses)) {
+            addToMap(map, type, address);
+        }
     }
 }

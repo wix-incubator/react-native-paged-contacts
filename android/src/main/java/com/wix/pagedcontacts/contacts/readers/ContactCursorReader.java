@@ -30,9 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ContactCursorReader {
-    private Integer contactIdIndex;
-    private int mimeTypeIndex;
-
     private Map<String, Contact> contacts;
     private Context context;
 
@@ -42,10 +39,7 @@ public class ContactCursorReader {
     }
 
     public Contact read(Cursor cursor) {
-        Contact contact = createContact();
-        findColumnIndices(cursor);
-        contact.contactId = getId(cursor);
-        return contact;
+        return new Contact(getId(cursor));
     }
 
     public WritableArray readWithIds(Cursor cursor, List<String> contactsToFetch, QueryParams params) {
@@ -68,12 +62,9 @@ public class ContactCursorReader {
 
     private Contact read(Cursor cursor, String contactId) {
         Contact contact = getContact(contactId);
-        findColumnIndices(cursor);
         contact.displayName = new DisplayName(cursor);
-        setContactId(cursor, contact);
 
-        String mimeType = cursor.getString(mimeTypeIndex);
-        switch (mimeType) {
+        switch (getMimeType(cursor)) {
             case StructuredName.CONTENT_ITEM_TYPE:
                 contact.name = new Name(cursor);
                 break;
@@ -121,28 +112,17 @@ public class ContactCursorReader {
         return contact;
     }
 
-    private void setContactId(Cursor cursor, Contact contact) {
-        if (contact.contactId == null) {
-            contact.contactId = getString(cursor, contactIdIndex);
-        }
+    private String getMimeType(Cursor cursor) {
+        return getString(cursor, cursor.getColumnIndex(ContactsContract.Data.MIMETYPE));
     }
 
     private Contact getContact(String contactId) {
         Contact contact = contacts.get(contactId);
         if (contact == null) {
-            contact = createContact();
+            contact = new Contact(contactId);
             contacts.put(contactId, contact);
         }
         return contact;
-    }
-
-    private Contact createContact() {
-        return new Contact();
-    }
-
-    private void findColumnIndices(Cursor cursor) {
-        contactIdIndex = cursor.getColumnIndex(ContactsContract.RawContacts.SOURCE_ID);
-        mimeTypeIndex = cursor.getColumnIndex(ContactsContract.Data.MIMETYPE);
     }
 
     private String getString(Cursor cursor, int index) {

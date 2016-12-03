@@ -32,8 +32,13 @@ public class Contact {
     public List<UrlAddress> urlAddresses = new ArrayList<>();
     public Photo photo = new Photo();
 
+    public Contact(String contactId) {
+        this.contactId = contactId;
+    }
+
     public WritableMap toMap(QueryParams params) {
         WritableMap map = createMap();
+        map.putString("identifier", contactId);
         displayName.fillMap(map, params);
         nickname.fillMap(map, params);
         name.fillMap(map, params);
