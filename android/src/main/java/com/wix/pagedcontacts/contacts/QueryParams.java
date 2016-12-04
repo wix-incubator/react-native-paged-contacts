@@ -3,9 +3,12 @@ package com.wix.pagedcontacts.contacts;
 import android.provider.ContactsContract;
 
 import com.facebook.react.bridge.ReadableArray;
+import com.wix.pagedcontacts.utils.RnCollections;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class QueryParams {
@@ -13,14 +16,31 @@ public class QueryParams {
     int size;
     private Set<String> selectionArgs;
     private ReadableArray keysToFetch;
+    private List<String> identifiers = new ArrayList<>();
     private Set<Field> fields;
 
-    public QueryParams(ReadableArray keysToFetch, int offset, int size) {
+    List<String> getIdentifiers() {
+        return identifiers;
+    }
+
+    public QueryParams(ReadableArray keysToFetch, ReadableArray identifiers) {
+        this.keysToFetch = keysToFetch;
+        if (!RnCollections.isEmpty(identifiers)) {
+            this.identifiers = RnCollections.toStringList(identifiers);
+        }
+        init();
+    }
+
+    public QueryParams(ReadableArray keysToFetch, int contactCount, int offset, int size) {
+        this.keysToFetch = keysToFetch;
+        this.offset = offset < contactCount - 1 ? offset : contactCount - 1;
+        this.size = this.offset + size < contactCount ? size : contactCount - this.offset;
+        init();
+    }
+
+    private void init() {
         fields = new HashSet<>();
         selectionArgs = new HashSet<>();
-        this.keysToFetch = keysToFetch;
-        this.offset = offset;
-        this.size = size;
     }
 
     String[] getProjection() {
@@ -38,6 +58,10 @@ public class QueryParams {
     }
 
     String getSelection() {
+        return getMimeTypeSelection();
+    }
+
+    private String getMimeTypeSelection() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < selectionArgs.size(); i++) {
             sb.append(ContactsContract.Data.MIMETYPE);
@@ -55,6 +79,10 @@ public class QueryParams {
     }
 
     String[] getSelectionArgs() {
+        return getMimeTypeSelectionArgs();
+    }
+
+    private String[] getMimeTypeSelectionArgs() {
         return selectionArgs.toArray(new String[selectionArgs.size()]);
     }
 }

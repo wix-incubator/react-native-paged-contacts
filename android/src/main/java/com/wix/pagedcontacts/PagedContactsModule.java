@@ -65,8 +65,19 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getContactsWithRange(String uuid, int offset, int size, ReadableArray array, Promise promise) {
-        WritableArray contacts = contactsProvider.getContactsWithRange(new QueryParams(array, offset, size));
+    public void getContactsWithRange(String uuid, int offset, int size, ReadableArray keysToFetch, Promise promise) {
+        QueryParams params = new QueryParams(keysToFetch, contactsProvider.getContactsCount(), offset, size);
+        WritableArray contacts = contactsProvider.getContactsWithRange(params);
+        setContactsAndResolve(promise, contacts);
+    }
+
+    @ReactMethod
+    public void getContactsWithIdentifiers(String uuid, ReadableArray identifiers, ReadableArray keysToFetch, Promise promise) {
+        WritableArray contacts = contactsProvider.getContactsWithIdentifiers(new QueryParams(keysToFetch, identifiers));
+        setContactsAndResolve(promise, contacts);
+    }
+
+    private void setContactsAndResolve(Promise promise, WritableArray contacts) {
         WritableMap args = Arguments.createMap();
         args.putArray("contacts", contacts);
         promise.resolve(args);

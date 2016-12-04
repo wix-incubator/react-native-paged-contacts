@@ -60,11 +60,16 @@ public class ContactsProvider {
     }
 
     public WritableArray getContactsWithRange(QueryParams params) {
-        Cursor cursor = queryContactsWithRange(params);
-        return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params.offset, params.size), params);
+        Cursor cursor = queryContacts(params);
+        return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params), params);
     }
 
-    private Cursor queryContactsWithRange(QueryParams params) {
+    public WritableArray getContactsWithIdentifiers(QueryParams params) {
+        Cursor cursor = queryContacts(params);
+        return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params), params);
+    }
+
+    private Cursor queryContacts(QueryParams params) {
         return context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
                 params.getProjection(),
                 params.getSelection(),
@@ -73,9 +78,12 @@ public class ContactsProvider {
         );
     }
 
-    private List<String> getContactsToFetch(int offset, int size) {
+    private List<String> getContactsToFetch(QueryParams params) {
+        if (!params.getIdentifiers().isEmpty()) {
+            return params.getIdentifiers();
+        }
         List<String> ids = new ArrayList<>();
-        for (String contactId : contactIds.subList(offset, size)) {
+        for (String contactId : contactIds.subList(params.offset, params.size)) {
             ids.add(contactId);
         }
         return ids;
