@@ -8,7 +8,7 @@ import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class DisplayName extends ContactItem {
-    private String name;
+    public String name;
 
     public DisplayName(Cursor cursor) {
         super(cursor);

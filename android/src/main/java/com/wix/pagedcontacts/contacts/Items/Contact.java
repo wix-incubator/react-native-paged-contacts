@@ -16,9 +16,9 @@ import java.util.Map;
 import static com.facebook.react.bridge.Arguments.createMap;
 
 public class Contact {
-    public String contactId;
+    private String contactId;
     public DisplayName displayName;
-    public Identity identity;
+    public Identity identity = new Identity();
     public Name name = new Name();
     public Nickname nickname = new Nickname();
     public List<PhoneNumber> phoneNumbers = new ArrayList<>();
@@ -33,6 +33,10 @@ public class Contact {
     public List<UrlAddress> urlAddresses = new ArrayList<>();
     public Photo photo = new Photo();
 
+    public String getId() {
+        return contactId;
+    }
+
     public Contact(String contactId) {
         this.contactId = contactId;
     }
@@ -40,9 +44,8 @@ public class Contact {
     public WritableMap toMap(QueryParams params) {
         WritableMap map = createMap();
         map.putString("identifier", contactId);
-        displayName.fillMap(map, params);
-        // TODO: Don't add identifier to map
         identity.fillMap(map, params);
+        displayName.fillMap(map, params);
         nickname.fillMap(map, params);
         name.fillMap(map, params);
         organization.fillMap(map, params);

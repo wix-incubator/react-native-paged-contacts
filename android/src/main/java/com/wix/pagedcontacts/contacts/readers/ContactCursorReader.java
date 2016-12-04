@@ -43,7 +43,10 @@ public class ContactCursorReader {
     }
 
     public Contact read(Cursor cursor) {
-        return new Contact(getId(cursor));
+        Contact contact = new Contact(getId(cursor));
+        contact.identity = new Identity(cursor);
+        contact.displayName = new DisplayName(cursor);
+        return contact;
     }
 
     public WritableArray readWithIds(Cursor cursor, List<String> contactsToFetch, QueryParams params) {
@@ -53,8 +56,8 @@ public class ContactCursorReader {
             final String id = getId(cursor);
             if (contactsToFetch.contains(id)) {
                 Contact contact = read(cursor, id);
-                if (!fetchedContacts.contains(contact.contactId)) {
-                    fetchedContacts.add(contact.contactId);
+                if (!fetchedContacts.contains(contact.getId())) {
+                    fetchedContacts.add(contact.getId());
                     contacts.add(contact);
                 }
             }
@@ -155,13 +158,17 @@ public class ContactCursorReader {
         if (contactIdColumnIdx != -1) {
             contactId = String.valueOf(cursor.getInt(contactIdColumnIdx));
         }
-        final int contactSourceIdColumnIdx = cursor.getColumnIndex(ContactsContract.RawContacts.SOURCE_ID);
-        if (contactSourceIdColumnIdx != -1) {
-            String uid = cursor.getString(contactSourceIdColumnIdx);
-            if (uid != null) {
-                contactId = uid;
-            }
-        }
+//        final int contactSourceIdColumnIdx = cursor.getColumnIndex(ContactsContract.RawContacts.SOURCE_ID);
+//        if (contactSourceIdColumnIdx != -1) {
+//            String uid = cursor.getString(contactSourceIdColumnIdx);
+//            if (uid != null) {
+//                contactId = uid;
+//            }
+//        }
+//        final int identityColumnIds = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Identity.IDENTITY);
+//        if (identityColumnIds != -1) {
+//            contactId = cursor.getString(identityColumnIds);
+//        }
         return contactId;
     }
 }

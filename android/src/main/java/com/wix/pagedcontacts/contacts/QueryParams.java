@@ -24,6 +24,7 @@ public class QueryParams {
     public QueryParams(String matchName) {
         List<String> keysToFetch = new ArrayList<>();
         keysToFetch.add("displayName");
+        keysToFetch.add("identity");
         this.keysToFetch = keysToFetch;
         this.matchName = matchName;
         init();
@@ -37,7 +38,7 @@ public class QueryParams {
 
     public QueryParams(List<String> keysToFetch, int offset, int size) {
         this.keysToFetch = keysToFetch;
-        keysToFetch.add("identity");
+        this.keysToFetch.add("identity");
         this.offset = offset;
         this.size = size;
         init();

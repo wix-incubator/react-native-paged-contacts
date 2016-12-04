@@ -30,7 +30,7 @@ public class ContactsProvider {
         contactIds = new ArrayList<>();
     }
 
-    public void sync() {
+    private void sync() {
         contactIds = getAllContacts();
         Log.d(TAG, "sync: " + contactIds.size());
     }
@@ -48,8 +48,8 @@ public class ContactsProvider {
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Contact contact = reader.read(cursor);
-                if (dedupSet.add(contact.contactId)) {
-                    contactIds.add(contact.contactId);
+                if (dedupSet.add(contact.getId())) {
+                    contactIds.add(contact.getId());
                 }
             }
             cursor.close();
@@ -80,7 +80,7 @@ public class ContactsProvider {
                 params.getProjection(),
                 params.getSelection(),
                 params.getSelectionArgs(),
-                ContactsContract.Contacts.DISPLAY_NAME + " ASC"
+                ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC"
         );
     }
 

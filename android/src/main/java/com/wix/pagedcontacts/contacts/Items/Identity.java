@@ -10,6 +10,10 @@ public class Identity extends ContactItem {
     String namespace;
     String identity;
 
+    public Identity() {
+
+    }
+
     public Identity(Cursor cursor) {
         super(cursor);
         fillFromCursor();
