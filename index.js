@@ -10,7 +10,7 @@ function guid() {
 export class PagedContacts {
     constructor(nameMatch) {
         this._uuid = guid();
-        this._nameMatch = nameMatch;
+        this.setNameMatch(nameMatch);
     }
     
     async requestAccess() {

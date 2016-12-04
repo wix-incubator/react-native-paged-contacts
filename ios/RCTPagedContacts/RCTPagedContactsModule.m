@@ -37,7 +37,7 @@ RCT_EXPORT_MODULE();
 	return @{
 			 @"identifier": CNContactIdentifierKey,
 			 @"displayName": @"displayName",
-			
+			 
 			 @"namePrefix": CNContactNamePrefixKey,
 			 @"givenName": CNContactGivenNameKey,
 			 @"middleName": CNContactMiddleNameKey,
@@ -229,7 +229,7 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 		
 		[rv addObject:rvC];
 	}];
-
+	
 	return rv;
 }
 
@@ -248,6 +248,11 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 
 RCT_EXPORT_METHOD(getContactsWithRange:(NSString*)identifier offset:(NSUInteger)offset batchSize:(NSUInteger)batchSize keysToFetch:(NSArray<NSString*>*)keysToFetch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
+	if(batchSize == 0)
+	{
+		return resolve(@[]);
+	}
+	
 	NSArray* realKeysToFetch = [self _keysToFetchIncludingManadatoryKeys:keysToFetch];
 	
 	WXContactsManager* manager = [self _managerForIdentifier:identifier];
@@ -258,12 +263,17 @@ RCT_EXPORT_METHOD(getContactsWithRange:(NSString*)identifier offset:(NSUInteger)
 
 RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(NSArray<NSString*>*)identifiers keysToFetch:(NSArray<NSString*>*)keysToFetch resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
+	if(identifiers.count == 0)
+	{
+		return resolve(@[]);
+	}
+	
 	NSArray* realKeysToFetch = [self _keysToFetchIncludingManadatoryKeys:keysToFetch];
 	
 	WXContactsManager* manager = [self _managerForIdentifier:identifier];
 	NSArray* contacts = [manager contactsWithIdentifiers:identifiers keysToFetch:realKeysToFetch];
 	
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch managerForObscureContacts:manager]);
-}    
+}
 
 @end
