@@ -18,6 +18,12 @@ public class ContactsProvider {
     private static final String TAG = "ContactsProvider";
     private Context context;
     private List<String> contactIds;
+    private String matchName;
+
+    public void setMatchName(String matchName) {
+        this.matchName = matchName;
+        contactIds.clear();
+    }
 
     public ContactsProvider(Context context) {
         this.context = context;
@@ -25,18 +31,19 @@ public class ContactsProvider {
     }
 
     public void sync() {
-        contactIds = getContacts();
+        contactIds = getAllContacts();
         Log.d(TAG, "sync: " + contactIds.size());
     }
 
     public int getContactsCount() {
+        ensureContactIds();
         return contactIds.size();
     }
 
-    private List<String> getContacts() {
+    private List<String> getAllContacts() {
         List<String> contacts = new ArrayList<>();
         Set<String> dedupSet = new HashSet<>();
-        Cursor cursor = queryContacts();
+        Cursor cursor = queryAllContacts(new QueryParams(matchName));
         ContactCursorReader reader = new ContactCursorReader(context);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -50,31 +57,30 @@ public class ContactsProvider {
         return contacts;
     }
 
-    private Cursor queryContacts() {
-        return context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
-                new String[]{ContactsContract.Data.CONTACT_ID, ContactsContract.RawContacts.SOURCE_ID},
-                null,
-                null,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
-        );
-    }
-
     public WritableArray getContactsWithRange(QueryParams params) {
-        Cursor cursor = queryContacts(params);
+        ensureContactIds();
+        Cursor cursor = queryAllContacts(params);
         return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params), params);
     }
 
     public WritableArray getContactsWithIdentifiers(QueryParams params) {
-        Cursor cursor = queryContacts(params);
+        ensureContactIds();
+        Cursor cursor = queryAllContacts(params);
         return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params), params);
     }
 
-    private Cursor queryContacts(QueryParams params) {
+    private void ensureContactIds() {
+        if (contactIds.isEmpty()) {
+            sync();
+        }
+    }
+
+    private Cursor queryAllContacts(QueryParams params) {
         return context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
                 params.getProjection(),
                 params.getSelection(),
                 params.getSelectionArgs(),
-                null
+                ContactsContract.Contacts.DISPLAY_NAME + " ASC"
         );
     }
 
@@ -83,7 +89,9 @@ public class ContactsProvider {
             return params.getIdentifiers();
         }
         List<String> ids = new ArrayList<>();
-        for (String contactId : contactIds.subList(params.offset, params.size)) {
+        int offset = params.offset < getContactsCount() - 1 ? params.offset : getContactsCount() - 1;
+        int size = offset + params.size < getContactsCount() ? params.size : getContactsCount() - offset;
+        for (String contactId : contactIds.subList(offset, size)) {
             ids.add(contactId);
         }
         return ids;

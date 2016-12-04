@@ -2,9 +2,6 @@ package com.wix.pagedcontacts.contacts;
 
 import android.provider.ContactsContract;
 
-import com.facebook.react.bridge.ReadableArray;
-import com.wix.pagedcontacts.utils.RnCollections;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,26 +12,33 @@ public class QueryParams {
     int offset;
     int size;
     private Set<String> selectionArgs;
-    private ReadableArray keysToFetch;
+    private List<String> keysToFetch;
     private List<String> identifiers = new ArrayList<>();
     private Set<Field> fields;
+    private String matchName;
 
     List<String> getIdentifiers() {
         return identifiers;
     }
 
-    public QueryParams(ReadableArray keysToFetch, ReadableArray identifiers) {
+    public QueryParams(String matchName) {
+        List<String> keysToFetch = new ArrayList<>();
+        keysToFetch.add("displayName");
         this.keysToFetch = keysToFetch;
-        if (!RnCollections.isEmpty(identifiers)) {
-            this.identifiers = RnCollections.toStringList(identifiers);
-        }
+        this.matchName = matchName;
         init();
     }
 
-    public QueryParams(ReadableArray keysToFetch, int contactCount, int offset, int size) {
+    public QueryParams(List<String> keysToFetch, List<String> identifiers) {
         this.keysToFetch = keysToFetch;
-        this.offset = offset < contactCount - 1 ? offset : contactCount - 1;
-        this.size = this.offset + size < contactCount ? size : contactCount - this.offset;
+        this.identifiers = identifiers;
+        init();
+    }
+
+    public QueryParams(List<String> keysToFetch, int offset, int size) {
+        this.keysToFetch = keysToFetch;
+        this.offset = offset;
+        this.size = size;
         init();
     }
 
@@ -46,18 +50,23 @@ public class QueryParams {
     String[] getProjection() {
         Set<String> projection = new HashSet<>();
         for (int i = 0; i < keysToFetch.size(); i++) {
-            Field field = Field.fromKey(keysToFetch.getString(i));
+            Field field = Field.fromKey(keysToFetch.get(i));
             Collections.addAll(projection, field.getProjection());
             field.addContentItemType(selectionArgs);
             fields.add(field);
+            if (field != Field.displayName) {
+                projection.add(ContactsContract.Contacts.Data.MIMETYPE);
+            }
         }
-        projection.add(ContactsContract.Contacts.Data.MIMETYPE);
         projection.add(ContactsContract.Data.CONTACT_ID);
         projection.add(ContactsContract.RawContacts.SOURCE_ID);
         return projection.toArray(new String[projection.size()]);
     }
 
     String getSelection() {
+        if (matchName != null) {
+            return getMatchNameSelection();
+        }
         return getMimeTypeSelection();
     }
 
@@ -71,7 +80,11 @@ public class QueryParams {
                 sb.append("=? OR ");
             }
         }
-        return sb.toString();
+        return selectionArgs.size() > 0 ? sb.toString() : null;
+    }
+
+    private String getMatchNameSelection() {
+        return ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?";
     }
 
     public boolean fetchField(Field field) {
@@ -79,10 +92,17 @@ public class QueryParams {
     }
 
     String[] getSelectionArgs() {
+        if (matchName != null) {
+            return getMatchNameSelectionArgs();
+        }
         return getMimeTypeSelectionArgs();
     }
 
+    private String[] getMatchNameSelectionArgs() {
+        return new String[]{"%" + matchName + "%"};
+    }
+
     private String[] getMimeTypeSelectionArgs() {
-        return selectionArgs.toArray(new String[selectionArgs.size()]);
+        return selectionArgs.isEmpty() ? null : selectionArgs.toArray(new String[selectionArgs.size()]);
     }
 }

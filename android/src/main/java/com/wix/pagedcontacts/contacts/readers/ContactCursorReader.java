@@ -7,6 +7,7 @@ import android.provider.ContactsContract.CommonDataKinds.Nickname;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
+import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
@@ -25,9 +26,12 @@ import com.wix.pagedcontacts.contacts.Items.Relation;
 import com.wix.pagedcontacts.contacts.Items.UrlAddress;
 import com.wix.pagedcontacts.contacts.QueryParams;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ContactCursorReader {
     private Map<String, Contact> contacts;
@@ -43,18 +47,20 @@ public class ContactCursorReader {
     }
 
     public WritableArray readWithIds(Cursor cursor, List<String> contactsToFetch, QueryParams params) {
-        Map<String, Contact> fetchedContacts = new HashMap<>();
+        Set<String> fetchedContacts = new HashSet<>();
+        List<Contact> contacts = new ArrayList<>();
         while (cursor.moveToNext()) {
             final String id = getId(cursor);
             if (contactsToFetch.contains(id)) {
                 Contact contact = read(cursor, id);
-                if (!fetchedContacts.containsKey(contact.contactId)) {
-                    fetchedContacts.put(contact.contactId, contact);
+                if (!fetchedContacts.contains(contact.contactId)) {
+                    fetchedContacts.add(contact.contactId);
+                    contacts.add(contact);
                 }
             }
         }
         WritableArray result = Arguments.createArray();
-        for (Contact contact : fetchedContacts.values()) {
+        for (Contact contact : contacts) {
             result.pushMap(contact.toMap(params));
         }
         return result;
@@ -63,7 +69,14 @@ public class ContactCursorReader {
     private Contact read(Cursor cursor, String contactId) {
         Contact contact = getContact(contactId);
         contact.displayName = new DisplayName(cursor);
+        readField(cursor, contact);
+        return contact;
+    }
 
+    private void readField(Cursor cursor, Contact contact) {
+        if (!hasMimeType(cursor)) {
+            return;
+        }
         switch (getMimeType(cursor)) {
             case StructuredName.CONTENT_ITEM_TYPE:
                 contact.name = new Name(cursor);
@@ -107,13 +120,17 @@ public class ContactCursorReader {
             case ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE:
                 contact.photo = new Photo(context, cursor);
                 break;
+            default:
+                break;
         }
-
-        return contact;
     }
 
     private String getMimeType(Cursor cursor) {
         return getString(cursor, cursor.getColumnIndex(ContactsContract.Data.MIMETYPE));
+    }
+
+    private boolean hasMimeType(Cursor cursor) {
+        return cursor.getColumnIndex(ContactsContract.Data.MIMETYPE) != -1;
     }
 
     private Contact getContact(String contactId) {
