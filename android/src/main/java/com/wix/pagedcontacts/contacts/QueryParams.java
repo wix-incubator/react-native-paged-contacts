@@ -37,6 +37,7 @@ public class QueryParams {
 
     public QueryParams(List<String> keysToFetch, int offset, int size) {
         this.keysToFetch = keysToFetch;
+        keysToFetch.add("identity");
         this.offset = offset;
         this.size = size;
         init();
@@ -52,7 +53,10 @@ public class QueryParams {
         for (int i = 0; i < keysToFetch.size(); i++) {
             Field field = Field.fromKey(keysToFetch.get(i));
             Collections.addAll(projection, field.getProjection());
-            field.addContentItemType(selectionArgs);
+            String contentItemType = field.getContentItemType();
+            if (contentItemType != null) {
+                selectionArgs.add(contentItemType);
+            }
             fields.add(field);
             if (field != Field.displayName) {
                 projection.add(ContactsContract.Contacts.Data.MIMETYPE);

@@ -4,6 +4,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Contactables;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Event;
+import android.provider.ContactsContract.CommonDataKinds.Identity;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 import android.provider.ContactsContract.CommonDataKinds.Nickname;
 import android.provider.ContactsContract.CommonDataKinds.Note;
@@ -14,12 +15,13 @@ import android.provider.ContactsContract.CommonDataKinds.Relation;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
+import android.support.annotation.Nullable;
 
 import java.util.Map;
-import java.util.Set;
 
 public enum Field {
     displayName("displayName", new String[]{ContactsContract.Contacts.DISPLAY_NAME}),
+    identity("identity", Identity.CONTENT_ITEM_TYPE, new String[]{Identity.IDENTITY, Identity.NAMESPACE}),
     namePrefix("namePrefix", StructuredName.CONTENT_ITEM_TYPE, new String[]{StructuredName.PREFIX}),
     givenName("givenName", StructuredName.CONTENT_ITEM_TYPE, new String[]{StructuredName.GIVEN_NAME}),
     middleName("middleName", StructuredName.CONTENT_ITEM_TYPE, new String[]{StructuredName.MIDDLE_NAME}),
@@ -82,9 +84,7 @@ public enum Field {
         throw new RuntimeException("Unsupported contact key: " + key);
     }
 
-    public void addContentItemType(Set<String> selectionArgs) {
-        if (contentItemType != null) {
-            selectionArgs.add(contentItemType);
-        }
+    public @Nullable String getContentItemType() {
+        return contentItemType;
     }
 }

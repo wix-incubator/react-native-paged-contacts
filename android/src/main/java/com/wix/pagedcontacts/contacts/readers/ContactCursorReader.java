@@ -7,7 +7,6 @@ import android.provider.ContactsContract.CommonDataKinds.Nickname;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
-import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
@@ -15,6 +14,7 @@ import com.wix.pagedcontacts.contacts.Items.Contact;
 import com.wix.pagedcontacts.contacts.Items.Date;
 import com.wix.pagedcontacts.contacts.Items.DisplayName;
 import com.wix.pagedcontacts.contacts.Items.Email;
+import com.wix.pagedcontacts.contacts.Items.Identity;
 import com.wix.pagedcontacts.contacts.Items.InstantMessagingAddress;
 import com.wix.pagedcontacts.contacts.Items.Name;
 import com.wix.pagedcontacts.contacts.Items.Note;
@@ -119,6 +119,9 @@ public class ContactCursorReader {
                 break;
             case ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE:
                 contact.photo = new Photo(context, cursor);
+                break;
+            case ContactsContract.CommonDataKinds.Identity.CONTENT_ITEM_TYPE:
+                contact.identity = new Identity(cursor);
                 break;
             default:
                 break;

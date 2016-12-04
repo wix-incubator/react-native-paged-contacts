@@ -18,6 +18,7 @@ import static com.facebook.react.bridge.Arguments.createMap;
 public class Contact {
     public String contactId;
     public DisplayName displayName;
+    public Identity identity;
     public Name name = new Name();
     public Nickname nickname = new Nickname();
     public List<PhoneNumber> phoneNumbers = new ArrayList<>();
@@ -40,6 +41,8 @@ public class Contact {
         WritableMap map = createMap();
         map.putString("identifier", contactId);
         displayName.fillMap(map, params);
+        // TODO: Don't add identifier to map
+        identity.fillMap(map, params);
         nickname.fillMap(map, params);
         name.fillMap(map, params);
         organization.fillMap(map, params);

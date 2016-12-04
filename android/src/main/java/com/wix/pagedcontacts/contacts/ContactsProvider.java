@@ -41,7 +41,7 @@ public class ContactsProvider {
     }
 
     private List<String> getAllContacts() {
-        List<String> contacts = new ArrayList<>();
+        List<String> contactIds = new ArrayList<>();
         Set<String> dedupSet = new HashSet<>();
         Cursor cursor = queryAllContacts(new QueryParams(matchName));
         ContactCursorReader reader = new ContactCursorReader(context);
@@ -49,12 +49,12 @@ public class ContactsProvider {
             while (cursor.moveToNext()) {
                 Contact contact = reader.read(cursor);
                 if (dedupSet.add(contact.contactId)) {
-                    contacts.add(contact.contactId);
+                    contactIds.add(contact.contactId);
                 }
             }
             cursor.close();
         }
-        return contacts;
+        return contactIds;
     }
 
     public WritableArray getContactsWithRange(QueryParams params) {
