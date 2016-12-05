@@ -47,7 +47,10 @@ public class Contact {
         addStringField(params, map, Field.birthday, birthday);
         addItemsArray(map, phoneNumbers, Field.phoneNumbers, params);
         addItemsArray(map, dates, Field.dates, params);
-        addItemsArray(map, relations, Field.relations, params);
+        if (relations.size() > 0) {
+            addItemsArray(map, relations, Field.relations, params);
+            map.putArray("contactRelations", getWritableArray(relations, params));
+        }
         addItemsArray(map, emails, Field.emailAddresses, params);
         if (postalAddresses.size() > 0) {
             map.putArray(Field.postalAddresses.getKey(), getPostalAddresses(params));

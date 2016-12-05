@@ -20,12 +20,12 @@ public class Relation extends ContactItem {
         final String label = getString(CommonDataKinds.Relation.LABEL);
         final Integer type = getInt(CommonDataKinds.Relation.TYPE);
         this.label = getLabelFromType(type, label);
-        this.name = name == null ? label : name;
     }
 
     @Override
     protected void fillMap(WritableMap map, QueryParams params) {
-        map.putString(label, name);
+        addToMap(map, "label", label);
+        addToMap(map, "value", name);
     }
 
 
