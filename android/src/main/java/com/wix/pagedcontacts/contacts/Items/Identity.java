@@ -4,11 +4,12 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 
 import com.facebook.react.bridge.WritableMap;
+import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class Identity extends ContactItem {
-    String namespace;
-    String identity;
+    private String namespace;
+    private String identity;
 
     public Identity() {
 
@@ -26,7 +27,7 @@ public class Identity extends ContactItem {
 
     @Override
     protected void fillMap(WritableMap map, QueryParams params) {
-        addToMap(map, "nameSpace", namespace);
-        addToMap(map, "identity", identity);
+        addField(map, params, Field.identity, namespace);
+        addField(map, params, Field.identity, identity);
     }
 }

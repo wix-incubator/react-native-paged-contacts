@@ -25,7 +25,7 @@ public class ContactsProvider {
         contactIds.clear();
     }
 
-    public ContactsProvider(Context context) {
+    ContactsProvider(Context context) {
         this.context = context;
         contactIds = new ArrayList<>();
     }
