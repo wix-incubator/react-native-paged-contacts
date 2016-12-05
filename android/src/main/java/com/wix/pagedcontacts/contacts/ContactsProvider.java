@@ -3,7 +3,6 @@ package com.wix.pagedcontacts.contacts;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.util.Log;
 
 import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.Items.Contact;
@@ -32,7 +31,6 @@ public class ContactsProvider {
 
     private void sync() {
         contactIds = getAllContacts();
-        Log.d(TAG, "sync: " + contactIds.size());
     }
 
     public int getContactsCount() {
@@ -48,9 +46,8 @@ public class ContactsProvider {
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Contact contact = reader.read(cursor);
-                Log.i("getAllContacts", "getAllContacts: " + contact.displayName.name);
-                if (dedupSet.add(contact.contactId)) {
-                    contactIds.add(contact.contactId);
+                if (dedupSet.add(contact.getContactId())) {
+                    contactIds.add(contact.getContactId());
                 }
             }
             cursor.close();

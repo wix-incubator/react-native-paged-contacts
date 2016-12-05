@@ -14,7 +14,7 @@ import java.util.List;
 import static com.facebook.react.bridge.Arguments.createMap;
 
 public class Contact {
-    public String contactId;
+    public Identifier identifier;
     public DisplayName displayName;
     public Identity identity = new Identity();
     public Name name = new Name();
@@ -32,12 +32,12 @@ public class Contact {
     public Photo photo = new Photo();
 
     public Contact(String contactId) {
-        this.contactId = contactId;
+        this.identifier = new Identifier(contactId);
     }
 
     public WritableMap toMap(QueryParams params) {
         WritableMap map = createMap();
-        map.putString("identifier", contactId);
+        identifier.fillMap(map, params);
         identity.fillMap(map, params);
         displayName.fillMap(map, params);
         nickname.fillMap(map, params);
@@ -88,5 +88,9 @@ public class Contact {
         if (params.fetchField(field) && !TextUtils.isEmpty(value)) {
             map.putString(field.getKey(), value);
         }
+    }
+
+    public String getContactId() {
+        return identifier.contactId;
     }
 }

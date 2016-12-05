@@ -56,8 +56,8 @@ public class ContactCursorReader {
             final String id = getId(cursor);
             if (contactsToFetch.contains(id)) {
                 Contact contact = read(cursor, id);
-                if (!fetchedContacts.contains(contact.contactId)) {
-                    fetchedContacts.add(contact.contactId);
+                if (!fetchedContacts.contains(contact.getContactId())) {
+                    fetchedContacts.add(contact.getContactId());
                     contacts.add(contact);
                 }
             }

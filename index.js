@@ -56,11 +56,11 @@ export class PagedContacts {
 }
 
 if (Platform.OS === 'ios') {
-  PagedContacts.identifier = PagedContactsModule.identifier;
   PagedContacts.previousFamilyName = PagedContactsModule.previousFamilyName;
   PagedContacts.nonGregorianBirthday = PagedContactsModule.nonGregorianBirthday;
   PagedContacts.socialProfiles = PagedContactsModule.socialProfiles;
 }
+PagedContacts.identifier = PagedContactsModule.identifier;
 PagedContacts.displayName = PagedContactsModule.displayName;
 PagedContacts.namePrefix = PagedContactsModule.namePrefix;
 PagedContacts.givenName = PagedContactsModule.givenName;
