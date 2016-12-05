@@ -90,10 +90,10 @@ public class ContactsProvider {
             return params.getIdentifiers();
         }
         List<String> ids = new ArrayList<>();
-        int offset = params.offset < getContactsCount() - 1 ? params.offset : getContactsCount() - 1;
+        int offset = params.offset <= getContactsCount() ? params.offset : getContactsCount() - 1;
         int size = offset + params.size < getContactsCount() ? params.size : getContactsCount() - offset;
-        for (String contactId : contactIds.subList(offset, size)) {
-            ids.add(contactId);
+        for (int i = offset; i < offset + size; i++) {
+            ids.add(contactIds.get(i));
         }
         return ids;
     }
