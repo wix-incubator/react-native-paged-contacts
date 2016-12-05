@@ -9,9 +9,7 @@ import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.QueryParams;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.facebook.react.bridge.Arguments.createMap;
 
@@ -28,7 +26,7 @@ public class Contact {
     public List<Date> dates = new ArrayList<>();
     public List<Relation> relations = new ArrayList<>();
     public List<Email> emails = new ArrayList<>();
-    public Map<String, PostalAddress> postalAddresses = new HashMap<>();
+    public List<PostalAddress> postalAddresses = new ArrayList<>();
     public List<InstantMessagingAddress> instantMessagingAddresses = new ArrayList<>();
     public List<UrlAddress> urlAddresses = new ArrayList<>();
     public Photo photo = new Photo();
@@ -69,10 +67,8 @@ public class Contact {
 
     private WritableArray getPostalAddresses(QueryParams params) {
         WritableArray result = Arguments.createArray();
-        for (String addressType : postalAddresses.keySet()) {
-            WritableMap address = Arguments.createMap();
-            address.putMap(addressType, postalAddresses.get(addressType).toMap(params));
-            result.pushMap(address);
+        for (PostalAddress postalAddress : postalAddresses) {
+            result.pushMap(postalAddress.toMap(params));
         }
         return result;
     }

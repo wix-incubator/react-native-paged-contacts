@@ -3,11 +3,12 @@ package com.wix.pagedcontacts.contacts.Items;
 import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class PostalAddress extends ContactItem {
-    public String type;
+    public String label;
     private String formattedAddress;
     private String poBox;
     private String street;
@@ -23,7 +24,7 @@ public class PostalAddress extends ContactItem {
     }
 
     private void fillFromCursor() {
-        type = getType(getString(StructuredPostal.LABEL));
+        label = getType(getString(StructuredPostal.LABEL));
         formattedAddress = getString(StructuredPostal.FORMATTED_ADDRESS);
         poBox = getString(StructuredPostal.POBOX);
         street = getString(StructuredPostal.STREET);
@@ -53,14 +54,17 @@ public class PostalAddress extends ContactItem {
 
     @Override
     protected void fillMap(WritableMap map, QueryParams params) {
-        addToMap(map, "country", country);
-        addToMap(map, "formattedAddress", formattedAddress);
-        addToMap(map, "postalCode", postcode);
-        addToMap(map, "poBox", poBox);
-        addToMap(map, "street", street);
-        addToMap(map, "neighborhood", neighborhood);
-        addToMap(map, "city", city);
-        addToMap(map, "region", region);
-        addToMap(map, "country", country);
+        addToMap(map, "label", label);
+        WritableMap address = Arguments.createMap();
+        addToMap(address, "country", country);
+        addToMap(address, "formattedAddress", formattedAddress);
+        addToMap(address, "postalCode", postcode);
+        addToMap(address, "poBox", poBox);
+        addToMap(address, "street", street);
+        addToMap(address, "neighborhood", neighborhood);
+        addToMap(address, "city", city);
+        addToMap(address, "region", region);
+        addToMap(address, "country", country);
+        map.putMap("value", address);
     }
 }

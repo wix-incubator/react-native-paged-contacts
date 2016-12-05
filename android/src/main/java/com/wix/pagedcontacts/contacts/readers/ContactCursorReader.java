@@ -111,8 +111,7 @@ public class ContactCursorReader {
                 contact.emails.add(new Email(cursor));
                 break;
             case StructuredPostal.CONTENT_ITEM_TYPE:
-                PostalAddress postalAddress = new PostalAddress(cursor);
-                contact.postalAddresses.put(postalAddress.type, postalAddress);
+                contact.postalAddresses.add(new PostalAddress(cursor));
                 break;
             case ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE:
                 contact.instantMessagingAddresses.add(new InstantMessagingAddress(cursor));

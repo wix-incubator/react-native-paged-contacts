@@ -8,7 +8,7 @@ import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.QueryParams;
 
 public class Email extends ContactItem {
-    private String type;
+    private String label;
     private String address;
 
     public Email(Cursor cursor) {
@@ -20,7 +20,7 @@ public class Email extends ContactItem {
         address = getString(ContactsContract.CommonDataKinds.Email.ADDRESS);
         final String label = getString(ContactsContract.CommonDataKinds.Email.LABEL);
         final Integer typeId = getInt(ContactsContract.CommonDataKinds.Email.TYPE);
-        type = getEmailType(typeId, label);
+        this.label = getEmailType(typeId, label);
     }
 
     private String getEmailType(Integer type, String label) {
@@ -42,7 +42,8 @@ public class Email extends ContactItem {
     @Override
     protected void fillMap(WritableMap map, QueryParams params) {
         if (params.fetchField(Field.emailAddresses)) {
-            addToMap(map, type, address);
+            addToMap(map, "label", label);
+            addToMap(map, "value", address);
         }
     }
 }
