@@ -48,8 +48,9 @@ public class ContactsProvider {
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
                 Contact contact = reader.read(cursor);
-                if (dedupSet.add(contact.getId())) {
-                    contactIds.add(contact.getId());
+                Log.i("getAllContacts", "getAllContacts: " + contact.displayName.name);
+                if (dedupSet.add(contact.contactId)) {
+                    contactIds.add(contact.contactId);
                 }
             }
             cursor.close();

@@ -16,7 +16,7 @@ import java.util.Map;
 import static com.facebook.react.bridge.Arguments.createMap;
 
 public class Contact {
-    private String contactId;
+    public String contactId;
     public DisplayName displayName;
     public Identity identity = new Identity();
     public Name name = new Name();
@@ -32,10 +32,6 @@ public class Contact {
     public List<InstantMessagingAddress> instantMessagingAddresses = new ArrayList<>();
     public List<UrlAddress> urlAddresses = new ArrayList<>();
     public Photo photo = new Photo();
-
-    public String getId() {
-        return contactId;
-    }
 
     public Contact(String contactId) {
         this.contactId = contactId;

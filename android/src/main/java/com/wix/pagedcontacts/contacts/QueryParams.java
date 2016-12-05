@@ -22,10 +22,8 @@ public class QueryParams {
     }
 
     public QueryParams(String matchName) {
-        List<String> keysToFetch = new ArrayList<>();
-        keysToFetch.add("displayName");
-        keysToFetch.add("identity");
-        this.keysToFetch = keysToFetch;
+        this.keysToFetch = new ArrayList<>();
+        this.keysToFetch.add("displayName");
         this.matchName = matchName;
         init();
     }
