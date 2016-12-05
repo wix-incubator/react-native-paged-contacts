@@ -35,13 +35,11 @@ export class PagedContacts {
   }
 
   async getContactsCount() {
-    const result = await PagedContactsModule.contactsCount(this._uuid);
-    return result.count;
+    return PagedContactsModule.contactsCount(this._uuid);
   }
 
   async getContactsWithRange(offset, batchSize, keysToFetch) {
-    const result = await PagedContactsModule.getContactsWithRange(this._uuid, offset, batchSize, keysToFetch);
-    return result.contacts;
+    return PagedContactsModule.getContactsWithRange(this._uuid, offset, batchSize, keysToFetch);
   }
 
   async getContactsWithIdentifiers(identifiers, keysToFetch) {
@@ -55,11 +53,6 @@ export class PagedContacts {
   }
 }
 
-if (Platform.OS === 'ios') {
-  PagedContacts.previousFamilyName = PagedContactsModule.previousFamilyName;
-  PagedContacts.nonGregorianBirthday = PagedContactsModule.nonGregorianBirthday;
-  PagedContacts.socialProfiles = PagedContactsModule.socialProfiles;
-}
 PagedContacts.identifier = PagedContactsModule.identifier;
 PagedContacts.displayName = PagedContactsModule.displayName;
 PagedContacts.namePrefix = PagedContactsModule.namePrefix;
@@ -86,3 +79,9 @@ PagedContacts.dates = PagedContactsModule.dates;
 PagedContacts.urlAddresses = PagedContactsModule.urlAddresses;
 PagedContacts.relations = PagedContactsModule.relations;
 PagedContacts.instantMessageAddresses = PagedContactsModule.instantMessageAddresses;
+
+if (Platform.OS === 'ios') {
+  PagedContacts.previousFamilyName = PagedContactsModule.previousFamilyName;
+  PagedContacts.nonGregorianBirthday = PagedContactsModule.nonGregorianBirthday;
+  PagedContacts.socialProfiles = PagedContactsModule.socialProfiles;
+}
