@@ -25,6 +25,16 @@ Paged contacts manager for React Native.
 
 * Add `react-native-paged-contacts` package, `new PagedContactsPackage()`, to `MainApplication.java`
 
+```java
+    @Override
+    protected List<ReactPackage> getPackages() {
+        return Arrays.<ReactPackage>asList(
+            new MainReactPackage(),
+            new ReactNativeYouTube()
+        );
+    }
+```
+
 ##API
 
 - `new PagedContacts()` — Create a paged contacts manager for all device contacts.
