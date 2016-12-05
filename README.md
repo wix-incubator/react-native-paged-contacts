@@ -4,6 +4,27 @@ Paged contacts manager for React Native.
 
 **Currently, only fetching contacts is supported.**
 
+### Installation
+## Android
+* Add the following to `settings.gradle`:
+
+	```groovy
+	include ':react-native-paged-contacts'
+	project(':react-native-paged-contacts').projectDir = new File(
+	        rootProject.projectDir, '../node_modules/react-native-paged-contacts/android/')
+	```
+* Update dependencies in `build.gradle`. 
+
+	```groovy
+	dependencies {
+	    compile fileTree(dir: 'libs', include: ['*.jar'])
+	    compile project(':react-native-paged-contacts')  // <- Add this
+	    ...
+	}
+	```
+
+* Add `react-native-paged-contacts` package, `new PagedContactsPackage()`, to `MainApplication.java`
+
 ##API
 
 - `new PagedContacts()` — Create a paged contacts manager for all device contacts.
@@ -23,7 +44,7 @@ Paged contacts manager for React Native.
 - `PagedContacts.givenName`
 - `PagedContacts.middleName`
 - `PagedContacts.familyName`
-- `PagedContacts.previousFamilyName`
+- `PagedContacts.previousFamilyName` // iOS only
 - `PagedContacts.nameSuffix`
 - `PagedContacts.nickname`
 - `PagedContacts.organizationName`
@@ -34,7 +55,7 @@ Paged contacts manager for React Native.
 - `PagedContacts.phoneticFamilyName`
 - `PagedContacts.phoneticOrganizationName`
 - `PagedContacts.birthday`
-- `PagedContacts.nonGregorianBirthday`
+- `PagedContacts.nonGregorianBirthday` // iOS only
 - `PagedContacts.note`
 - `PagedContacts.imageData`
 - `PagedContacts.thumbnailImageData`
@@ -44,7 +65,7 @@ Paged contacts manager for React Native.
 - `PagedContacts.dates`
 - `PagedContacts.urlAddresses`
 - `PagedContacts.relations`
-- `PagedContacts.socialProfiles`
+- `PagedContacts.socialProfiles` // iOS only
 - `PagedContacts.instantMessageAddresses`
 
 ##Usage
