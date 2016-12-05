@@ -2,7 +2,6 @@ import {
   NativeModules,
   Platform
 } from 'react-native';
-import * as keys from './src/keys';
 
 const PagedContactsModule = NativeModules.ReactNativePagedContacts;
 
@@ -12,8 +11,6 @@ function guid() {
     return v.toString(16);
   });
 }
-
-export const KeysToFetch = keys;
 
 export class PagedContacts {
     constructor(nameMatch) {
