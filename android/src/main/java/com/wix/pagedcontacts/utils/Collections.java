@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Collections {
-    public static boolean isEmpty(ReadableArray array) {
-        return array == null || array.size() == 0;
-    }
-
     public static List<String> toStringList(@Nullable ReadableArray array) {
         if (array == null) {
             return null;
@@ -19,6 +15,22 @@ public class Collections {
         List<String> result = new ArrayList<>();
         for (int i = 0; i < array.size(); i++) {
             result.add(array.getString(i));
+        }
+        return result;
+    }
+
+    public static String[] concat(String[]... arrays) {
+        int length = 0;
+        for (String[] array : arrays) {
+            length += array.length;
+        }
+        String[] result = new String[length];
+        int pos = 0;
+        for (String[] array : arrays) {
+            for (String element : array) {
+                result[pos] = element;
+                pos++;
+            }
         }
         return result;
     }

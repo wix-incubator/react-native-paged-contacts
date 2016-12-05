@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 abstract class ContactItem {
     Cursor cursor;

@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.facebook.react.bridge.WritableMap;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.utils.ImageUtils;
 
 import static android.provider.ContactsContract.CommonDataKinds.Photo.PHOTO;

@@ -6,7 +6,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 import java.util.ArrayList;
 import java.util.List;

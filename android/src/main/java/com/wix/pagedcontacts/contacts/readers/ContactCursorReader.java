@@ -24,7 +24,7 @@ import com.wix.pagedcontacts.contacts.Items.Photo;
 import com.wix.pagedcontacts.contacts.Items.PostalAddress;
 import com.wix.pagedcontacts.contacts.Items.Relation;
 import com.wix.pagedcontacts.contacts.Items.UrlAddress;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -6,6 +6,7 @@ import android.provider.ContactsContract;
 
 import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.Items.Contact;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.contacts.readers.ContactCursorReader;
 
 import java.util.ArrayList;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ContactsProvider {
-    private static final String TAG = "ContactsProvider";
     private Context context;
     private List<String> contactIds;
     private String matchName;
@@ -29,10 +29,6 @@ public class ContactsProvider {
         contactIds = new ArrayList<>();
     }
 
-    private void sync() {
-        contactIds = getAllContacts();
-    }
-
     public int getContactsCount() {
         ensureContactIds();
         return contactIds.size();
@@ -41,7 +37,7 @@ public class ContactsProvider {
     private List<String> getAllContacts() {
         List<String> contactIds = new ArrayList<>();
         Set<String> dedupSet = new HashSet<>();
-        Cursor cursor = queryAllContacts(new QueryParams(matchName));
+        Cursor cursor = queryContacts(new QueryParams(matchName));
         ContactCursorReader reader = new ContactCursorReader(context);
         if (cursor != null && cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
@@ -57,13 +53,15 @@ public class ContactsProvider {
 
     public WritableArray getContactsWithRange(QueryParams params) {
         ensureContactIds();
-        Cursor cursor = queryAllContacts(params);
-        return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params), params);
+        List<String> contactsToFetch = getContactsToFetch(params);
+        params.setContactsToFetch(contactsToFetch);
+        Cursor cursor = queryContacts(params);
+        return new ContactCursorReader(context).readWithIds(cursor, contactsToFetch, params);
     }
 
     public WritableArray getContactsWithIdentifiers(QueryParams params) {
         ensureContactIds();
-        Cursor cursor = queryAllContacts(params);
+        Cursor cursor = queryContacts(params);
         return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params), params);
     }
 
@@ -73,7 +71,11 @@ public class ContactsProvider {
         }
     }
 
-    private Cursor queryAllContacts(QueryParams params) {
+    private void sync() {
+        contactIds = getAllContacts();
+    }
+
+    private Cursor queryContacts(QueryParams params) {
         return context.getContentResolver().query(ContactsContract.Data.CONTENT_URI,
                 params.getProjection(),
                 params.getSelection(),

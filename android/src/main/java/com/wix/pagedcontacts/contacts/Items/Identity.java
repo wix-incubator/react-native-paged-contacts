@@ -5,7 +5,7 @@ import android.provider.ContactsContract;
 
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 public class Identity extends ContactItem {
     private String namespace;
