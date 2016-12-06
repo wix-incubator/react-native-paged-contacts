@@ -4,10 +4,10 @@ import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class Identifier extends ContactItem {
-    public String contactId;
+class Identifier extends ContactItem {
+    String contactId;
 
-    public Identifier(String contactId) {
+    Identifier(String contactId) {
         this.contactId = contactId;
     }
 

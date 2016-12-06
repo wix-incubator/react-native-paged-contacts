@@ -7,7 +7,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class PostalAddress extends ContactItem {
+class PostalAddress extends ContactItem {
     public String label;
     private String formattedAddress;
     private String poBox;
@@ -18,13 +18,14 @@ public class PostalAddress extends ContactItem {
     private String postcode;
     private String country;
 
-    public PostalAddress(Cursor cursor) {
+    PostalAddress(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }
 
     private void fillFromCursor() {
-        label = getType(getString(StructuredPostal.LABEL));
+        Integer type = getInt(StructuredPostal.TYPE);
+        label = getType(type, getString(StructuredPostal.LABEL));
         formattedAddress = getString(StructuredPostal.FORMATTED_ADDRESS);
         poBox = getString(StructuredPostal.POBOX);
         street = getString(StructuredPostal.STREET);
@@ -35,10 +36,9 @@ public class PostalAddress extends ContactItem {
         country = getString(StructuredPostal.COUNTRY);
     }
 
-    private String getType(String label) {
-        Integer type = getInt(StructuredPostal.TYPE);
+    private String getType(Integer type, String label) {
         if (type == null) {
-            return label;
+            throw new InvalidCursorTypeException();
         }
         switch (type) {
             case StructuredPostal.TYPE_HOME:

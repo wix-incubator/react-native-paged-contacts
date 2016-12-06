@@ -26,7 +26,6 @@ public class QueryParams {
 
     public QueryParams(String matchName) {
         this.keysToFetch = new ArrayList<>();
-        this.keysToFetch.add("displayName");
         this.matchName = matchName;
         init();
     }
@@ -39,7 +38,6 @@ public class QueryParams {
 
     public QueryParams(List<String> keysToFetch, int offset, int size) {
         this.keysToFetch = keysToFetch;
-        this.keysToFetch.add("identity");
         this.offset = offset;
         this.size = size;
         init();
@@ -65,7 +63,6 @@ public class QueryParams {
             }
         }
         projection.add(ContactsContract.Data.CONTACT_ID);
-        projection.add(ContactsContract.RawContacts.SOURCE_ID);
         return projection.toArray(new String[projection.size()]);
     }
 
@@ -74,7 +71,8 @@ public class QueryParams {
     }
 
     public String[] getSelectionArgs() {
-        return new Selection(matchName, selectionArgs, contactsToFetch).getSelectionArgs();
+        String[] selectionArgs = new Selection(matchName, this.selectionArgs, contactsToFetch).getSelectionArgs();
+        return selectionArgs != null && selectionArgs.length == 0 ? null : selectionArgs;
     }
 
     public boolean fetchField(Field field) {

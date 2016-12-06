@@ -6,11 +6,11 @@ import android.provider.ContactsContract.CommonDataKinds.Im;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class InstantMessagingAddress extends ContactItem {
+class InstantMessagingAddress extends ContactItem {
     private String data;
     private String protocol;
 
-    public InstantMessagingAddress(Cursor cursor) {
+    InstantMessagingAddress(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }
@@ -23,6 +23,9 @@ public class InstantMessagingAddress extends ContactItem {
     }
 
     private String getProtocolName(String protocolId, String customProtocol) {
+        if (protocolId == null) {
+            throw new InvalidCursorTypeException();
+        }
         switch (Integer.valueOf(protocolId)) {
             case Im.PROTOCOL_AIM:
                 return "AIM";

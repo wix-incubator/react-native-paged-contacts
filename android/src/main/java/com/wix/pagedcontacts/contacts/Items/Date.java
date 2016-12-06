@@ -1,39 +1,46 @@
 package com.wix.pagedcontacts.contacts.Items;
 
 import android.database.Cursor;
-import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Event;
 
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class Date extends ContactItem {
+class Date extends ContactItem {
     private String startDate;
     private String type;
 
-    public Date(Cursor cursor) {
+    Date(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }
 
     private void fillFromCursor() {
-        final Integer type = getInt(ContactsContract.CommonDataKinds.Event.TYPE);
-        startDate = getString(ContactsContract.CommonDataKinds.Event.START_DATE);
-        final String label = getString(ContactsContract.CommonDataKinds.Event.LABEL);
+        final Integer type = getInt(Event.TYPE);
+        startDate = getString(Event.START_DATE);
+        final String label = getString(Event.LABEL);
         this.type = getEventType(type, label);
     }
 
     private String getEventType(Integer type, String label) {
-        if (label != null) {
-            return label;
+        if (type == null) {
+            throw new InvalidCursorTypeException();
         }
-        if (type == ContactsContract.CommonDataKinds.Event.TYPE_ANNIVERSARY) {
-            return "anniversary";
+        switch (type) {
+            case Event.TYPE_ANNIVERSARY:
+                return "anniversary";
+            case Event.TYPE_OTHER:
+                return "other";
+            case Event.TYPE_CUSTOM:
+                return label;
+            default:
+                return "other";
         }
-        return "other";
     }
 
     @Override
     protected void fillMap(WritableMap map, QueryParams queryParams) {
-        map.putString(type, startDate);
+        map.putString("label", type);
+        map.putString("value", startDate);
     }
 }

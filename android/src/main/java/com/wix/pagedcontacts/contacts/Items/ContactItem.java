@@ -2,6 +2,7 @@ package com.wix.pagedcontacts.contacts.Items;
 
 import android.database.Cursor;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
@@ -51,7 +52,7 @@ abstract class ContactItem {
     }
 
     void addField(WritableMap map, QueryParams params, Field field, String value) {
-        if (value != null && params.fetchField(field)) {
+        if (!TextUtils.isEmpty(value) && params.fetchField(field)) {
             map.putString(field.getKey(), value);
         }
     }

@@ -3,27 +3,14 @@ package com.wix.pagedcontacts.contacts.readers;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.provider.ContactsContract.CommonDataKinds.Nickname;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
-import android.provider.ContactsContract.CommonDataKinds.StructuredName;
-import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.Items.Contact;
-import com.wix.pagedcontacts.contacts.Items.Date;
+import com.wix.pagedcontacts.contacts.Items.ContactItemReader;
 import com.wix.pagedcontacts.contacts.Items.DisplayName;
-import com.wix.pagedcontacts.contacts.Items.Email;
 import com.wix.pagedcontacts.contacts.Items.Identity;
-import com.wix.pagedcontacts.contacts.Items.InstantMessagingAddress;
-import com.wix.pagedcontacts.contacts.Items.Name;
-import com.wix.pagedcontacts.contacts.Items.Note;
-import com.wix.pagedcontacts.contacts.Items.Organization;
-import com.wix.pagedcontacts.contacts.Items.PhoneNumber;
-import com.wix.pagedcontacts.contacts.Items.Photo;
-import com.wix.pagedcontacts.contacts.Items.PostalAddress;
-import com.wix.pagedcontacts.contacts.Items.Relation;
-import com.wix.pagedcontacts.contacts.Items.UrlAddress;
+import com.wix.pagedcontacts.contacts.Items.InvalidCursorTypeException;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 import java.util.ArrayList;
@@ -74,65 +61,11 @@ public class ContactCursorReader {
     }
 
     private void readField(Cursor cursor, Contact contact) {
-        if (!hasMimeType(cursor)) {
-            return;
+        try {
+            new ContactItemReader(contact, context).read(cursor);
+        } catch (InvalidCursorTypeException e) {
+            // Nothing
         }
-        switch (getMimeType(cursor)) {
-            case StructuredName.CONTENT_ITEM_TYPE:
-                contact.name = new Name(cursor);
-                break;
-            case Nickname.CONTENT_ITEM_TYPE:
-                contact.nickname = new com.wix.pagedcontacts.contacts.Items.Nickname(cursor);
-                break;
-            case Phone.CONTENT_ITEM_TYPE:
-                contact.phoneNumbers.add(new PhoneNumber(cursor));
-                break;
-            case ContactsContract.CommonDataKinds.Organization.CONTENT_ITEM_TYPE:
-                contact.organization = new Organization(cursor);
-                break;
-            case ContactsContract.CommonDataKinds.Note.CONTENT_ITEM_TYPE:
-                contact.note = new Note(cursor);
-                break;
-            case ContactsContract.CommonDataKinds.Event.CONTENT_ITEM_TYPE:
-                final int type = cursor.getInt(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.TYPE));
-                if (ContactsContract.CommonDataKinds.Event.TYPE_BIRTHDAY == type) {
-                    contact.birthday = getString(cursor, cursor.getColumnIndex(ContactsContract.CommonDataKinds.Event.START_DATE));
-                } else {
-                    contact.dates.add(new Date(cursor));
-                }
-                break;
-            case ContactsContract.CommonDataKinds.Relation.CONTENT_ITEM_TYPE:
-                contact.relations.add(new Relation(cursor));
-                break;
-            case ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE:
-                contact.emails.add(new Email(cursor));
-                break;
-            case StructuredPostal.CONTENT_ITEM_TYPE:
-                contact.postalAddresses.add(new PostalAddress(cursor));
-                break;
-            case ContactsContract.CommonDataKinds.Im.CONTENT_ITEM_TYPE:
-                contact.instantMessagingAddresses.add(new InstantMessagingAddress(cursor));
-                break;
-            case ContactsContract.CommonDataKinds.Website.CONTENT_ITEM_TYPE:
-                contact.urlAddresses.add(new UrlAddress(cursor));
-                break;
-            case ContactsContract.CommonDataKinds.Photo.CONTENT_ITEM_TYPE:
-                contact.photo = new Photo(context, cursor);
-                break;
-            case ContactsContract.CommonDataKinds.Identity.CONTENT_ITEM_TYPE:
-                contact.identity = new Identity(cursor);
-                break;
-            default:
-                break;
-        }
-    }
-
-    private String getMimeType(Cursor cursor) {
-        return getString(cursor, cursor.getColumnIndex(ContactsContract.Data.MIMETYPE));
-    }
-
-    private boolean hasMimeType(Cursor cursor) {
-        return cursor.getColumnIndex(ContactsContract.Data.MIMETYPE) != -1;
     }
 
     private Contact getContact(String contactId) {
@@ -144,16 +77,7 @@ public class ContactCursorReader {
         return contact;
     }
 
-    private String getString(Cursor cursor, int index) {
-        return index >= 0 ? cursor.getString(index) : null;
-    }
-
     private String getId(Cursor cursor) {
-        String contactId = null;
-        final int contactIdColumnIdx = cursor.getColumnIndex(ContactsContract.Data.CONTACT_ID);
-        if (contactIdColumnIdx != -1) {
-            contactId = String.valueOf(cursor.getInt(contactIdColumnIdx));
-        }
-        return contactId;
+        return String.valueOf(cursor.getInt(cursor.getColumnIndex(ContactsContract.Data.CONTACT_ID)));
     }
 }

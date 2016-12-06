@@ -11,7 +11,7 @@ public class Identity extends ContactItem {
     private String namespace;
     private String identity;
 
-    public Identity() {
+    Identity() {
 
     }
 

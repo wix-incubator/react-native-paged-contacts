@@ -7,14 +7,14 @@ import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class Note extends ContactItem {
+class Note extends ContactItem {
     private String note;
-    public Note(Cursor cursor) {
+    Note(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }
 
-    public Note() {
+    Note() {
 
     }
 

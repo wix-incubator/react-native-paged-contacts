@@ -7,11 +7,11 @@ import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class Email extends ContactItem {
+class Email extends ContactItem {
     private String label;
     private String address;
 
-    public Email(Cursor cursor) {
+    Email(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }
@@ -24,8 +24,8 @@ public class Email extends ContactItem {
     }
 
     private String getEmailType(Integer type, String label) {
-        if (label != null || type == null) {
-            return label;
+        if (type == null) {
+            throw new InvalidCursorTypeException();
         }
         switch (type) {
             case ContactsContract.CommonDataKinds.Email.TYPE_HOME:
@@ -34,6 +34,8 @@ public class Email extends ContactItem {
                 return "mobile";
             case ContactsContract.CommonDataKinds.Email.TYPE_WORK:
                 return "work";
+            case ContactsContract.CommonDataKinds.Email.TYPE_CUSTOM:
+                return label;
             default:
                 return "other";
         }

@@ -6,11 +6,11 @@ import android.provider.ContactsContract.CommonDataKinds.Website;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class UrlAddress extends ContactItem {
+class UrlAddress extends ContactItem {
     private String url;
     private String type;
 
-    public UrlAddress(Cursor cursor) {
+    UrlAddress(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }
@@ -22,7 +22,10 @@ public class UrlAddress extends ContactItem {
         this.type = getType(type, label);
     }
 
-    private String getType(int type, String label) {
+    private String getType(Integer type, String label) {
+        if (type == null) {
+            throw new InvalidCursorTypeException();
+        }
         switch (type) {
             case Website.TYPE_BLOG:
                 return "Blog";

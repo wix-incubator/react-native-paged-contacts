@@ -7,7 +7,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class Organization extends ContactItem {
+class Organization extends ContactItem {
     private String organizationName;
     private String departmentName;
     private String jobTitle;
@@ -17,7 +17,7 @@ public class Organization extends ContactItem {
         super();
     }
 
-    public Organization(Cursor cursor) {
+    Organization(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }

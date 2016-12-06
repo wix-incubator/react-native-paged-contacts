@@ -7,14 +7,14 @@ import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class Nickname extends ContactItem {
+class Nickname extends ContactItem {
     private String nickname;
 
-    public Nickname() {
+    Nickname() {
 
     }
 
-    public Nickname(Cursor cursor) {
+    Nickname(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }

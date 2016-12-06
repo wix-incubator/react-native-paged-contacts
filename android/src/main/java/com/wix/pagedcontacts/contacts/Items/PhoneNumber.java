@@ -6,11 +6,11 @@ import android.provider.ContactsContract;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class PhoneNumber extends ContactItem {
+class PhoneNumber extends ContactItem {
     public String type;
     private String number;
 
-    public PhoneNumber(Cursor cursor) {
+    PhoneNumber(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }
@@ -26,7 +26,7 @@ public class PhoneNumber extends ContactItem {
 
     private String getType(Integer type) {
         if (type == null) {
-            return "other";
+            throw new InvalidCursorTypeException();
         }
         switch (type) {
             case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:

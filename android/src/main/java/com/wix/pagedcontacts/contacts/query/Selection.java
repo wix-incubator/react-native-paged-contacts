@@ -1,6 +1,7 @@
 package com.wix.pagedcontacts.contacts.query;
 
 import android.provider.ContactsContract;
+import android.text.TextUtils;
 
 import com.wix.pagedcontacts.utils.Collections;
 
@@ -23,11 +24,22 @@ class Selection {
         if (matchName != null) {
             return getMatchNameSelection();
         }
-        if (contactsToFetch.isEmpty()) {
-            return getMimeTypeSelection();
-        } else {
-            return "(" + getMimeTypeSelection() + ") AND (" + getContactSelection() + ")";
+        return combineMimeTypeAndContactsSelection(getMimeTypeSelection(), getContactSelection());
+    }
+
+    private String combineMimeTypeAndContactsSelection(String mimeTypeSelection, String contactSelection) {
+        String result = "";
+        if (!TextUtils.isEmpty(mimeTypeSelection)) {
+            result = mimeTypeSelection;
         }
+        if (!TextUtils.isEmpty(contactSelection)) {
+            if (!TextUtils.isEmpty(mimeTypeSelection)) {
+                result = "(" + result + ") AND (" + contactSelection + ")";
+            } else {
+                result = contactSelection;
+            }
+        }
+        return result.isEmpty() ? null : result;
     }
 
     String[] getSelectionArgs() {
@@ -50,6 +62,9 @@ class Selection {
     }
 
     private String getSelection(String columnName, int count) {
+        if (count == 0) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < count; i++) {
             sb.append(columnName);

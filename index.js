@@ -82,3 +82,6 @@ if (Platform.OS === 'ios') {
   PagedContacts.nonGregorianBirthday = PagedContactsModule.nonGregorianBirthday;
   PagedContacts.socialProfiles = PagedContactsModule.socialProfiles;
 }
+if (Platform.OS === 'android') {
+  PagedContacts.identity = PagedContactsModule.identity;
+}

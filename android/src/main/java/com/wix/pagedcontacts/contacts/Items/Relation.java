@@ -6,11 +6,11 @@ import android.provider.ContactsContract.CommonDataKinds;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-public class Relation extends ContactItem {
+class Relation extends ContactItem {
     public String label;
     public String name;
 
-    public Relation(Cursor cursor) {
+    Relation(Cursor cursor) {
         super(cursor);
         fillFromCursor();
     }
@@ -22,14 +22,10 @@ public class Relation extends ContactItem {
         this.label = getLabelFromType(type, label);
     }
 
-    @Override
-    protected void fillMap(WritableMap map, QueryParams params) {
-        addToMap(map, "label", label);
-        addToMap(map, "value", name);
-    }
-
-
     private String getLabelFromType(Integer type, String name) {
+        if (type == null) {
+            throw new InvalidCursorTypeException();
+        }
         switch (type) {
             case CommonDataKinds.Relation.TYPE_CUSTOM:
                 return name;
@@ -64,5 +60,11 @@ public class Relation extends ContactItem {
             default:
                 return "other";
         }
+    }
+
+    @Override
+    protected void fillMap(WritableMap map, QueryParams params) {
+        addToMap(map, "label", label);
+        addToMap(map, "value", name);
     }
 }

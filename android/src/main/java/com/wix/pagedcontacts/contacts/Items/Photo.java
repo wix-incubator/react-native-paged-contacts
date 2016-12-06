@@ -12,17 +12,17 @@ import com.wix.pagedcontacts.utils.ImageUtils;
 
 import static android.provider.ContactsContract.CommonDataKinds.Photo.PHOTO;
 
-public class Photo extends ContactItem {
+class Photo extends ContactItem {
     private Context applicationContext;
     @Nullable private String imageUri;
     @Nullable private String thumbnailImageUri;
     private byte[] imageData;
 
-    public Photo() {
+    Photo() {
 
     }
 
-    public Photo(Context context, Cursor cursor) {
+    Photo(Context context, Cursor cursor) {
         super(cursor);
         this.applicationContext = context;
         fillFromCursor();
