@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds;
 
 import com.facebook.react.bridge.WritableMap;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 public class Relation extends ContactItem {
     public String label;

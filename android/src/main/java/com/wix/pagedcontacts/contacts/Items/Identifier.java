@@ -2,7 +2,7 @@ package com.wix.pagedcontacts.contacts.Items;
 
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 public class Identifier extends ContactItem {
     public String contactId;

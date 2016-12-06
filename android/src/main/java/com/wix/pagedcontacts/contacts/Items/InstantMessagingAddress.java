@@ -4,7 +4,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds.Im;
 
 import com.facebook.react.bridge.WritableMap;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 public class InstantMessagingAddress extends ContactItem {
     private String data;

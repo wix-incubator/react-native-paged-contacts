@@ -10,7 +10,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.ContactsProviderFactory;
 import com.wix.pagedcontacts.contacts.Field;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.utils.Collections;
 
 import java.util.HashMap;

@@ -5,7 +5,7 @@ import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
-import com.wix.pagedcontacts.contacts.QueryParams;
+import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 public class PostalAddress extends ContactItem {
     public String label;

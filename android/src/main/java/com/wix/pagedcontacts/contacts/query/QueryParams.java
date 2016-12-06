@@ -1,6 +1,8 @@
-package com.wix.pagedcontacts.contacts;
+package com.wix.pagedcontacts.contacts.query;
 
 import android.provider.ContactsContract;
+
+import com.wix.pagedcontacts.contacts.Field;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,15 +11,16 @@ import java.util.List;
 import java.util.Set;
 
 public class QueryParams {
-    int offset;
-    int size;
+    public int offset;
+    public int size;
     private Set<String> selectionArgs;
     private List<String> keysToFetch;
     private List<String> identifiers = new ArrayList<>();
     private Set<Field> fields;
     private String matchName;
+    private List<String> contactsToFetch;
 
-    List<String> getIdentifiers() {
+    public List<String> getIdentifiers() {
         return identifiers;
     }
 
@@ -47,7 +50,7 @@ public class QueryParams {
         selectionArgs = new HashSet<>();
     }
 
-    String[] getProjection() {
+    public String[] getProjection() {
         Set<String> projection = new HashSet<>();
         for (int i = 0; i < keysToFetch.size(); i++) {
             Field field = Field.fromKey(keysToFetch.get(i));
@@ -66,46 +69,19 @@ public class QueryParams {
         return projection.toArray(new String[projection.size()]);
     }
 
-    String getSelection() {
-        if (matchName != null) {
-            return getMatchNameSelection();
-        }
-        return getMimeTypeSelection();
+    public String getSelection() {
+        return new Selection(matchName, selectionArgs, contactsToFetch).getSelection();
     }
 
-    private String getMimeTypeSelection() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < selectionArgs.size(); i++) {
-            sb.append(ContactsContract.Data.MIMETYPE);
-            if (i == selectionArgs.size() - 1) {
-                sb.append("=?");
-            } else {
-                sb.append("=? OR ");
-            }
-        }
-        return selectionArgs.size() > 0 ? sb.toString() : null;
-    }
-
-    private String getMatchNameSelection() {
-        return ContactsContract.Contacts.DISPLAY_NAME + " LIKE ?";
+    public String[] getSelectionArgs() {
+        return new Selection(matchName, selectionArgs, contactsToFetch).getSelectionArgs();
     }
 
     public boolean fetchField(Field field) {
         return fields.contains(field);
     }
 
-    String[] getSelectionArgs() {
-        if (matchName != null) {
-            return getMatchNameSelectionArgs();
-        }
-        return getMimeTypeSelectionArgs();
-    }
-
-    private String[] getMatchNameSelectionArgs() {
-        return new String[]{"%" + matchName + "%"};
-    }
-
-    private String[] getMimeTypeSelectionArgs() {
-        return selectionArgs.isEmpty() ? null : selectionArgs.toArray(new String[selectionArgs.size()]);
+    public void setContactsToFetch(List<String> contactsToFetch) {
+        this.contactsToFetch = contactsToFetch;
     }
 }
