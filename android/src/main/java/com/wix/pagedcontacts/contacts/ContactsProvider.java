@@ -61,6 +61,7 @@ public class ContactsProvider {
 
     public WritableArray getContactsWithIdentifiers(QueryParams params) {
         ensureContactIds();
+        params.setContactsToFetch(getContactsToFetch(params));
         Cursor cursor = queryContacts(params);
         return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params), params);
     }

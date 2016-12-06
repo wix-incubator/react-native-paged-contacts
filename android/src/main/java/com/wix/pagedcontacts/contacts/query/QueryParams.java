@@ -70,11 +70,11 @@ public class QueryParams {
     }
 
     public String getSelection() {
-        return new Selection(matchName, selectionArgs, contactsToFetch).get();
+        return new Selection(matchName, selectionArgs, contactsToFetch).getSelection();
     }
 
     public String[] getSelectionArgs() {
-        return new Selection(matchName, selectionArgs, contactsToFetch).getArgs();
+        return new Selection(matchName, selectionArgs, contactsToFetch).getSelectionArgs();
     }
 
     public boolean fetchField(Field field) {

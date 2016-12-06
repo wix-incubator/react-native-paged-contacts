@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.facebook.react.bridge.ReadableArray;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Collections {
@@ -19,7 +20,16 @@ public class Collections {
         return result;
     }
 
-    public static String[] concat(String[]... arrays) {
+    public static String[] concat(Collection<String> arg1, Collection<String> arg2) {
+        if (arg1 == null && arg2 == null) {
+            return null;
+        }
+        arg1 = arg1 == null ? new ArrayList<String>() : arg1;
+        arg2 = arg2 == null ? new ArrayList<String>() : arg2;
+        return concat(arg1.toArray(new String[arg1.size()]), arg2.toArray(new String[arg2.size()]));
+    }
+
+    private static String[] concat(String[]... arrays) {
         int length = 0;
         for (String[] array : arrays) {
             length += array.length;
