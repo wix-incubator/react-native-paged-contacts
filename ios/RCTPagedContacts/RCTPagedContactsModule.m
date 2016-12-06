@@ -30,7 +30,7 @@
 	return self;
 }
 
-RCT_EXPORT_MODULE("ReactNativePagedContacts");
+RCT_EXPORT_MODULE(ReactNativePagedContacts);
 
 - (NSDictionary *)constantsToExport
 {
