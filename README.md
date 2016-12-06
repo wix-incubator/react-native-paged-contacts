@@ -54,7 +54,7 @@ Paged contacts manager for React Native.
 - `PagedContacts.givenName`
 - `PagedContacts.middleName`
 - `PagedContacts.familyName`
-- `PagedContacts.previousFamilyName` // iOS only
+- `PagedContacts.previousFamilyName` — **iOS only**
 - `PagedContacts.nameSuffix`
 - `PagedContacts.nickname`
 - `PagedContacts.organizationName`
@@ -65,7 +65,7 @@ Paged contacts manager for React Native.
 - `PagedContacts.phoneticFamilyName`
 - `PagedContacts.phoneticOrganizationName`
 - `PagedContacts.birthday`
-- `PagedContacts.nonGregorianBirthday` // iOS only
+- `PagedContacts.nonGregorianBirthday` — **iOS only**
 - `PagedContacts.note`
 - `PagedContacts.imageData`
 - `PagedContacts.thumbnailImageData`
@@ -75,7 +75,7 @@ Paged contacts manager for React Native.
 - `PagedContacts.dates`
 - `PagedContacts.urlAddresses`
 - `PagedContacts.relations`
-- `PagedContacts.socialProfiles` // iOS only
+- `PagedContacts.socialProfiles` — **iOS only**
 - `PagedContacts.instantMessageAddresses`
 
 ##Usage
