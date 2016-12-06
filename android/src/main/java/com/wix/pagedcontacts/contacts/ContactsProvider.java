@@ -56,14 +56,14 @@ public class ContactsProvider {
         List<String> contactsToFetch = getContactsToFetch(params);
         params.setContactsToFetch(contactsToFetch);
         Cursor cursor = queryContacts(params);
-        return new ContactCursorReader(context).readWithIds(cursor, contactsToFetch, params);
+        return new ContactCursorReader(context).readWithIds(cursor, params);
     }
 
     public WritableArray getContactsWithIdentifiers(QueryParams params) {
         ensureContactIds();
         params.setContactsToFetch(getContactsToFetch(params));
         Cursor cursor = queryContacts(params);
-        return new ContactCursorReader(context).readWithIds(cursor, getContactsToFetch(params), params);
+        return new ContactCursorReader(context).readWithIds(cursor, params);
     }
 
     private void ensureContactIds() {

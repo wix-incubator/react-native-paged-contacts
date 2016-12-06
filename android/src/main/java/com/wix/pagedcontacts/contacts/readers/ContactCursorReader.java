@@ -49,17 +49,14 @@ public class ContactCursorReader {
         return contact;
     }
 
-    public WritableArray readWithIds(Cursor cursor, List<String> contactsToFetch, QueryParams params) {
+    public WritableArray readWithIds(Cursor cursor, QueryParams params) {
         Set<String> fetchedContacts = new HashSet<>();
         List<Contact> contacts = new ArrayList<>();
         while (cursor.moveToNext()) {
-            final String id = getId(cursor);
-            if (contactsToFetch.contains(id)) {
-                Contact contact = read(cursor, id);
-                if (!fetchedContacts.contains(contact.getContactId())) {
-                    fetchedContacts.add(contact.getContactId());
-                    contacts.add(contact);
-                }
+            Contact contact = read(cursor, getId(cursor));
+            if (!fetchedContacts.contains(contact.getContactId())) {
+                fetchedContacts.add(contact.getContactId());
+                contacts.add(contact);
             }
         }
         WritableArray result = Arguments.createArray();
