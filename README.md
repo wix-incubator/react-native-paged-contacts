@@ -92,7 +92,7 @@ import {PagedContacts} from 'react-native-paged-contacts';
 let pg = new PagedContacts();
 ```
 
-First request authorization, and, if granted, request the contacts.
+*iOS ONLY* - First request authorization, and, if granted, request the contacts.
 
 ```javascript
 pg.requestAccess().then((granted) => {
