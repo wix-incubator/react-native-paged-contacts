@@ -1,13 +1,11 @@
 package com.wix.pagedcontacts;
 
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.ContactsProviderFactory;
 import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
@@ -44,28 +42,20 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void contactsCount(String uuid, Promise promise) {
         final int count = contactProvider.get(uuid).getContactsCount();
-        WritableMap args = Arguments.createMap();
-        args.putInt("count", count);
-        promise.resolve(args);
+        promise.resolve(count);
     }
 
     @ReactMethod
     public void getContactsWithRange(String uuid, int offset, int size, ReadableArray keysToFetch, Promise promise) {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), offset, size);
         WritableArray contacts = contactProvider.get(uuid).getContactsWithRange(params);
-        setContactsAndResolve(promise, contacts);
+        promise.resolve(contacts);
     }
 
     @ReactMethod
     public void getContactsWithIdentifiers(String uuid, ReadableArray identifiers, ReadableArray keysToFetch, Promise promise) {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), Collections.toStringList(identifiers));
         WritableArray contacts = contactProvider.get(uuid).getContactsWithIdentifiers(params);
-        setContactsAndResolve(promise, contacts);
-    }
-
-    private void setContactsAndResolve(Promise promise, WritableArray contacts) {
-        WritableMap args = Arguments.createMap();
-        args.putArray("contacts", contacts);
-        promise.resolve(args);
+        promise.resolve(contacts);
     }
 }
