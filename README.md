@@ -25,20 +25,20 @@ Paged contacts manager for React Native.
 
 * Add `react-native-paged-contacts` package, `new PagedContactsPackage()`, to `MainApplication.java`
 
-```java
-    @Override
-    protected List<ReactPackage> getPackages() {
-        return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new ReactNativeYouTube()
-        );
-    }
-```
+	```java
+	    @Override
+	    protected List<ReactPackage> getPackages() {
+		return Arrays.<ReactPackage>asList(
+		    new MainReactPackage(),
+		    new ReactNativeYouTube()
+		);
+	    }
+	```
 * Add `READ_CONTACTS` permission to `AndroidManifest.xml`
 
-```xml
-<uses-permission android:name="android.permission.READ_CONTACTS" />
-```
+	```xml
+	<uses-permission android:name="android.permission.READ_CONTACTS" />
+	```
 
 ##API
 
