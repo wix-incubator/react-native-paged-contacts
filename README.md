@@ -30,7 +30,7 @@ Paged contacts manager for React Native.
 	    protected List<ReactPackage> getPackages() {
 		return Arrays.<ReactPackage>asList(
 		    new MainReactPackage(),
-		    new ReactNativeYouTube()
+		    new PagedContactsPackage() // <- Add this
 		);
 	    }
 	```
