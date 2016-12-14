@@ -152,7 +152,9 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 	}
 	else if([value isKindOfClass:[CNLabeledValue class]])
 	{
-		return @{@"label": [CNLabeledValue localizedStringForLabel:[(CNLabeledValue*)value label]], @"value": [self _transformValueToJSValue:[(CNLabeledValue*)value value]]};
+		id label = [CNLabeledValue localizedStringForLabel:[(CNLabeledValue*)value label]];
+		if (label == nil) label = @"";
+		return @{@"label": label, @"value": [self _transformValueToJSValue:[(CNLabeledValue*)value value]]};
 	}
 	else if([value isKindOfClass:[CNPhoneNumber class]])
 	{
