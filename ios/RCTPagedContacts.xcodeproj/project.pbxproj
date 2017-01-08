@@ -12,6 +12,16 @@
 		39B037B11DE7138A00E6167D /* WXContactsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B037B01DE7138A00E6167D /* WXContactsManager.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3972C2CC1E2250AF0055C7BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3972C2C81E224E950055C7BB /* React.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = A06430521EED795C79AF2D7B;
+			remoteInfo = React;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		1441618C1BD0A79300FA4F59 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -29,6 +39,7 @@
 		1441618E1BD0A79300FA4F59 /* libRCTPagedContacts.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTPagedContacts.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		144161901BD0A79300FA4F59 /* RCTPagedContactsModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTPagedContactsModule.h; sourceTree = "<group>"; };
 		144161921BD0A79300FA4F59 /* RCTPagedContactsModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTPagedContactsModule.m; sourceTree = "<group>"; };
+		3972C2C81E224E950055C7BB /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native-xcode-headers/React.xcodeproj"; sourceTree = "<group>"; };
 		39B037AF1DE7138A00E6167D /* WXContactsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXContactsManager.h; sourceTree = "<group>"; };
 		39B037B01DE7138A00E6167D /* WXContactsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXContactsManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +69,7 @@
 		145CC5671AED80100006342E = {
 			isa = PBXGroup;
 			children = (
+				3972C2CE1E2250C50055C7BB /* React */,
 				1441618F1BD0A79300FA4F59 /* RCTPagedContacts */,
 				145CC5711AED80100006342E /* Products */,
 			);
@@ -69,6 +81,21 @@
 				1441618E1BD0A79300FA4F59 /* libRCTPagedContacts.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		3972C2C91E224E950055C7BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3972C2CE1E2250C50055C7BB /* React */ = {
+			isa = PBXGroup;
+			children = (
+				3972C2C81E224E950055C7BB /* React.xcodeproj */,
+			);
+			name = React;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -85,6 +112,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3972C2CD1E2250AF0055C7BB /* PBXTargetDependency */,
 			);
 			name = RCTPagedContacts;
 			productName = RCTContacts;
@@ -97,7 +125,7 @@
 		145CC5681AED80100006342E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = rt2zz;
 				TargetAttributes = {
 					1441618D1BD0A79300FA4F59 = {
@@ -115,6 +143,12 @@
 			mainGroup = 145CC5671AED80100006342E;
 			productRefGroup = 145CC5711AED80100006342E /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3972C2C91E224E950055C7BB /* Products */;
+					ProjectRef = 3972C2C81E224E950055C7BB /* React.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1441618D1BD0A79300FA4F59 /* RCTPagedContacts */,
@@ -134,17 +168,20 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		3972C2CD1E2250AF0055C7BB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = React;
+			targetProxy = 3972C2CC1E2250AF0055C7BB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
 		144161951BD0A79300FA4F59 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_TESTABILITY = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../../../React/**",
-					"$(SRCROOT)/../../react-native/React/**",
-				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -154,11 +191,6 @@
 		144161961BD0A79300FA4F59 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../../../React/**",
-					"$(SRCROOT)/../../react-native/React/**",
-				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -178,13 +210,16 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -205,7 +240,7 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -226,8 +261,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
@@ -247,7 +284,7 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = "";
