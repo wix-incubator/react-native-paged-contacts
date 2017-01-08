@@ -61,6 +61,11 @@
 	return _chachedIdentifiers;
 }
 
++ (CNAuthorizationStatus)authorizationStatus
+{
+	return [CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts];
+}
+
 - (void)requestAccessWithCompletionHandler:(void (^)(BOOL granted, NSError* error))completionHandler
 {
 	if([CNContactStore authorizationStatusForEntityType:CNEntityTypeContacts] == CNAuthorizationStatusAuthorized)
