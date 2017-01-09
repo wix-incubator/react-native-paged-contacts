@@ -38,6 +38,17 @@ export class PagedContacts {
   }
 
   /**
+   * Return the authorization status.
+   * 
+   * @returns {String} The authorization status
+   * 
+   * @memberOf PagedContacts
+   */
+  async getAuthorizationStatus() {
+    return PagedContactsModule.getAuthorizationStatus();
+  }
+
+  /**
      * Requests contact access from the operating system. 
      * 
      * @returns {Boolean} `true` if access was granted or `false` otherwise
