@@ -23,8 +23,5 @@
   "contributors": [
     "Guy Carmeli <guyc@wix.com>"
   ],
-  "license": "MIT",
-  "dependencies": {
-    "react-native-xcode-headers": "latest"
-  }
+  "license": "MIT"
 }
