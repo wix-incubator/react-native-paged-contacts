@@ -158,9 +158,9 @@ if (Platform.OS === 'android') {
   PagedContacts.identity = PagedContactsModule.identity;
 }
 
+PagedContacts.denied = PagedContactsModule.denied;
+PagedContacts.authorized = PagedContactsModule.authorized;
 if (Platform.OS === 'ios') {
-  PagedContacts.denied = PagedContactsModule.denied;
   PagedContacts.notDetermined = PagedContactsModule.notDetermined;
-  PagedContacts.authorized = PagedContactsModule.authorized;
   PagedContacts.restricted = PagedContactsModule.restricted;
 }
