@@ -4,8 +4,15 @@ Paged contacts manager for React Native.
 
 **Currently, only fetching contacts is supported.**
 
-### Installation
-## Android
+## Installation
+
+#### iOS
+
+* Add `RCTPagedContacts.xcodeproj` to your project.
+* In you project's target, under `Build Phases` — `Target Dependencies`, add `RCTPagedContacts`.
+* In you project's target, under `Build Phases` — `Link Libraries With Libraries`, add `RCTPagedContacts`.
+
+#### Android
 * Add the following to `settings.gradle`:
 
 	```groovy
@@ -18,7 +25,7 @@ Paged contacts manager for React Native.
 	```groovy
 	dependencies {
 	    compile fileTree(dir: 'libs', include: ['*.jar'])
-	    compile project(':react-native-paged-contacts')  // <- Add this
+	    compile project(':react-native-paged-contacts')  // <— Add this
 	    ...
 	}
 	```
@@ -44,6 +51,7 @@ Paged contacts manager for React Native.
 
 - `new PagedContacts()` — Create a paged contacts manager for all device contacts.
 - `new PagedContacts(nameMatch)` — Create a paged contacts manager for contacts matching the provided name.
+- `getAuthorizationStatus()` — Returns the current authorization status to access the contact data.
 - `requestAccess()` — Request contacts access from the operating system. This must be called before calling other APIs.
 - `setNameMatch(matchName)` — Change the result set to filter contacts by matching name. Set to `null` to receive all contacts.
 - `getContactsCount()` — Get the count of the current contacts set.
@@ -51,37 +59,44 @@ Paged contacts manager for React Native.
 - `getContactsWithIdentifiers(identifiers, keysToFetch)` — Get contacts with the provided `identifiers`. Only the keys requested in `keysToFetch` will be provided (contact identifiers are always provided).
 - `dispose()` — Disposes the native components. Call this method when the manager object is no longer required. Must not call any other methods of the contacts manager after calling `dispose`.
 
+####Authorization Status
+
+- `PagedContacts.notAuthorized` — The user has not yet made a choice regarding whether the application may access contact data.
+- `PagedContacts.authorized` — The application is authorized to access contact data.
+- `PagedContacts.denied` — The user explicitly denied access to contact data for the application.
+- `PagedContacts.restricted` — The application is not authorized to access contact data. The user cannot change this application’s status, possibly due to active restrictions such as parental controls being in place.
+
 ####Available Keys to Fetch
 
-- `PagedContacts.identifier`
+- `PagedContacts.identifier` — The contact’s unique identifier.
 - `PagedContacts.displayName`
-- `PagedContacts.namePrefix`
-- `PagedContacts.givenName`
-- `PagedContacts.middleName`
-- `PagedContacts.familyName`
-- `PagedContacts.previousFamilyName` — **iOS only**
-- `PagedContacts.nameSuffix`
-- `PagedContacts.nickname`
-- `PagedContacts.organizationName`
-- `PagedContacts.departmentName`
-- `PagedContacts.jobTitle`
-- `PagedContacts.phoneticGivenName`
-- `PagedContacts.phoneticMiddleName`
-- `PagedContacts.phoneticFamilyName`
-- `PagedContacts.phoneticOrganizationName`
-- `PagedContacts.birthday`
-- `PagedContacts.nonGregorianBirthday` — **iOS only**
-- `PagedContacts.note`
-- `PagedContacts.imageData`
-- `PagedContacts.thumbnailImageData`
-- `PagedContacts.phoneNumbers`
-- `PagedContacts.emailAddresses`
-- `PagedContacts.postalAddresses`
-- `PagedContacts.dates`
-- `PagedContacts.urlAddresses`
-- `PagedContacts.relations`
-- `PagedContacts.socialProfiles` — **iOS only**
-- `PagedContacts.instantMessageAddresses`
+- `PagedContacts.namePrefix` — Name prefix.
+- `PagedContacts.givenName` — Given name.
+- `PagedContacts.middleName` — Middle name.
+- `PagedContacts.familyName` — Family prefix.
+- `PagedContacts.previousFamilyName` — Previous family name. (**iOS only**)
+- `PagedContacts.nameSuffix` — Name suffix.
+- `PagedContacts.nickname` — Nickname.
+- `PagedContacts.organizationName` — Organization name.
+- `PagedContacts.departmentName` — Department name.
+- `PagedContacts.jobTitle` — Job title.
+- `PagedContacts.phoneticGivenName` — Phonetic given name.
+- `PagedContacts.phoneticMiddleName` — Phonetic middle name.
+- `PagedContacts.phoneticFamilyName` — Phonetic family name.
+- `PagedContacts.phoneticOrganizationName` — Phonetic organization name.
+- `PagedContacts.birthday` — Birthday.
+- `PagedContacts.nonGregorianBirthday` — Non-Gregorian birthday. (**iOS only**)
+- `PagedContacts.note` — Note.
+- `PagedContacts.imageData` — Image data.
+- `PagedContacts.thumbnailImageData` — Thumbnail data.
+- `PagedContacts.phoneNumbers` — Phone numbers.
+- `PagedContacts.emailAddresses` — Email addresses.
+- `PagedContacts.postalAddresses` — Postal addresses.
+- `PagedContacts.dates` — Contact dates.
+- `PagedContacts.urlAddresses` — URL addresses.
+- `PagedContacts.relations` — Contact relations.
+- `PagedContacts.socialProfiles` — Social profiles. (**iOS only**)
+- `PagedContacts.instantMessageAddresses` — Instant message addresses.
 
 ##Usage
 
@@ -92,7 +107,7 @@ import {PagedContacts} from 'react-native-paged-contacts';
 let pg = new PagedContacts();
 ```
 
-*iOS ONLY* - First request authorization, and, if granted, request the contacts.
+First request authorization, and, if granted, request the contacts. (**iOS only**)
 
 ```javascript
 pg.requestAccess().then((granted) => {
@@ -111,7 +126,7 @@ pg.requestAccess().then((granted) => {
 
 This is a very intensive way of obtaining specific keys of all contacts. Instead, use the paging mechanism to obtain contacts within a range, and only request keys you need.
 
-###Example of a Contact Result
+####Example of a Contact Result
 
 ```json
 {

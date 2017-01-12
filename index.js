@@ -38,6 +38,17 @@ export class PagedContacts {
   }
 
   /**
+   * Return the authorization status.
+   * 
+   * @returns {String} The authorization status
+   * 
+   * @memberOf PagedContacts
+   */
+  async getAuthorizationStatus() {
+    return PagedContactsModule.getAuthorizationStatus();
+  }
+
+  /**
      * Requests contact access from the operating system. 
      * 
      * @returns {Boolean} `true` if access was granted or `false` otherwise
@@ -145,4 +156,11 @@ if (Platform.OS === 'ios') {
 }
 if (Platform.OS === 'android') {
   PagedContacts.identity = PagedContactsModule.identity;
+}
+
+PagedContacts.denied = PagedContactsModule.denied;
+PagedContacts.authorized = PagedContactsModule.authorized;
+if (Platform.OS === 'ios') {
+  PagedContacts.notDetermined = PagedContactsModule.notDetermined;
+  PagedContacts.restricted = PagedContactsModule.restricted;
 }

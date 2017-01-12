@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.ContactsProviderFactory;
 import com.wix.pagedcontacts.contacts.Field;
+import com.wix.pagedcontacts.contacts.ReadContactsPermissionStatus;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.utils.Collections;
 
@@ -27,10 +28,16 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
         return "ReactNativePagedContacts";
     }
 
+    @ReactMethod
+    public void getAuthorizationStatus(Promise promise) {
+        promise.resolve(ReadContactsPermissionStatus.check(getReactApplicationContext()));
+    }
+
     @Override
     public Map<String, Object> getConstants() {
         final Map<String, Object> constants = new HashMap<>();
         Field.exportToJs(constants);
+        ReadContactsPermissionStatus.exportToJs(constants);
         return constants;
     }
 

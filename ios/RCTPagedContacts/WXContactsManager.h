@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString* nameMatch;
 
++ (CNAuthorizationStatus)authorizationStatus;
+
 - (void)requestAccessWithCompletionHandler:(void (^)(BOOL granted,  NSError* __nullable error))completionHandler;
 
 @property (nonatomic, readonly, assign) NSUInteger contactsCount;

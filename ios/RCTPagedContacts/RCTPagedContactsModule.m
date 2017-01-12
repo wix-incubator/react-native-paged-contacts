@@ -35,41 +35,50 @@ RCT_EXPORT_MODULE(ReactNativePagedContacts);
 - (NSDictionary *)constantsToExport
 {
 	NSMutableDictionary *constants = [@{
-		@"identifier": CNContactIdentifierKey,
-		@"displayName": @"displayName",
-		
-		@"namePrefix": CNContactNamePrefixKey,
-		@"givenName": CNContactGivenNameKey,
-		@"middleName": CNContactMiddleNameKey,
-		@"familyName": CNContactFamilyNameKey,
-		@"previousFamilyName": CNContactPreviousFamilyNameKey,
-		@"nameSuffix": CNContactNameSuffixKey,
-		@"nickname": CNContactNicknameKey,
-		@"organizationName": CNContactOrganizationNameKey,
-		@"departmentName": CNContactDepartmentNameKey,
-		@"jobTitle": CNContactJobTitleKey,
-		@"phoneticGivenName": CNContactPhoneticGivenNameKey,
-		@"phoneticMiddleName": CNContactPhoneticMiddleNameKey,
-		@"phoneticFamilyName": CNContactPhoneticFamilyNameKey,
-		@"birthday": CNContactBirthdayKey,
-		@"nonGregorianBirthday": CNContactNonGregorianBirthdayKey,
-		@"note": CNContactNoteKey,
-		@"imageData": CNContactImageDataKey,
-		@"thumbnailImageData": CNContactThumbnailImageDataKey,
-		@"phoneNumbers": CNContactPhoneNumbersKey,
-		@"emailAddresses": CNContactEmailAddressesKey,
-		@"postalAddresses": CNContactPostalAddressesKey,
-		@"dates": CNContactDatesKey,
-		@"urlAddresses": CNContactUrlAddressesKey,
-		@"socialProfiles": CNContactSocialProfilesKey,
-		@"instantMessageAddresses": CNContactInstantMessageAddressesKey,
-		@"relations": CNContactRelationsKey,
-	} mutableCopy];
+										@"identifier": CNContactIdentifierKey,
+										@"displayName": @"displayName",
+										
+										@"namePrefix": CNContactNamePrefixKey,
+										@"givenName": CNContactGivenNameKey,
+										@"middleName": CNContactMiddleNameKey,
+										@"familyName": CNContactFamilyNameKey,
+										@"previousFamilyName": CNContactPreviousFamilyNameKey,
+										@"nameSuffix": CNContactNameSuffixKey,
+										@"nickname": CNContactNicknameKey,
+										@"organizationName": CNContactOrganizationNameKey,
+										@"departmentName": CNContactDepartmentNameKey,
+										@"jobTitle": CNContactJobTitleKey,
+										@"phoneticGivenName": CNContactPhoneticGivenNameKey,
+										@"phoneticMiddleName": CNContactPhoneticMiddleNameKey,
+										@"phoneticFamilyName": CNContactPhoneticFamilyNameKey,
+										@"birthday": CNContactBirthdayKey,
+										@"nonGregorianBirthday": CNContactNonGregorianBirthdayKey,
+										@"note": CNContactNoteKey,
+										@"imageData": CNContactImageDataKey,
+										@"thumbnailImageData": CNContactThumbnailImageDataKey,
+										@"phoneNumbers": CNContactPhoneNumbersKey,
+										@"emailAddresses": CNContactEmailAddressesKey,
+										@"postalAddresses": CNContactPostalAddressesKey,
+										@"dates": CNContactDatesKey,
+										@"urlAddresses": CNContactUrlAddressesKey,
+										@"socialProfiles": CNContactSocialProfilesKey,
+										@"instantMessageAddresses": CNContactInstantMessageAddressesKey,
+										@"relations": CNContactRelationsKey,
+										} mutableCopy];
 	
 	// CNContactPhoneticOrganizationNameKey is only available in iOS10
 	if (&CNContactPhoneticOrganizationNameKey != nil) {
 		[constants setValue:CNContactPhoneticOrganizationNameKey forKey:@"phoneticOrganizationName"];
 	}
+	
+	NSDictionary* authorizationStatusConstants = @{
+												   @"denied": @(CNAuthorizationStatusDenied),
+												   @"notDetermined": @(CNAuthorizationStatusNotDetermined),
+												   @"authorized": @(CNAuthorizationStatusAuthorized),
+												   @"restricted": @(CNAuthorizationStatusRestricted),
+												   };
+	
+	[constants addEntriesFromDictionary:authorizationStatusConstants];
 	
 	return constants;
 }
@@ -92,6 +101,11 @@ RCT_EXPORT_MODULE(ReactNativePagedContacts);
 - (dispatch_queue_t)methodQueue
 {
 	return dispatch_queue_create("RCTPagedContactsModule", DISPATCH_QUEUE_SERIAL);
+}
+
+RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+	resolve(@([WXContactsManager authorizationStatus]));
 }
 
 RCT_EXPORT_METHOD(requestAccess:(NSString*)identifier resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
