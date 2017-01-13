@@ -61,7 +61,7 @@ Paged contacts manager for React Native.
 
 ####Authorization Status
 
-- `PagedContacts.notAuthorized` — The user has not yet made a choice regarding whether the application may access contact data.
+- `PagedContacts.notDetermined` — The user has not yet made a choice regarding whether the application may access contact data.
 - `PagedContacts.authorized` — The application is authorized to access contact data.
 - `PagedContacts.denied` — The user explicitly denied access to contact data for the application.
 - `PagedContacts.restricted` — The application is not authorized to access contact data. The user cannot change this application’s status, possibly due to active restrictions such as parental controls being in place.
