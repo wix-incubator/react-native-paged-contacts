@@ -51,7 +51,6 @@ RCT_EXPORT_MODULE(ReactNativePagedContacts);
 										@"phoneticGivenName": CNContactPhoneticGivenNameKey,
 										@"phoneticMiddleName": CNContactPhoneticMiddleNameKey,
 										@"phoneticFamilyName": CNContactPhoneticFamilyNameKey,
-										@"phoneticOrganizationName": CNContactPhoneticOrganizationNameKey,
 										@"birthday": CNContactBirthdayKey,
 										@"nonGregorianBirthday": CNContactNonGregorianBirthdayKey,
 										@"note": CNContactNoteKey,
