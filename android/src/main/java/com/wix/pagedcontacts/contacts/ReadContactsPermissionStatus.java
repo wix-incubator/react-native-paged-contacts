@@ -26,7 +26,7 @@ public enum ReadContactsPermissionStatus {
 
 
     public static String check(Context context) {
-        final int statusCode = PermissionChecker.checkCallingPermission(context, Manifest.permission.READ_CONTACTS, context.getPackageName());
+        final int statusCode = PermissionChecker.checkCallingOrSelfPermission(context, Manifest.permission.READ_CONTACTS);
         for (ReadContactsPermissionStatus status : values()) {
             if (status.code == statusCode) {
                 return status.value;
