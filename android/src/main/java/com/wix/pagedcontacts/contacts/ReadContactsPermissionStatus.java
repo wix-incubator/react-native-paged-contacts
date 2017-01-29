@@ -2,14 +2,13 @@ package com.wix.pagedcontacts.contacts;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.content.PermissionChecker;
 
 import java.util.Map;
 
 public enum ReadContactsPermissionStatus {
-    authorized(PackageManager.PERMISSION_GRANTED, "authorized"),
-    denied(PackageManager.PERMISSION_DENIED, "denied");
+    authorized(PermissionChecker.PERMISSION_GRANTED, "authorized"),
+    denied(PermissionChecker.PERMISSION_DENIED, "denied");
 
     private String value;
     private int code;
@@ -27,12 +26,12 @@ public enum ReadContactsPermissionStatus {
 
 
     public static String check(Context context) {
-        final int statusCode = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS);
+        final int statusCode = PermissionChecker.checkCallingPermission(context, Manifest.permission.READ_CONTACTS, context.getPackageName());
         for (ReadContactsPermissionStatus status : values()) {
             if (status.code == statusCode) {
                 return status.value;
             }
         }
-        throw new RuntimeException("Unexpected permission status " + statusCode);
+        return denied.value;
     }
 }

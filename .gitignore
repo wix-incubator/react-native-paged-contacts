@@ -60,3 +60,7 @@ fastlane/screenshots
 iOSInjectionProject/
 node_modules/
 yarn.lock
+android/gradlew
+android/gradlew.bat
+android/gradle/wrapper/gradle-wrapper.jar
+android/gradle/wrapper/gradle-wrapper.properties
