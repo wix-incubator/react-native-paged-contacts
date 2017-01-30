@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.Items.Contact;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
@@ -54,6 +55,9 @@ public class ContactsProvider {
     public WritableArray getContactsWithRange(QueryParams params) {
         ensureContactIds();
         List<String> contactsToFetch = getContactsToFetch(params);
+        if (contactsToFetch.isEmpty()) {
+            return Arguments.createArray();
+        }
         params.setContactsToFetch(contactsToFetch);
         Cursor cursor = queryContacts(params);
         return new ContactCursorReader(context).readWithIds(cursor, params);
