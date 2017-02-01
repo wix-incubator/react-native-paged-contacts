@@ -2,6 +2,7 @@ package com.wix.pagedcontacts.contacts.query;
 
 import android.provider.ContactsContract;
 
+import com.wix.pagedcontacts.contacts.ContactsProvider;
 import com.wix.pagedcontacts.contacts.Field;
 
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ public class QueryParams {
     }
 
     public QueryParams(List<String> keysToFetch, int offset, int size) {
+        if (size > ContactsProvider.MAX_ARGS) {
+            throw new RuntimeException("Size must be smaller then " + ContactsProvider.MAX_ARGS);
+        }
         this.keysToFetch = keysToFetch;
         this.offset = offset;
         this.size = size;

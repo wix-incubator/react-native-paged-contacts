@@ -55,7 +55,7 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getContactsWithRange(String uuid, int offset, int size, ReadableArray keysToFetch, Promise promise) {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), offset, size);
-        WritableArray contacts = contactProvider.get(uuid).getContactsWithRange(params);
+        WritableArray contacts = contactProvider.get(uuid).getContacts(params);
         promise.resolve(contacts);
     }
 

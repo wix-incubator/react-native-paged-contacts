@@ -4,14 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.Items.Contact;
 import com.wix.pagedcontacts.contacts.Items.ContactItemReader;
 import com.wix.pagedcontacts.contacts.Items.DisplayName;
 import com.wix.pagedcontacts.contacts.Items.Identity;
 import com.wix.pagedcontacts.contacts.Items.InvalidCursorTypeException;
-import com.wix.pagedcontacts.contacts.query.QueryParams;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +33,7 @@ public class ContactCursorReader {
         return contact;
     }
 
-    public WritableArray readWithIds(Cursor cursor, QueryParams params) {
+    public List<Contact> readWithIds(Cursor cursor) {
         Set<String> fetchedContacts = new HashSet<>();
         List<Contact> contacts = new ArrayList<>();
         while (cursor.moveToNext()) {
@@ -46,11 +43,7 @@ public class ContactCursorReader {
                 contacts.add(contact);
             }
         }
-        WritableArray result = Arguments.createArray();
-        for (Contact contact : contacts) {
-            result.pushMap(contact.toMap(params));
-        }
-        return result;
+        return contacts;
     }
 
     private Contact read(Cursor cursor, String contactId) {

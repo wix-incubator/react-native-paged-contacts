@@ -11,11 +11,13 @@ import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.contacts.readers.ContactCursorReader;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class ContactsProvider {
+    public static final int MAX_ARGS = 999;
     private Context context;
     private List<String> contactIds;
     private String matchName;
@@ -52,22 +54,59 @@ public class ContactsProvider {
         return contactIds;
     }
 
-    public WritableArray getContactsWithRange(QueryParams params) {
+    public WritableArray getContacts(QueryParams params) {
+        if (matchName != null) {
+            return getContactsWithNameFilter(params);
+        } else {
+            List<Contact> contactsWithRange = getContactsWithRange(params);
+            return toWritableArray(params, new List[]{contactsWithRange});
+        }
+    }
+
+    private WritableArray getContactsWithNameFilter(QueryParams params) {
+        ensureContactIds();
+        int size = contactIds.size();
+        int offset = 0;
+        List<List<Contact>> contactLists = new ArrayList<>();
+        while (size > 0) {
+            params.size = size > MAX_ARGS ? MAX_ARGS : size;
+            params.offset = offset;
+            contactLists.add(getContactsWithRange(params));
+
+            offset += params.size;
+            size = size - MAX_ARGS;
+        }
+        List[] lists = contactLists.toArray(new List[contactLists.size()]);
+        return toWritableArray(params, lists);
+    }
+
+    private List<Contact> getContactsWithRange(QueryParams params) {
         ensureContactIds();
         List<String> contactsToFetch = getContactsToFetch(params);
         if (contactsToFetch.isEmpty()) {
-            return Arguments.createArray();
+            return Collections.emptyList();
         }
         params.setContactsToFetch(contactsToFetch);
         Cursor cursor = queryContacts(params);
-        return new ContactCursorReader(context).readWithIds(cursor, params);
+        return new ContactCursorReader(context).readWithIds(cursor);
     }
 
     public WritableArray getContactsWithIdentifiers(QueryParams params) {
         ensureContactIds();
         params.setContactsToFetch(getContactsToFetch(params));
         Cursor cursor = queryContacts(params);
-        return new ContactCursorReader(context).readWithIds(cursor, params);
+        List<Contact> contacts = new ContactCursorReader(context).readWithIds(cursor);
+        return toWritableArray(params, new List[]{contacts});
+    }
+
+    private WritableArray toWritableArray(QueryParams params, List<Contact>[] contactsLists) {
+        WritableArray result = Arguments.createArray();
+        for (List<Contact> contactList : contactsLists) {
+            for (Contact contact : contactList) {
+                result.pushMap(contact.toMap(params));
+            }
+        }
+        return result;
     }
 
     private void ensureContactIds() {
