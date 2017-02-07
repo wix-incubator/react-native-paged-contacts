@@ -1,5 +1,8 @@
 package com.wix.pagedcontacts;
 
+import android.Manifest;
+import android.support.v4.content.PermissionChecker;
+
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -8,7 +11,7 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.ContactsProviderFactory;
 import com.wix.pagedcontacts.contacts.Field;
-import com.wix.pagedcontacts.contacts.ReadContactsPermissionStatus;
+import com.wix.pagedcontacts.contacts.permission.ReadContactsPermissionStatus;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.utils.Collections;
 
@@ -16,7 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PagedContactsModule extends ReactContextBaseJavaModule {
+    public static final int READ_CONTACTS_PERMISSION_REQUEST_CODE = 30156;
     private final ContactsProviderFactory contactProvider;
+    private Promise requestPermissionPromise;
 
     public PagedContactsModule(ReactApplicationContext context) {
         super(context);
@@ -30,7 +35,13 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void getAuthorizationStatus(Promise promise) {
-        promise.resolve(ReadContactsPermissionStatus.check(getReactApplicationContext()));
+        promise.resolve(ReadContactsPermissionStatus.getAuthorizationStatus(getCurrentActivity()));
+    }
+
+    @ReactMethod
+    public void requestAccess(String uuid, Promise promise) {
+        ReadContactsPermissionStatus.requestAccess(getCurrentActivity());
+        this.requestPermissionPromise = promise;
     }
 
     @Override
@@ -64,5 +75,16 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), Collections.toStringList(identifiers));
         WritableArray contacts = contactProvider.get(uuid).getContactsWithIdentifiers(params);
         promise.resolve(contacts);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (isReadContactsPermission(requestCode, permissions)) {
+            if (requestPermissionPromise != null) requestPermissionPromise.resolve(grantResults[0] == PermissionChecker.PERMISSION_GRANTED);
+        }
+    }
+
+    private boolean isReadContactsPermission(int requestCode, String[] permissions) {
+        return requestCode == READ_CONTACTS_PERMISSION_REQUEST_CODE &&
+               Manifest.permission.READ_CONTACTS.equals(permissions[0]);
     }
 }
