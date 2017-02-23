@@ -40,6 +40,10 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void requestAccess(String uuid, Promise promise) {
+        if (ReadContactsPermissionStatus.isAuthorized(getCurrentActivity())) {
+            promise.resolve(true);
+            return;
+        }
         ReadContactsPermissionStatus.requestAccess(getCurrentActivity());
         this.requestPermissionPromise = promise;
     }
