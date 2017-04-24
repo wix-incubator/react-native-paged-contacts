@@ -66,3 +66,4 @@ android/gradle/wrapper/gradle-wrapper.properties
 *.iml
 .idea
 .DS_Store
+npm-debug.log
