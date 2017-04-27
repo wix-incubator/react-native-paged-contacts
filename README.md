@@ -33,7 +33,7 @@ Paged contacts manager for React Native.
 * Add `react-native-paged-contacts` package, `new PagedContactsPackage()`, to `MainApplication.java`
 
 	```java
-            import com.wix.pagedcontacts.PagedContactsPackage; // <- Add this
+	    import com.wix.pagedcontacts.PagedContactsPackage; // <- Add this
 
 	    @Override
 	    protected List<ReactPackage> getPackages() {
