@@ -37,10 +37,10 @@ Paged contacts manager for React Native.
 
 	    @Override
 	    protected List<ReactPackage> getPackages() {
-		return Arrays.<ReactPackage>asList(
-		    new MainReactPackage(),
-		    new PagedContactsPackage() // <- Add this
-		);
+	    	return Arrays.<ReactPackage>asList(
+	    		new MainReactPackage(),
+	    		new PagedContactsPackage() // <- Add this
+	    	);
 	    }
 	```
 * Add `READ_CONTACTS` permission to `AndroidManifest.xml`
