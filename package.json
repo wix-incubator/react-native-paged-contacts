@@ -14,8 +14,9 @@
     "addressbook",
     "contacts"
   ],
-  "peerDependencies": {
-    "react-native": "^0.38.0"
+  "dependencies": {
+    "react-native": "^0.38.0",
+    "react": "*"
   },
   "bugs": {
     "url": "https://github.com/wix/react-native-paged-contacts/issues"

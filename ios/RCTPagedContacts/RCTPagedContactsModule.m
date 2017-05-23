@@ -1,6 +1,7 @@
 #import <AddressBook/AddressBook.h>
 #import <UIKit/UIKit.h>
 #import "RCTPagedContactsModule.h"
+#import <React/RCTUIManager.h>
 
 #import "WXContactsManager.h"
 @import ObjectiveC;
@@ -296,6 +297,29 @@ RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(
 	NSArray* contacts = [manager contactsWithIdentifiers:identifiers keysToFetch:realKeysToFetch];
 	
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch managerForObscureContacts:manager]);
+}
+
+RCT_EXPORT_METHOD(setImageViewWithHandle:(nonnull NSNumber *)viewHandle contactId:(NSString *)contactId imageType:(NSString*)imageType managerId:(NSString *)managerId)
+{
+    WXContactsManager* manager = [self _managerForIdentifier:managerId];
+    NSString *key = [imageType isEqual:@"image"] ? CNContactImageDataKey : CNContactThumbnailImageDataKey;
+    NSArray<CNContact *> *contacts = [manager contactsWithIdentifiers:@[contactId] keysToFetch:@[key]];
+    CNContact *contact = contacts.count > 0 ? contacts[0] : nil;
+    NSData *imageData = [contact valueForKey:key];
+    UIImage *image = imageData ? [UIImage imageWithData:imageData] : nil;
+    
+    RCTUIManager *uiManager = ((RCTBridge *)[RCTBridge valueForKey:@"currentBridge"]).uiManager;
+    dispatch_async(RCTGetUIManagerQueue(), ^{
+        [uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry)
+         {
+             UIView *view = viewRegistry[viewHandle];
+             if ([view isKindOfClass:[UIImageView class]])
+             {
+                 [(UIImageView *)view setImage:image];
+             }
+         }];
+        [uiManager batchDidComplete];
+    });
 }
 
 @end

@@ -6,17 +6,17 @@ export default class DemoApp extends Component {
   constructor() {
     super();
     this.state = {contacts: []};
+    this.pagedContacts = new PagedContacts();
     this.getContacts().then(contacts => {
       this.setState({contacts});
     });
   }
 
   async getContacts() {
-    const pagedContacts = new PagedContacts();
-    const granted = await pagedContacts.requestAccess();
+    const granted = await this.pagedContacts.requestAccess();
     if(granted) {
-      const count = await pagedContacts.getContactsCount();
-      return await pagedContacts.getContactsWithRange(0, count, [PagedContacts.displayName, PagedContacts.thumbnailImageData, PagedContacts.phoneNumbers, PagedContacts.emailAddresses])
+      const count = await this.pagedContacts.getContactsCount();
+      return await this.pagedContacts.getContactsWithRange(0, count, [PagedContacts.displayName, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]);
     }
   }
 
@@ -25,7 +25,12 @@ export default class DemoApp extends Component {
 
     return (
       <View>
-        {contacts.map((contact, index) => <Text key={index}>{contact.displayName}</Text>)}
+        {contacts.map((contact, index) => (
+          <View key={index} style={{flexDirection: "row", alignItems: 'center'}}>
+            <PagedContacts.Image style={{width:15, height: 15}} pagedContacts={this.pagedContacts} contactId={contact.identifier}/>
+            <Text>{contact.displayName}</Text>
+          </View>
+        ))}
       </View>
     );
   }
