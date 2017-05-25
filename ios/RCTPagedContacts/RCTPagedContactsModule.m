@@ -304,7 +304,7 @@ RCT_EXPORT_METHOD(setImageViewWithHandle:(nonnull NSNumber *)viewHandle contactI
     WXContactsManager* manager = [self _managerForIdentifier:managerId];
     NSString *key = [imageType isEqual:@"image"] ? CNContactImageDataKey : CNContactThumbnailImageDataKey;
     NSArray<CNContact *> *contacts = [manager contactsWithIdentifiers:@[contactId] keysToFetch:@[key]];
-    CNContact *contact = contacts.count > 0 ? contacts[0] : nil;
+    CNContact *contact = contacts.firstObject;
     NSData *imageData = [contact valueForKey:key];
     UIImage *image = imageData ? [UIImage imageWithData:imageData] : nil;
     
