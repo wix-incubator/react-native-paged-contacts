@@ -17,6 +17,8 @@ export default class DemoApp extends Component {
     if(granted) {
       const count = await this.pagedContacts.getContactsCount();
       return await this.pagedContacts.getContactsWithRange(0, count, [PagedContacts.displayName, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]);
+    } else {
+      console.warn('Permissions issue');
     }
   }
 
@@ -27,7 +29,7 @@ export default class DemoApp extends Component {
       <View>
         {contacts.map((contact, index) => (
           <View key={index} style={{flexDirection: "row", alignItems: 'center'}}>
-            <PagedContacts.Image style={{width:15, height: 15}} pagedContacts={this.pagedContacts} contactId={contact.identifier}/>
+            <PagedContacts.Image source={[]} style={{width:15, height: 15}} pagedContacts={this.pagedContacts} contactId={contact.identifier}/>
             <Text>{contact.displayName}</Text>
           </View>
         ))}

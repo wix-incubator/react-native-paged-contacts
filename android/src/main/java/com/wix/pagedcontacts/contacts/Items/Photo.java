@@ -16,7 +16,7 @@ class Photo extends ContactItem {
     private Context applicationContext;
     @Nullable private String imageUri;
     @Nullable private String thumbnailImageUri;
-    private byte[] imageData;
+    private byte[] thumbnailBytes;
 
     Photo() {
 
@@ -28,29 +28,45 @@ class Photo extends ContactItem {
         fillFromCursor();
     }
 
+    public byte[] getImageBytes() {
+        return imageUri != null ? getBytesPhoto(imageUri) : null;
+    }
+
+    public byte[] getThumbnailBytes() {
+        if (hasThumbnailBlob()) {
+            return thumbnailBytes;
+        }
+        return thumbnailImageUri != null ? getBytesPhoto(thumbnailImageUri) : null;
+    }
+
     private void fillFromCursor() {
         imageUri = getString(Contactables.PHOTO_URI);
         thumbnailImageUri = getString(Contactables.PHOTO_THUMBNAIL_URI);
-        imageData = getBlob(PHOTO);
+        thumbnailBytes = getBlob(PHOTO);
     }
 
-    String getImageData() {
+    String getImageBase64() {
         return imageUri != null ? getBase64Photo(imageUri) : null;
     }
 
-    String getThumbnailImageDate() {
+    String getThumbnailImageBase64() {
         if (hasThumbnailBlob()) {
-            return ImageUtils.toBase64(imageData);
+            return ImageUtils.toBase64(thumbnailBytes);
         }
         return thumbnailImageUri != null ? getBase64Photo(thumbnailImageUri) : null;
     }
 
     private boolean hasThumbnailBlob() {
-        return imageData != null && imageData.length > 0;
+        return thumbnailBytes != null && thumbnailBytes.length > 0;
     }
 
     private String getBase64Photo(@NonNull String uri) {
-        return ImageUtils.toBase64(applicationContext, uri);
+        byte[] bytes = getBytesPhoto(uri);
+        return bytes == null ? null : ImageUtils.toBase64(bytes);
+    }
+
+    private byte[] getBytesPhoto(@NonNull String uri) {
+        return ImageUtils.getBytes(applicationContext, uri);
     }
 
     @Override

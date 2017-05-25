@@ -57,8 +57,8 @@ public class Contact {
         }
         addItemsArray(map, instantMessagingAddresses, Field.instantMessageAddresses, params);
         addItemsArray(map, urlAddresses, Field.urlAddresses, params);
-        addStringField(params, map, Field.imageData, photo.getImageData());
-        addStringField(params, map, Field.thumbnailImageData, photo.getThumbnailImageDate());
+        addStringField(params, map, Field.imageData, photo.getImageBase64());
+        addStringField(params, map, Field.thumbnailImageData, photo.getThumbnailImageBase64());
         return map;
     }
 
@@ -92,5 +92,9 @@ public class Contact {
 
     public String getContactId() {
         return identifier.contactId;
+    }
+
+    public byte[] getContactPhotoBytes(String imageType) {
+        return imageType != null && imageType.equals("image") ? photo.getImageBytes() : photo.getThumbnailBytes();
     }
 }

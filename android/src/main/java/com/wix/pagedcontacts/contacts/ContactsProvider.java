@@ -91,11 +91,15 @@ public class ContactsProvider {
         return new ContactCursorReader(context).readWithIds(cursor);
     }
 
-    public WritableArray getContactsWithIdentifiers(QueryParams params) {
+    public List<Contact> getContactsJavaListWithIdentifiers(QueryParams params) {
         ensureContactIds();
         params.setContactsToFetch(getContactsToFetch(params));
         Cursor cursor = queryContacts(params);
-        List<Contact> contacts = new ContactCursorReader(context).readWithIds(cursor);
+        return new ContactCursorReader(context).readWithIds(cursor);
+    }
+
+    public WritableArray getContactsWithIdentifiers(QueryParams params) {
+        List<Contact> contacts = getContactsJavaListWithIdentifiers(params);
         return toWritableArray(params, new List[]{contacts});
     }
 
