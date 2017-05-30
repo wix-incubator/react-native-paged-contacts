@@ -31,14 +31,14 @@ import java.util.Map;
 
 public class PagedContactsModule extends ReactContextBaseJavaModule {
     public static final int READ_CONTACTS_PERMISSION_REQUEST_CODE = 30156;
-    private final ContactsProviderFactory contactProvider;
+    private final ContactsProviderFactory contactsProviderFactory;
     private Promise requestPermissionPromise;
     private ReactApplicationContext reactContext;
 
-    public PagedContactsModule(ReactApplicationContext context) {
+    public PagedContactsModule(ReactApplicationContext context, ContactsProviderFactory contactsProviderFactory) {
         super(context);
-        contactProvider = new ContactsProviderFactory(context);
         reactContext = context;
+        this.contactsProviderFactory = contactsProviderFactory;
     }
 
     @Override
@@ -71,51 +71,27 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setNameMatch(String uuid, String nameMatch) {
-        contactProvider.get(uuid).setMatchName(nameMatch);
+        contactsProviderFactory.get(uuid).setMatchName(nameMatch);
     }
 
     @ReactMethod
     public void contactsCount(String uuid, Promise promise) {
-        final int count = contactProvider.get(uuid).getContactsCount();
+        final int count = contactsProviderFactory.get(uuid).getContactsCount();
         promise.resolve(count);
     }
 
     @ReactMethod
     public void getContactsWithRange(String uuid, int offset, int size, ReadableArray keysToFetch, Promise promise) {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), offset, size);
-        WritableArray contacts = contactProvider.get(uuid).getContacts(params);
+        WritableArray contacts = contactsProviderFactory.get(uuid).getContacts(params);
         promise.resolve(contacts);
     }
 
     @ReactMethod
     public void getContactsWithIdentifiers(String uuid, ReadableArray identifiers, ReadableArray keysToFetch, Promise promise) {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), Collections.toStringList(identifiers));
-        WritableArray contacts = contactProvider.get(uuid).getContactsWithIdentifiers(params);
+        WritableArray contacts = contactsProviderFactory.get(uuid).getContactsWithIdentifiers(params);
         promise.resolve(contacts);
-    }
-
-    @ReactMethod
-    public void setImageViewWithHandle(final int viewHandle, String contactId, String imageType, String uuid) {
-        Field key = imageType != null && imageType.equals("image") ? Field.imageData : Field.thumbnailImageData;
-        QueryParams params = new QueryParams(Arrays.asList(key.getKey()), Arrays.asList(contactId));
-        List<Contact> contacts = contactProvider.get(uuid).getContactsJavaListWithIdentifiers(params);
-        if(contacts.size() == 0) {
-            return;
-        }
-
-        byte[] imageBytes = contacts.get(0).getContactPhotoBytes(imageType);
-        final Bitmap bitmap = imageBytes == null ? null : BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-
-        UIManagerModule uiManager = reactContext.getNativeModule(UIManagerModule.class);
-        uiManager.addUIBlock(new UIBlock() {
-            @Override
-            public void execute(NativeViewHierarchyManager nativeViewHierarchyManager) {
-                View view = nativeViewHierarchyManager.resolveView(viewHandle);
-                if(view instanceof ReactImageView) {
-                    ((ImageView)view).setImageBitmap(bitmap);
-                }
-            }
-        });
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

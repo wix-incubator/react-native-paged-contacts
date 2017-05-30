@@ -10,6 +10,9 @@
 		144161911BD0A79300FA4F59 /* RCTPagedContactsModule.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 144161901BD0A79300FA4F59 /* RCTPagedContactsModule.h */; };
 		144161931BD0A79300FA4F59 /* RCTPagedContactsModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 144161921BD0A79300FA4F59 /* RCTPagedContactsModule.m */; };
 		39B037B11DE7138A00E6167D /* WXContactsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B037B01DE7138A00E6167D /* WXContactsManager.m */; };
+		763CECF041DEDB82500E73F3 /* WXContactsManagersStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 763CED6665551CA48A00DBE0 /* WXContactsManagersStore.m */; };
+		A7388CAB1EDC662D0049CFE0 /* WXContactImageViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A7388CAA1EDC662D0049CFE0 /* WXContactImageViewManager.m */; };
+		A7388CB11EDC694B0049CFE0 /* WXContactImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = A7388CB01EDC694B0049CFE0 /* WXContactImageView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -31,6 +34,11 @@
 		144161921BD0A79300FA4F59 /* RCTPagedContactsModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTPagedContactsModule.m; sourceTree = "<group>"; };
 		39B037AF1DE7138A00E6167D /* WXContactsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXContactsManager.h; sourceTree = "<group>"; };
 		39B037B01DE7138A00E6167D /* WXContactsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXContactsManager.m; sourceTree = "<group>"; };
+		763CEC15AEC02DF5F4730E7D /* WXContactsManagersStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXContactsManagersStore.h; sourceTree = "<group>"; };
+		763CED6665551CA48A00DBE0 /* WXContactsManagersStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXContactsManagersStore.m; sourceTree = "<group>"; };
+		A7388CAA1EDC662D0049CFE0 /* WXContactImageViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXContactImageViewManager.m; sourceTree = "<group>"; };
+		A7388CAF1EDC694B0049CFE0 /* WXContactImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXContactImageView.h; sourceTree = "<group>"; };
+		A7388CB01EDC694B0049CFE0 /* WXContactImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WXContactImageView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +59,11 @@
 				39B037B01DE7138A00E6167D /* WXContactsManager.m */,
 				144161901BD0A79300FA4F59 /* RCTPagedContactsModule.h */,
 				144161921BD0A79300FA4F59 /* RCTPagedContactsModule.m */,
+				A7388CAA1EDC662D0049CFE0 /* WXContactImageViewManager.m */,
+				A7388CAF1EDC694B0049CFE0 /* WXContactImageView.h */,
+				A7388CB01EDC694B0049CFE0 /* WXContactImageView.m */,
+				763CED6665551CA48A00DBE0 /* WXContactsManagersStore.m */,
+				763CEC15AEC02DF5F4730E7D /* WXContactsManagersStore.h */,
 			);
 			path = RCTPagedContacts;
 			sourceTree = "<group>";
@@ -127,8 +140,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7388CB11EDC694B0049CFE0 /* WXContactImageView.m in Sources */,
 				144161931BD0A79300FA4F59 /* RCTPagedContactsModule.m in Sources */,
+				A7388CAB1EDC662D0049CFE0 /* WXContactImageViewManager.m in Sources */,
 				39B037B11DE7138A00E6167D /* WXContactsManager.m in Sources */,
+				763CECF041DEDB82500E73F3 /* WXContactsManagersStore.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +161,7 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -159,6 +176,7 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 				);
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

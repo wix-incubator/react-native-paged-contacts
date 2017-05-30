@@ -1,7 +1,7 @@
 import ReactNative, {
   NativeModules,
   Platform,
-  Image
+  requireNativeComponent
 } from 'react-native';
 import React, {Component} from 'react';
 
@@ -185,7 +185,8 @@ if (Platform.OS === 'ios') {
  * using `PagedContacts.setImageViewWithHandle`
  * function to update the view with the contact picture on the native side.
  * 
- * @prop {Number} contactId Contact identifier
+ * @prop {PagedContacts} pagedContacts PagedContacts instance
+ * @prop {String} contactId Contact identifier
  * @prop {String} imageType Image type - either `image` or `thumbnailImage`
  * 
  * @memberOf PagedContacts
@@ -193,15 +194,13 @@ if (Platform.OS === 'ios') {
 class PagedContactsImage extends Component {
   render() {
     return (
-      <Image
+      <WXContactImageView
         {...this.props}
-        ref={(element) => {
-          const handle = ReactNative.findNodeHandle(element);
-          this.props.pagedContacts.setImageViewWithHandle(handle, this.props.contactId, this.props.imageType);
-        }}
+        pagedContactsId={this.props.pagedContacts._uuid}
+        pagedContacts={undefined}
       />
     );
   }
 }
-
+const WXContactImageView = requireNativeComponent('WXContactImageView');
 PagedContacts.Image = PagedContactsImage;
