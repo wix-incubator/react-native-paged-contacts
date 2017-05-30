@@ -1,11 +1,7 @@
 package com.wix.pagedcontacts;
 
 import android.Manifest;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v4.content.PermissionChecker;
-import android.view.View;
-import android.widget.ImageView;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -13,20 +9,13 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
-import com.facebook.react.uimanager.NativeViewHierarchyManager;
-import com.facebook.react.uimanager.UIBlock;
-import com.facebook.react.uimanager.UIManagerModule;
-import com.facebook.react.views.image.ReactImageView;
 import com.wix.pagedcontacts.contacts.ContactsProviderFactory;
 import com.wix.pagedcontacts.contacts.Field;
-import com.wix.pagedcontacts.contacts.Items.Contact;
 import com.wix.pagedcontacts.contacts.permission.ReadContactsPermissionStatus;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.utils.Collections;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PagedContactsModule extends ReactContextBaseJavaModule {

@@ -13,8 +13,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.Arrays.asList;
-
 public class PagedContactsPackage implements ReactPackage {
     private final RequestPermissionsResultCallback permissionsResultCallback;
     private ContactsProviderFactory contactsProviderFactory;
