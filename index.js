@@ -1,7 +1,9 @@
-import {
+import ReactNative, {
   NativeModules,
-  Platform
+  Platform,
+  requireNativeComponent
 } from 'react-native';
+import React, {Component} from 'react';
 
 const PagedContactsModule = NativeModules.ReactNativePagedContacts;
 
@@ -16,7 +18,6 @@ function guid() {
     return v.toString(16);
   });
 }
-
 
 /**
  * The `PagedContacts` class is a class that can fetch native contacts in pages.
@@ -120,6 +121,20 @@ export class PagedContacts {
       PagedContactsModule.dispose(this._uuid);
     }
   }
+
+  /**
+   * Assigns image of contact with `contactId` to the image with `viewHandle`.
+   * 
+   * @param {Number} viewHandle Handle of the image view
+   * @param {String} contactId Id of the contact
+   * @param {String} imageType `image` for full image, `thumbnailImage` for thumbnail image
+   * 
+   * @memberOf PagedContacts
+   */
+  setImageViewWithHandle(viewHandle, contactId, imageType) {
+    PagedContactsModule.setImageViewWithHandle(viewHandle, contactId, imageType, this._uuid);
+  }
+
 }
 
 PagedContacts.identifier = PagedContactsModule.identifier;
@@ -164,3 +179,28 @@ if (Platform.OS === 'ios') {
   PagedContacts.notDetermined = PagedContactsModule.notDetermined;
   PagedContacts.restricted = PagedContactsModule.restricted;
 }
+
+/**
+ * The `PagedContactsImage` class is a simple wrapper around the `Image` component
+ * using `PagedContacts.setImageViewWithHandle`
+ * function to update the view with the contact picture on the native side.
+ * 
+ * @prop {PagedContacts} pagedContacts PagedContacts instance
+ * @prop {String} contactId Contact identifier
+ * @prop {String} imageType Image type - either `image` or `thumbnailImage`
+ * 
+ * @memberOf PagedContacts
+ */
+class PagedContactsImage extends Component {
+  render() {
+    return (
+      <WXContactImageView
+        {...this.props}
+        pagedContactsId={this.props.pagedContacts._uuid}
+        pagedContacts={undefined}
+      />
+    );
+  }
+}
+const WXContactImageView = requireNativeComponent('WXContactImageView');
+PagedContacts.Image = PagedContactsImage;

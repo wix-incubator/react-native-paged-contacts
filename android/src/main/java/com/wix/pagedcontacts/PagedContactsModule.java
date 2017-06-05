@@ -20,12 +20,14 @@ import java.util.Map;
 
 public class PagedContactsModule extends ReactContextBaseJavaModule {
     public static final int READ_CONTACTS_PERMISSION_REQUEST_CODE = 30156;
-    private final ContactsProviderFactory contactProvider;
+    private final ContactsProviderFactory contactsProviderFactory;
     private Promise requestPermissionPromise;
+    private ReactApplicationContext reactContext;
 
-    public PagedContactsModule(ReactApplicationContext context) {
+    public PagedContactsModule(ReactApplicationContext context, ContactsProviderFactory contactsProviderFactory) {
         super(context);
-        contactProvider = new ContactsProviderFactory(context);
+        reactContext = context;
+        this.contactsProviderFactory = contactsProviderFactory;
     }
 
     @Override
@@ -58,26 +60,26 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void setNameMatch(String uuid, String nameMatch) {
-        contactProvider.get(uuid).setMatchName(nameMatch);
+        contactsProviderFactory.get(uuid).setMatchName(nameMatch);
     }
 
     @ReactMethod
     public void contactsCount(String uuid, Promise promise) {
-        final int count = contactProvider.get(uuid).getContactsCount();
+        final int count = contactsProviderFactory.get(uuid).getContactsCount();
         promise.resolve(count);
     }
 
     @ReactMethod
     public void getContactsWithRange(String uuid, int offset, int size, ReadableArray keysToFetch, Promise promise) {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), offset, size);
-        WritableArray contacts = contactProvider.get(uuid).getContacts(params);
+        WritableArray contacts = contactsProviderFactory.get(uuid).getContacts(params);
         promise.resolve(contacts);
     }
 
     @ReactMethod
     public void getContactsWithIdentifiers(String uuid, ReadableArray identifiers, ReadableArray keysToFetch, Promise promise) {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), Collections.toStringList(identifiers));
-        WritableArray contacts = contactProvider.get(uuid).getContactsWithIdentifiers(params);
+        WritableArray contacts = contactsProviderFactory.get(uuid).getContactsWithIdentifiers(params);
         promise.resolve(contacts);
     }
 

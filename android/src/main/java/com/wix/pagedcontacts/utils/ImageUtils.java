@@ -17,12 +17,11 @@ public class ImageUtils {
         return Base64.encodeToString(blob, Base64.DEFAULT);
     }
 
-    public static String toBase64(Context context, @NonNull String imageUri) {
+    public static byte[] getBytes(Context context, @NonNull String imageUri) {
         try {
             Uri photo = Uri.parse(imageUri);
             Bitmap bitmap = getBitmap(context, photo);
-            byte[] byteArray = getBytes(bitmap);
-            return Base64.encodeToString(byteArray, Base64.DEFAULT);
+            return getBytes(bitmap);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

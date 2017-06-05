@@ -5,15 +5,17 @@ import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
+import com.wix.pagedcontacts.contacts.ContactsProviderFactory;
 import com.wix.pagedcontacts.contacts.permission.RequestPermissionsResultCallback;
+import com.wix.pagedcontacts.imageview.WXContactImageViewManager;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class PagedContactsPackage implements ReactPackage {
-
     private final RequestPermissionsResultCallback permissionsResultCallback;
+    private ContactsProviderFactory contactsProviderFactory;
 
     public PagedContactsPackage() {
         permissionsResultCallback = new RequestPermissionsResultCallback();
@@ -25,7 +27,7 @@ public class PagedContactsPackage implements ReactPackage {
 
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        PagedContactsModule pagedContactsModule = new PagedContactsModule(reactContext);
+        PagedContactsModule pagedContactsModule = new PagedContactsModule(reactContext, providersFactory(reactContext));
         permissionsResultCallback.setModule(pagedContactsModule);
         return Arrays.<NativeModule>asList(pagedContactsModule);
     }
@@ -37,6 +39,14 @@ public class PagedContactsPackage implements ReactPackage {
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {
-      return Collections.emptyList();
+        WXContactImageViewManager imageViewManager = new WXContactImageViewManager(providersFactory(reactContext));
+        return Arrays.<ViewManager>asList(imageViewManager);
+    }
+
+    private ContactsProviderFactory providersFactory(ReactApplicationContext reactContext) {
+        if(contactsProviderFactory == null) {
+            contactsProviderFactory = new ContactsProviderFactory(reactContext);
+        }
+        return contactsProviderFactory;
     }
 }

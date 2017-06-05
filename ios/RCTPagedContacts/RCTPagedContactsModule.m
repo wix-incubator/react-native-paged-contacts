@@ -1,14 +1,14 @@
 #import <AddressBook/AddressBook.h>
 #import <UIKit/UIKit.h>
 #import "RCTPagedContactsModule.h"
+#import <React/RCTUIManager.h>
 
 #import "WXContactsManager.h"
+#import "WXContactsManagersStore.h"
 @import ObjectiveC;
 
 @implementation RCTPagedContactsModule
 {
-	dispatch_queue_t _managerDispatchQueue;
-	NSMutableDictionary<NSString*, WXContactsManager*>* _managerMapping;
 	NSDateFormatter* _jsonDateFormatter;
 	CNContactFormatter* _displayNameFormatter;
 }
@@ -19,8 +19,6 @@
 	
 	if(self)
 	{
-		_managerDispatchQueue = dispatch_queue_create("_managerDispatchQueue", NULL);
-		_managerMapping = [NSMutableDictionary new];
 		_jsonDateFormatter = [NSDateFormatter new];
 		_jsonDateFormatter.dateFormat = @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'";
 		_displayNameFormatter = [CNContactFormatter new];
@@ -83,21 +81,6 @@ RCT_EXPORT_MODULE(ReactNativePagedContacts);
 	return constants;
 }
 
-- (WXContactsManager*)_managerForIdentifier:(NSString*)identifier
-{
-	__block WXContactsManager* manager;
-	dispatch_sync(_managerDispatchQueue, ^{
-		manager = _managerMapping[identifier];
-		if(manager == nil)
-		{
-			manager = [WXContactsManager new];
-			_managerMapping[identifier] = manager;
-		}
-	});
-	
-	return manager;
-}
-
 - (dispatch_queue_t)methodQueue
 {
 	return dispatch_queue_create("RCTPagedContactsModule", DISPATCH_QUEUE_SERIAL);
@@ -110,7 +93,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTPromiseResolveBlock)resolve rejecte
 
 RCT_EXPORT_METHOD(requestAccess:(NSString*)identifier resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-	WXContactsManager* manager = [self _managerForIdentifier:identifier];
+	WXContactsManager* manager = [[WXContactsManagersStore sharedInstance] managerForIdentifier:identifier];
 	
 	[manager requestAccessWithCompletionHandler:^(BOOL granted, NSError* error) {
 		if(error)
@@ -124,20 +107,18 @@ RCT_EXPORT_METHOD(requestAccess:(NSString*)identifier resolver:(RCTPromiseResolv
 
 RCT_EXPORT_METHOD(dispose:(NSString*)identifier)
 {
-	dispatch_sync(_managerDispatchQueue, ^{
-		[_managerMapping removeObjectForKey:identifier];
-	});
+    [[WXContactsManagersStore sharedInstance] removeManagerWithIdentifier:identifier];
 }
 
 RCT_EXPORT_METHOD(setNameMatch:(NSString*)identifier nameMatch:(NSString*)nameMatch)
 {
-	WXContactsManager* manager = [self _managerForIdentifier:identifier];
+	WXContactsManager* manager = [[WXContactsManagersStore sharedInstance] managerForIdentifier:identifier];
 	manager.nameMatch = nameMatch;
 }
 
 RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-	WXContactsManager* manager = [self _managerForIdentifier:identifier];
+	WXContactsManager* manager = [[WXContactsManagersStore sharedInstance] managerForIdentifier:identifier];
 	resolve(@(manager.contactsCount));
 }
 
@@ -277,7 +258,7 @@ RCT_EXPORT_METHOD(getContactsWithRange:(NSString*)identifier offset:(NSUInteger)
 	
 	NSArray* realKeysToFetch = [self _keysToFetchIncludingManadatoryKeys:keysToFetch];
 	
-	WXContactsManager* manager = [self _managerForIdentifier:identifier];
+	WXContactsManager* manager = [[WXContactsManagersStore sharedInstance] managerForIdentifier:identifier];
 	NSArray<CNContact*>* contacts = [manager contactsWithRange:NSMakeRange(offset, batchSize) keysToFetch:realKeysToFetch];
 	
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch managerForObscureContacts:manager]);
@@ -292,10 +273,33 @@ RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(
 	
 	NSArray* realKeysToFetch = [self _keysToFetchIncludingManadatoryKeys:keysToFetch];
 	
-	WXContactsManager* manager = [self _managerForIdentifier:identifier];
+	WXContactsManager* manager = [[WXContactsManagersStore sharedInstance] managerForIdentifier:identifier];
 	NSArray* contacts = [manager contactsWithIdentifiers:identifiers keysToFetch:realKeysToFetch];
 	
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch managerForObscureContacts:manager]);
+}
+
+RCT_EXPORT_METHOD(setImageViewWithHandle:(nonnull NSNumber *)viewHandle contactId:(NSString *)contactId imageType:(NSString*)imageType managerId:(NSString *)managerId)
+{
+    WXContactsManager* manager = [[WXContactsManagersStore sharedInstance] managerForIdentifier:managerId];
+    NSString *key = [imageType isEqual:@"image"] ? CNContactImageDataKey : CNContactThumbnailImageDataKey;
+    NSArray<CNContact *> *contacts = [manager contactsWithIdentifiers:@[contactId] keysToFetch:@[key]];
+    CNContact *contact = contacts.firstObject;
+    NSData *imageData = [contact valueForKey:key];
+    UIImage *image = imageData ? [UIImage imageWithData:imageData] : nil;
+    
+    RCTUIManager *uiManager = ((RCTBridge *)[RCTBridge valueForKey:@"currentBridge"]).uiManager;
+    dispatch_async(RCTGetUIManagerQueue(), ^{
+        [uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry)
+         {
+             UIView *view = viewRegistry[viewHandle];
+             if ([view isKindOfClass:[UIImageView class]])
+             {
+                 [(UIImageView *)view setImage:image];
+             }
+         }];
+        [uiManager batchDidComplete];
+    });
 }
 
 @end

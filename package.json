@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/wix/react-native-paged-contacts.git"
   },
-  "version": "1.0.19",
+  "version": "1.0.20-experimental.1",
   "description": "React Native Paged Contacts",
   "nativePackage": true,
   "keywords": [
@@ -14,8 +14,9 @@
     "addressbook",
     "contacts"
   ],
-  "peerDependencies": {
-    "react-native": "^0.38.0"
+  "dependencies": {
+    "react-native": "^0.38.0",
+    "react": "*"
   },
   "bugs": {
     "url": "https://github.com/wix/react-native-paged-contacts/issues"

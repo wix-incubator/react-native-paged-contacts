@@ -1,22 +1,34 @@
 import React, {Component} from 'react';
 import {PagedContacts} from 'react-native-paged-contacts';
-import {View, Text} from 'react-native';
+import ReactNative, {Image, View, ListView, Text} from 'react-native';
+import _ from 'lodash';
 
 export default class DemoApp extends Component {
   constructor() {
     super();
-    this.state = {contacts: []};
+    this.contacts = [];
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      dataSource: ds.cloneWithRows([])
+    };
+    this.handlesByContactId = {};
+    this.pagedContacts = new PagedContacts();
+
     this.getContacts().then(contacts => {
-      this.setState({contacts});
+      this.contacts = contacts;
+      this.setState({
+        dataSource: ds.cloneWithRows(contacts)
+      });
     });
   }
 
   async getContacts() {
-    const pagedContacts = new PagedContacts();
-    const granted = await pagedContacts.requestAccess();
+    const granted = await this.pagedContacts.requestAccess();
     if(granted) {
-      const count = await pagedContacts.getContactsCount();
-      return await pagedContacts.getContactsWithRange(0, count, [PagedContacts.displayName, PagedContacts.thumbnailImageData, PagedContacts.phoneNumbers, PagedContacts.emailAddresses])
+      const count = await this.pagedContacts.getContactsCount();
+      return await this.pagedContacts.getContactsWithRange(0, count, [PagedContacts.displayName, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]);
+    } else {
+      console.warn('Permissions issue');
     }
   }
 
@@ -24,9 +36,21 @@ export default class DemoApp extends Component {
     const {contacts} = this.state;
 
     return (
-      <View>
-        {contacts.map((contact, index) => <Text key={index}>{contact.displayName}</Text>)}
-      </View>
+      <ListView
+        style={{marginTop: 20}}
+        enableEmptySections={true}
+        dataSource={this.state.dataSource}
+        renderRow={contact => (
+          <View style={{flexDirection: "row", alignItems: 'center'}}>
+            <PagedContacts.Image
+              style={{width:15, height: 15}}
+              pagedContacts={this.pagedContacts}
+              contactId={contact.identifier}
+            />
+            <Text>{contact.displayName}</Text>
+          </View>
+        )}
+      />
     );
   }
 }
