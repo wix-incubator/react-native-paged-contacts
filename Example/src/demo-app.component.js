@@ -40,6 +40,7 @@ export default class DemoApp extends Component {
         style={{marginTop: 20}}
         enableEmptySections={true}
         dataSource={this.state.dataSource}
+        initialListSize={40}
         renderRow={contact => (
           <View style={{flexDirection: "row", alignItems: 'center'}}>
             <PagedContacts.Image
