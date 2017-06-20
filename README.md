@@ -49,7 +49,7 @@ Paged contacts manager for React Native.
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
 	```
 
-##API
+## API
 
 - `new PagedContacts()` — Create a paged contacts manager for all device contacts.
 - `new PagedContacts(nameMatch)` — Create a paged contacts manager for contacts matching the provided name.
@@ -61,14 +61,14 @@ Paged contacts manager for React Native.
 - `getContactsWithIdentifiers(identifiers, keysToFetch)` — Get contacts with the provided `identifiers`. Only the keys requested in `keysToFetch` will be provided (contact identifiers are always provided).
 - `dispose()` — Disposes the native components. Call this method when the manager object is no longer required. Must not call any other methods of the contacts manager after calling `dispose`.
 
-####Authorization Status
+#### Authorization Status
 
 - `PagedContacts.notDetermined` — The user has not yet made a choice regarding whether the application may access contact data.
 - `PagedContacts.authorized` — The application is authorized to access contact data.
 - `PagedContacts.denied` — The user explicitly denied access to contact data for the application.
 - `PagedContacts.restricted` — The application is not authorized to access contact data. The user cannot change this application’s status, possibly due to active restrictions such as parental controls being in place.
 
-####Available Keys to Fetch
+#### Available Keys to Fetch
 
 - `PagedContacts.identifier` — The contact’s unique identifier.
 - `PagedContacts.displayName`
@@ -100,7 +100,7 @@ Paged contacts manager for React Native.
 - `PagedContacts.socialProfiles` — Social profiles. (**iOS only**)
 - `PagedContacts.instantMessageAddresses` — Instant message addresses.
 
-##Usage
+## Usage
 
 Import the library and create a new `PagedContacts` instance.
 
@@ -128,7 +128,7 @@ pg.requestAccess().then((granted) => {
 
 This is a very intensive way of obtaining specific keys of all contacts. Instead, use the paging mechanism to obtain contacts within a range, and only request keys you need.
 
-####Example of a Contact Result
+#### Example of a Contact Result
 
 ```json
 {
