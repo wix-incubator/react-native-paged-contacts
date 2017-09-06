@@ -11,6 +11,7 @@ Paged contacts manager for React Native.
 * Add `RCTPagedContacts.xcodeproj` to your project.
 * In you project's target, under `Build Phases` — `Target Dependencies`, add `RCTPagedContacts`.
 * In you project's target, under `Build Phases` — `Link Libraries With Libraries`, add `RCTPagedContacts`.
+* Add `NSContactsUsageDescription` privacy key description to `Info.plist`
 
 #### Android
 * Add the following to `settings.gradle`:
