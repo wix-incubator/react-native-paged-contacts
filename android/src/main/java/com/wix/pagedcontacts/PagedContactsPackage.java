@@ -30,7 +30,6 @@ public class PagedContactsPackage implements ReactPackage {
         return Arrays.<NativeModule>asList(pagedContactsModule);
     }
 
-    @Override
     public List<Class<? extends JavaScriptModule>> createJSModules() {
       return Collections.emptyList();
     }
