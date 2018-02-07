@@ -1,3 +1,6 @@
-examples/
+Example/
 node_modules/
 yarn.lock
+android/build/
+ios/lib/DerivedData/
+package-lock.json

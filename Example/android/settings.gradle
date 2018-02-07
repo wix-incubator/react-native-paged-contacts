@@ -1,3 +1,8 @@
-rootProject.name = 'Example'
+rootProject.name = 'react-native-paged-contacts Example'
 
 include ':app'
+
+include ':pagedcontacts'
+
+project(':pagedcontacts').projectDir = new File(rootProject.projectDir,
+        '../node_modules/react-native-paged-contacts/android/')

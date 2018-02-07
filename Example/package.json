@@ -8,7 +8,8 @@
 	},
 	"dependencies": {
 		"react": "16.0.0-alpha.6",
-		"react-native": "0.43.4"
+		"react-native": "0.51.0",
+		"react-native-paged-contacts": "file:../"
 	},
 	"devDependencies": {
 		"babel-jest": "19.0.0",
