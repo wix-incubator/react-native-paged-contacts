@@ -25,6 +25,7 @@ export default class DemoApp extends Component {
 
     return (
       <View>
+        <Text>Found {contacts.length} contacts</Text>
         {contacts.map((contact, index) => <Text key={index}>{contact.displayName}</Text>)}
       </View>
     );

@@ -15,8 +15,11 @@
     "contacts"
   ],
   "peerDependencies": {
-    "react-native": "^0.38.0"
+    "react-native": "0.51.0"
   },
+    "devDependencies": {
+    "react-native": "0.51.0"
+},
   "bugs": {
     "url": "https://github.com/wix/react-native-paged-contacts/issues"
   },

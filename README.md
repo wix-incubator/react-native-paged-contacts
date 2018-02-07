@@ -17,8 +17,8 @@ Paged contacts manager for React Native.
 * Add the following to `settings.gradle`:
 
 	```groovy
-	include ':react-native-paged-contacts'
-	project(':react-native-paged-contacts').projectDir = new File(
+	include ':pagedcontacts'
+	project(':pagedcontacts').projectDir = new File(
 	        rootProject.projectDir, '../node_modules/react-native-paged-contacts/android/')
 	```
 * Update dependencies in `build.gradle`. 
@@ -26,12 +26,14 @@ Paged contacts manager for React Native.
 	```groovy
 	dependencies {
 	    compile fileTree(dir: 'libs', include: ['*.jar'])
-	    compile project(':react-native-paged-contacts')  // <— Add this
+	    compile project(':pagedcontacts')  // <— Add this
 	    ...
 	}
 	```
 
-* Add `react-native-paged-contacts` package, `new PagedContactsPackage()`, to `MainApplication.java`
+(The dependency will be satisfied after `npm install` on the Example project)
+
+* Add the package `PagedContactsPackage`, to `MainApplication.java`
 
 	```java
 	    import com.wix.pagedcontacts.PagedContactsPackage; // <- Add this
