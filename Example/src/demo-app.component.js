@@ -1,32 +1,50 @@
 import React, {Component} from 'react';
 import {PagedContacts} from 'react-native-paged-contacts';
-import {View, Text} from 'react-native';
+import {View, FlatList, Text, Button} from 'react-native';
 
 export default class DemoApp extends Component {
   constructor() {
     super();
-    this.state = {contacts: []};
+    this.state = {
+      data: {}
+    };
+
+    this.pagedContacts = new PagedContacts();
+
     this.getContacts().then(contacts => {
-      this.setState({contacts});
+      this.contacts = contacts;
+
+      let list = contacts.map(x => {
+        return {
+          key: x.identifier,
+          label: x.displayName
+        }
+      });
+      this.setState({
+        data: list
+      });
     });
   }
 
   async getContacts() {
-    const pagedContacts = new PagedContacts();
-    const granted = await pagedContacts.requestAccess();
-    if(granted) {
-      const count = await pagedContacts.getContactsCount();
-      return await pagedContacts.getContactsWithRange(0, count, [PagedContacts.displayName, PagedContacts.thumbnailImageData, PagedContacts.phoneNumbers, PagedContacts.emailAddresses])
+    const granted = await this.pagedContacts.requestAccess();
+    if (granted) {
+      const count = await this.pagedContacts.getContactsCount();
+      return await this.pagedContacts.getContactsWithRange(0, 100, [PagedContacts.displayName, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]);
+    } else {
+      console.warn('Permissions issue');
     }
   }
 
   render() {
-    const {contacts} = this.state;
-
+    const {data} = this.state;
     return (
       <View>
-        <Text>Found {contacts.length} contacts</Text>
-        {contacts.map((contact, index) => <Text key={index}>{contact.displayName}</Text>)}
+        <Text style={{fontWeight: 'bold'}}>Found {data.length} contacts</Text>
+        <FlatList
+          data={data}
+          renderItem={({item}) => <Text>{item.label}</Text>}
+        />
       </View>
     );
   }
