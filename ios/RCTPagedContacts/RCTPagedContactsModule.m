@@ -298,4 +298,9 @@ RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch managerForObscureContacts:manager]);
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
 @end
