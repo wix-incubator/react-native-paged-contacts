@@ -88,6 +88,8 @@
 - (NSArray<CNContact*>*)contactsWithRange:(NSRange)range keysToFetch:(NSArray<NSString*>*)keysToFetch
 {
 	NSMutableArray* contacts = [NSMutableArray new];
+    
+    range.length = MIN(range.length, self._chachedIdentifiers.count);
 	
 	NSArray* identifiers = [self._chachedIdentifiers subarrayWithRange:range];
 	

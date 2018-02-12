@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {PagedContacts} from 'react-native-paged-contacts';
-import {View, FlatList, Text, Button} from 'react-native';
+import {SafeAreaView, FlatList, Text, Button} from 'react-native';
 
 export default class DemoApp extends Component {
   constructor() {
@@ -39,13 +39,13 @@ export default class DemoApp extends Component {
   render() {
     const {data} = this.state;
     return (
-      <View>
+      <SafeAreaView>
         <Text style={{fontWeight: 'bold'}}>Found {data.length} contacts</Text>
         <FlatList
           data={data}
           renderItem={({item}) => <Text>{item.label}</Text>}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 }
