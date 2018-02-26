@@ -46,7 +46,7 @@ Paged contacts manager for React Native.
 	    	);
 	    }
 	```
-* Add `READ_CONTACTS` permission to `AndroidManifest.xml`
+* FYI: The `READ_CONTACTS` permission will automatically be merged into your build's `AndroidManifest.xml`
 
 	```xml
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
