@@ -5,7 +5,7 @@ import {
   View
 } from 'react-native';
 
-import DemoApp from './src/demo-app.component';
+import DemoApp from './src/demo-app-component';
 
 class Example extends Component {
 
