@@ -66,14 +66,16 @@ class Selection {
             return null;
         }
         StringBuilder sb = new StringBuilder();
+        sb.append(columnName);
+        sb.append(" in (");
         for (int i = 0; i < count; i++) {
-            sb.append(columnName);
             if (i == count - 1) {
-                sb.append("=?");
+                sb.append("?");
             } else {
-                sb.append("=? OR ");
+                sb.append("?,");
             }
         }
+        sb.append(")");
         return sb.toString();
     }
 

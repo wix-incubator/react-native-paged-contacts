@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ContactsProvider {
-    public static final int MAX_ARGS = 999;
+    public static final int MAX_ARGS = 990;
     private Context context;
     private List<String> contactIds;
     private String matchName;

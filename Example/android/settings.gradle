@@ -4,5 +4,4 @@ include ':app'
 
 include ':pagedcontacts'
 
-project(':pagedcontacts').projectDir = new File(rootProject.projectDir,
-        '../node_modules/react-native-paged-contacts/android/')
+project(':pagedcontacts').projectDir = new File(rootProject.projectDir, '../../android/')

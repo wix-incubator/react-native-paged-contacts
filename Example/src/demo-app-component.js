@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import {PagedContacts} from 'react-native-paged-contacts';
-import {SafeAreaView, FlatList, Text} from 'react-native';
+import {SafeAreaView, FlatList} from 'react-native';
+import {View, Text, LoaderScreen, Colors} from 'react-native-ui-lib';//eslint-disable-line
+
 
 export default class DemoApp extends Component {
   constructor() {
     super();
     this.state = {
-      data: {}
+      data: undefined,
+      loading: true,
     };
 
     this.pagedContacts = new PagedContacts();
@@ -21,16 +24,32 @@ export default class DemoApp extends Component {
         }
       });
       this.setState({
-        data: list
+        data: list,
+        loading: false
       });
     });
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        animationConfig: {
+          animation: 'fadeOut',
+          onAnimationEnd: () => this.setState({loading: false}),
+        },
+      });
+    }, 2500);
   }
 
   async getContacts() {
     const granted = await this.pagedContacts.requestAccess();
     if (granted) {
       const count = await this.pagedContacts.getContactsCount();
-      return await this.pagedContacts.getContactsWithRange(0, 100, [PagedContacts.identifier, PagedContacts.displayName, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]);
+      this.setState({
+        count: count
+      });
+      return await this.pagedContacts.getContactsWithRange(0, count, [PagedContacts.identifier, PagedContacts.displayName, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]);
+
     } else {
       console.warn('Permissions issue');
     }
@@ -38,14 +57,37 @@ export default class DemoApp extends Component {
 
   render() {
     const {data} = this.state;
+    if (data === undefined) {
+      return this.renderLoading();
+    }
+    return this.renderList();
+  }
+
+  renderList() {
+    const {data, count} = this.state;
     return (
       <SafeAreaView>
-        <Text style={{fontWeight: 'bold'}}>Found {data.length} contacts</Text>
+        <Text style={{fontWeight: 'bold'}}>Found {count} contacts</Text>
         <FlatList
           data={data}
           renderItem={({item}) => <Text>{item.label}</Text>}
         />
       </SafeAreaView>
+    );
+  }
+
+  renderLoading() {
+    const {loading, animationConfig} = this.state;
+    return (
+      <View flex bg-orange70 center>
+        {loading &&
+        <LoaderScreen
+          color={Colors.blue60}
+          message="Loading..."
+          overlay
+          {...animationConfig}
+        />}
+      </View>
     );
   }
 }

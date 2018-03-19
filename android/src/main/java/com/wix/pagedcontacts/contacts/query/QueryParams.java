@@ -39,7 +39,8 @@ public class QueryParams {
 
     public QueryParams(List<String> keysToFetch, int offset, int size) {
         if (size > ContactsProvider.MAX_ARGS) {
-            throw new RuntimeException("Size must be smaller then " + ContactsProvider.MAX_ARGS);
+            // silently avoid runtime crash
+            size = ContactsProvider.MAX_ARGS;
         }
         this.keysToFetch = keysToFetch;
         this.offset = offset;

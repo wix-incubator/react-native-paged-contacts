@@ -9,7 +9,8 @@
 	"dependencies": {
 		"react": "16.0.0",
 		"react-native": "0.51.0",
-		"react-native-paged-contacts": "file:../"
+		"react-native-paged-contacts": "file:../",
+		"react-native-ui-lib": "^3.3.32"
 	},
 	"devDependencies": {
 		"babel-jest": "19.0.0",
