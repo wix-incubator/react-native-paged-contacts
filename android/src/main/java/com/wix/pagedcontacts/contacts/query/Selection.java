@@ -34,7 +34,7 @@ class Selection {
         }
         if (!TextUtils.isEmpty(contactSelection)) {
             if (!TextUtils.isEmpty(mimeTypeSelection)) {
-                result = "(" + result + ") AND (" + contactSelection + ")";
+                result = "(" + result + ") OR (" + contactSelection + ")";
             } else {
                 result = contactSelection;
             }
