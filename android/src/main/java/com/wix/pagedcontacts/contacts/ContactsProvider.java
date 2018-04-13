@@ -55,29 +55,8 @@ public class ContactsProvider {
     }
 
     public WritableArray getContacts(QueryParams params) {
-        if (matchName != null) {
-            return getContactsWithNameFilter(params);
-        } else {
-            List<Contact> contactsWithRange = getContactsWithRange(params);
-            return toWritableArray(params, new List[]{contactsWithRange});
-        }
-    }
-
-    private WritableArray getContactsWithNameFilter(QueryParams params) {
-        ensureContactIds();
-        int size = contactIds.size();
-        int offset = 0;
-        List<List<Contact>> contactLists = new ArrayList<>();
-        while (size > 0) {
-            params.size = size > MAX_ARGS ? MAX_ARGS : size;
-            params.offset = offset;
-            contactLists.add(getContactsWithRange(params));
-
-            offset += params.size;
-            size = size - MAX_ARGS;
-        }
-        List[] lists = contactLists.toArray(new List[contactLists.size()]);
-        return toWritableArray(params, lists);
+        List<Contact> contactsWithRange = getContactsWithRange(params);
+        return toWritableArray(params, new List[]{contactsWithRange});
     }
 
     private List<Contact> getContactsWithRange(QueryParams params) {
