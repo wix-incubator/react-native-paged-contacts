@@ -24,38 +24,20 @@ class Selection {
         if (matchName != null) {
             return getMatchNameSelection();
         }
-        return combineMimeTypeAndContactsSelection(getMimeTypeSelection(), getContactSelection());
-    }
-
-    private String combineMimeTypeAndContactsSelection(String mimeTypeSelection, String contactSelection) {
-        String result = "";
-        if (!TextUtils.isEmpty(mimeTypeSelection)) {
-            result = mimeTypeSelection;
-        }
-        if (!TextUtils.isEmpty(contactSelection)) {
-            if (!TextUtils.isEmpty(mimeTypeSelection)) {
-                result = "(" + result + ") AND (" + contactSelection + ")";
-            } else {
-                result = contactSelection;
-            }
-        }
-        return result.isEmpty() ? null : result;
+        return getContactSelection();
     }
 
     String[] getSelectionArgs() {
         if (matchName != null) {
             return getMatchNameSelectionArgs();
         }
-        return Collections.concat(selectionArgs, contactsToFetch);
+        return Collections.concat(new ArrayList<String>(), contactsToFetch);
     }
 
     private String[] getMatchNameSelectionArgs() {
         return new String[]{"%" + matchName + "%"};
     }
 
-    private String getMimeTypeSelection() {
-        return getSelection(ContactsContract.Data.MIMETYPE, selectionArgs.size());
-    }
 
     private String getContactSelection() {
         return getSelection(ContactsContract.Data.CONTACT_ID, contactsToFetch.size());
