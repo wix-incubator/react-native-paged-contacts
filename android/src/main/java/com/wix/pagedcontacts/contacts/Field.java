@@ -21,6 +21,7 @@ import java.util.Map;
 
 public enum Field {
     identifier("identifier", new String[]{}),
+    lookupKey("lookupKey", new String[]{}),
     displayName("displayName", new String[]{ContactsContract.Contacts.DISPLAY_NAME}),
     identity("identity", Identity.CONTENT_ITEM_TYPE, new String[]{Identity.IDENTITY, Identity.NAMESPACE}),
     namePrefix("namePrefix", StructuredName.CONTENT_ITEM_TYPE, new String[]{StructuredName.PREFIX}),

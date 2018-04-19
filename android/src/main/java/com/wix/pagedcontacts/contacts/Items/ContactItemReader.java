@@ -57,9 +57,16 @@ public class ContactItemReader {
             case ContactsContract.CommonDataKinds.Identity.CONTENT_ITEM_TYPE:
                 readIdentity(cursor);
                 break;
+            case ContactsContract.CommonDataKinds.Identity.LOOKUP_KEY:
+                readLookupKey(cursor);
+                break;
             default:
                 break;
         }
+    }
+
+    private void readLookupKey(Cursor cursor) {
+        contact.identifier.lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
     }
 
     private void readIdentity(Cursor cursor) {

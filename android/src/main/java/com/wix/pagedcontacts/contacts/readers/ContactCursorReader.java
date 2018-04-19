@@ -27,7 +27,7 @@ public class ContactCursorReader {
     }
 
     public Contact read(Cursor cursor) {
-        Contact contact = new Contact(getId(cursor));
+        Contact contact = new Contact(getId(cursor), getLookupKey(cursor));
         contact.identity = new Identity(cursor);
         contact.displayName = new DisplayName(cursor);
         return contact;
@@ -37,7 +37,7 @@ public class ContactCursorReader {
         Set<String> fetchedContacts = new HashSet<>();
         List<Contact> contacts = new ArrayList<>();
         while (cursor.moveToNext()) {
-            Contact contact = read(cursor, getId(cursor));
+            Contact contact = read(cursor, getId(cursor), getLookupKey(cursor));
             if (!fetchedContacts.contains(contact.getContactId())) {
                 fetchedContacts.add(contact.getContactId());
                 contacts.add(contact);
@@ -46,8 +46,8 @@ public class ContactCursorReader {
         return contacts;
     }
 
-    private Contact read(Cursor cursor, String contactId) {
-        Contact contact = getContact(contactId);
+    private Contact read(Cursor cursor, String contactId, String lookupKey) {
+        Contact contact = getContact(contactId, lookupKey);
         contact.displayName = new DisplayName(cursor);
         readField(cursor, contact);
         return contact;
@@ -61,10 +61,10 @@ public class ContactCursorReader {
         }
     }
 
-    private Contact getContact(String contactId) {
+    private Contact getContact(String contactId, String lookupKey) {
         Contact contact = contacts.get(contactId);
         if (contact == null) {
-            contact = new Contact(contactId);
+            contact = new Contact(contactId, lookupKey);
             contacts.put(contactId, contact);
         }
         return contact;
@@ -72,5 +72,9 @@ public class ContactCursorReader {
 
     private String getId(Cursor cursor) {
         return String.valueOf(cursor.getInt(cursor.getColumnIndex(ContactsContract.Data.CONTACT_ID)));
+    }
+
+    private String getLookupKey(Cursor cursor) {
+        return cursor.getString(cursor.getColumnIndex(ContactsContract.Data.LOOKUP_KEY));
     }
 }

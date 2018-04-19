@@ -31,8 +31,8 @@ public class Contact {
     public List<UrlAddress> urlAddresses = new ArrayList<>();
     public Photo photo = new Photo();
 
-    public Contact(String contactId) {
-        this.identifier = new Identifier(contactId);
+    public Contact(String contactId, String lookupKey) {
+        this.identifier = new Identifier(contactId, lookupKey);
     }
 
     public WritableMap toMap(QueryParams params) {
