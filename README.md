@@ -74,6 +74,7 @@ Paged contacts manager for React Native.
 #### Available Keys to Fetch
 
 - `PagedContacts.identifier` — The contact’s unique identifier.
+- `PagedContacts.lookupKey` — The contact’s lookup key. (**Android only**)
 - `PagedContacts.displayName`
 - `PagedContacts.namePrefix` — Name prefix.
 - `PagedContacts.givenName` — Given name.
@@ -189,6 +190,7 @@ This is a very intensive way of obtaining specific keys of all contacts. Instead
     }
   ],
   "identifier": "60CB0169-0747-4494-9F10-22F387226676",
+  "lookupKey": "0r5-3535352929291A1A142F14141624",
   "urlAddresses": [
     {
       "label": "homepage",

@@ -156,6 +156,7 @@ if (Platform.OS === 'ios') {
 }
 if (Platform.OS === 'android') {
   PagedContacts.identity = PagedContactsModule.identity;
+  PagedContacts.lookupKey = PagedContactsModule.lookupKey;
 }
 
 PagedContacts.denied = PagedContactsModule.denied;

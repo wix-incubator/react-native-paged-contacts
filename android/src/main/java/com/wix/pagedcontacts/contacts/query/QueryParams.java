@@ -68,6 +68,7 @@ public class QueryParams {
             }
         }
         projection.add(ContactsContract.Data.CONTACT_ID);
+        projection.add(ContactsContract.Data.LOOKUP_KEY);
         return projection.toArray(new String[projection.size()]);
     }
 
