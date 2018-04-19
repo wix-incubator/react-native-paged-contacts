@@ -12,7 +12,7 @@
 @implementation WXContactsManager
 {
 	CNContactStore* _store;
-	NSArray* _chachedIdentifiers;
+	NSArray* _identifiers;
 }
 
 - (instancetype)init
@@ -30,35 +30,31 @@
 - (void)setNameMatch:(NSString *)nameMatch
 {
 	_nameMatch = nameMatch;
-	_chachedIdentifiers = nil;
+	_identifiers = nil;
 }
 
-- (NSArray*)_chachedIdentifiers
+- (NSArray*)_identifiers
 {
-	if(_chachedIdentifiers == nil)
+	NSMutableArray* identifiers = [NSMutableArray new];
+	
+	CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:@[CNContactIdentifierKey]];
+	request.unifyResults = YES;
+	request.sortOrder = CNContactSortOrderGivenName;
+	if(_nameMatch != nil)
 	{
-		NSMutableArray* identifiers = [NSMutableArray new];
-		
-		CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:@[CNContactIdentifierKey]];
-		request.unifyResults = YES;
-		request.sortOrder = CNContactSortOrderGivenName;
-		if(_nameMatch != nil)
-		{
-			request.predicate = [CNContact predicateForContactsMatchingName:_nameMatch];
-		}
-		
-		NSError* error = nil;
-		if([_store enumerateContactsWithFetchRequest:request error:&error usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
-			[identifiers addObject:contact.identifier];
-		}] == NO)
-		{
-			NSLog(@"Contact manager failed to obtain contact identifiers with error: %@", error);
-		}
-		
-		_chachedIdentifiers = identifiers;
+		request.predicate = [CNContact predicateForContactsMatchingName:_nameMatch];
 	}
 	
-	return _chachedIdentifiers;
+	NSError* error = nil;
+	if([_store enumerateContactsWithFetchRequest:request error:&error usingBlock:^(CNContact * _Nonnull contact, BOOL * _Nonnull stop) {
+		[identifiers addObject:contact.identifier];
+	}] == NO)
+	{
+		NSLog(@"Contact manager failed to obtain contact identifiers with error: %@", error);
+	}
+	
+	_identifiers = identifiers;
+	return _identifiers;
 }
 
 + (CNAuthorizationStatus)authorizationStatus
@@ -89,9 +85,9 @@
 {
 	NSMutableArray* contacts = [NSMutableArray new];
     
-    range.length = MIN(range.length, self._chachedIdentifiers.count);
+    range.length = MIN(range.length, self._identifiers.count);
 	
-	NSArray* identifiers = [self._chachedIdentifiers subarrayWithRange:range];
+	NSArray* identifiers = [self._identifiers subarrayWithRange:range];
 	
 	CNContactFetchRequest *request = [[CNContactFetchRequest alloc] initWithKeysToFetch:@[CNContactIdentifierKey]];
 	request.unifyResults = YES;
@@ -138,7 +134,7 @@
 
 - (NSUInteger)contactsCount
 {
-	return self._chachedIdentifiers.count;
+	return self._identifiers.count;
 }
 
 @end

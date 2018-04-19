@@ -33,7 +33,7 @@ public class ContactsProvider {
     }
 
     public int getContactsCount() {
-        ensureContactIds();
+        sync();
         return contactIds.size();
     }
 
@@ -64,7 +64,7 @@ public class ContactsProvider {
     }
 
     private WritableArray getContactsWithNameFilter(QueryParams params) {
-        ensureContactIds();
+        sync();
         int size = contactIds.size();
         int offset = 0;
         List<List<Contact>> contactLists = new ArrayList<>();
@@ -81,7 +81,7 @@ public class ContactsProvider {
     }
 
     private List<Contact> getContactsWithRange(QueryParams params) {
-        ensureContactIds();
+        sync();
         List<String> contactsToFetch = getContactsToFetch(params);
         if (contactsToFetch.isEmpty()) {
             return Collections.emptyList();
@@ -92,7 +92,7 @@ public class ContactsProvider {
     }
 
     public WritableArray getContactsWithIdentifiers(QueryParams params) {
-        ensureContactIds();
+        sync();
         params.setContactsToFetch(getContactsToFetch(params));
         Cursor cursor = queryContacts(params);
         List<Contact> contacts = new ContactCursorReader(context).readWithIds(cursor);
@@ -107,12 +107,6 @@ public class ContactsProvider {
             }
         }
         return result;
-    }
-
-    private void ensureContactIds() {
-        if (contactIds.isEmpty()) {
-            sync();
-        }
     }
 
     private void sync() {
