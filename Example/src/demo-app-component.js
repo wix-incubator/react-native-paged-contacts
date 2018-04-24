@@ -10,6 +10,8 @@ export default class DemoApp extends Component {
     this.state = {
       data: undefined,
       loading: true,
+      actualCount: 0,
+      count: 'unknown'
     };
 
     this.pagedContacts = new PagedContacts();
@@ -30,17 +32,6 @@ export default class DemoApp extends Component {
     });
   }
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({
-        animationConfig: {
-          animation: 'fadeOut',
-          onAnimationEnd: () => this.setState({loading: false}),
-        },
-      });
-    }, 2500);
-  }
-
   async getContacts() {
     const granted = await this.pagedContacts.requestAccess();
     if (granted) {
@@ -48,7 +39,16 @@ export default class DemoApp extends Component {
       this.setState({
         count: count
       });
-      return await this.pagedContacts.getContactsWithRange(0, count, [PagedContacts.identifier, PagedContacts.displayName, PagedContacts.phoneNumbers, PagedContacts.emailAddresses]);
+
+      const contacts = [];
+
+      for (let i=0; i< count; i+=100) {
+        const newContacts = await this.pagedContacts.getContactsWithRange(i, 100, [PagedContacts.displayName, PagedContacts.phoneNumbers]);
+        contacts.push(...newContacts);
+        this.setState({actualCount: contacts.length});
+      }
+
+      return contacts;
 
     } else {
       console.warn('Permissions issue');
@@ -64,10 +64,10 @@ export default class DemoApp extends Component {
   }
 
   renderList() {
-    const {data, count} = this.state;
+    const {data, count, actualCount} = this.state;
     return (
       <SafeAreaView>
-        <Text style={{fontWeight: 'bold'}}>Found {count} contacts</Text>
+        <Text style={{fontWeight: 'bold'}}>Found {actualCount}, expected {count} contacts</Text>
         <FlatList
           data={data}
           renderItem={({item}) => <Text>{item.label}</Text>}
@@ -77,13 +77,13 @@ export default class DemoApp extends Component {
   }
 
   renderLoading() {
-    const {loading, animationConfig} = this.state;
+    const {loading, animationConfig, actualCount, count} = this.state;
     return (
       <View flex bg-orange70 center>
         {loading &&
         <LoaderScreen
           color={Colors.blue60}
-          message="Loading..."
+          message={"Loading... " + actualCount + '/' + count}
           overlay
           {...animationConfig}
         />}

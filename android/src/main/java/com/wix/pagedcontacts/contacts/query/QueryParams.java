@@ -58,10 +58,6 @@ public class QueryParams {
         for (int i = 0; i < keysToFetch.size(); i++) {
             Field field = Field.fromKey(keysToFetch.get(i));
             Collections.addAll(projection, field.getProjection());
-            String contentItemType = field.getContentItemType();
-            if (contentItemType != null) {
-                selectionArgs.add(contentItemType);
-            }
             fields.add(field);
             if (field != Field.displayName) {
                 projection.add(ContactsContract.Contacts.Data.MIMETYPE);
