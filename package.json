@@ -27,6 +27,7 @@
   "main": "index.js",
   "author": "Leo Natan <lnatan@wix.com>",
   "contributors": [
+    "Amir Uval <amiru@wix.com>",
     "Ran Greenberg <rang@wix.com>",
     "Guy Carmeli <guyc@wix.com>"
   ],
