@@ -7,8 +7,8 @@
 		"test": "jest"
 	},
 	"dependencies": {
-		"react": "16.5.1",
-		"react-native": "0.57.1",
+		"react": "16.9.x",
+		"react-native": "0.61.4",
 		"react-native-paged-contacts": "latest",
 		"react-native-ui-lib": "^3.3.32"
 	},
