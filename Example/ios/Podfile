@@ -24,5 +24,14 @@ target 'Example' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
+
+  pod 'React-CoreModules', :path => '../node_modules/react-native/React/CoreModules'
+  pod 'ReactCommon/turbomodule/core', :path => '../node_modules/react-native/ReactCommon'
+  pod 'FBLazyVector', :path => '../node_modules/react-native/Libraries/FBLazyVector'
+  pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
+  pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
+  pod 'RCTTypeSafety', :path => "../node_modules/react-native/Libraries/TypeSafety"
+
   pod 'RCTPagedContacts', :path => '../../RCTPagedContacts.podspec'
+
 end
