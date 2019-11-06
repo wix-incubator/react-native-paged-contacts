@@ -15,8 +15,7 @@ import android.provider.ContactsContract.CommonDataKinds.Relation;
 import android.provider.ContactsContract.CommonDataKinds.StructuredName;
 import android.provider.ContactsContract.CommonDataKinds.StructuredPostal;
 import android.provider.ContactsContract.CommonDataKinds.Website;
-import android.support.annotation.Nullable;
-
+import androidx.annotation.Nullable;
 import java.util.Map;
 
 public enum Field {

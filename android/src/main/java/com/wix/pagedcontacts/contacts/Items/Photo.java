@@ -3,9 +3,8 @@ package com.wix.pagedcontacts.contacts.Items;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds.Contactables;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.utils.ImageUtils;

@@ -2,11 +2,9 @@ package com.wix.pagedcontacts.contacts.permission;
 
 import android.Manifest;
 import android.app.Activity;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.PermissionChecker;
-
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.PermissionChecker;
 import com.wix.pagedcontacts.PagedContactsModule;
-
 import java.util.Map;
 
 public enum ReadContactsPermissionStatus {
