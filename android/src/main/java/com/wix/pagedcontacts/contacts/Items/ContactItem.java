@@ -1,13 +1,12 @@
 package com.wix.pagedcontacts.contacts.Items;
 
 import android.database.Cursor;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
+import androidx.annotation.Nullable;
 
 abstract class ContactItem {
     Cursor cursor;

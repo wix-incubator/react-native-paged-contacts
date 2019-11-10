@@ -1,9 +1,7 @@
 package com.wix.pagedcontacts.utils;
 
-import android.support.annotation.Nullable;
-
+import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReadableArray;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

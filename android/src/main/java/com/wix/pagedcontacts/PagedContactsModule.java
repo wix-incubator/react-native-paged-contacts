@@ -1,8 +1,7 @@
 package com.wix.pagedcontacts;
 
 import android.Manifest;
-import android.support.v4.content.PermissionChecker;
-
+import androidx.core.content.PermissionChecker;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
