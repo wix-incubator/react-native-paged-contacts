@@ -160,6 +160,15 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 	return rv;
 }
 
+RCT_EXPORT_METHOD(addContact:(NSDictionary*)contactData identifier:(NSString*)identifier) {
+    WXContactsManager* manager = [self _managerForIdentifier:identifier];
+    
+    CNMutableContact * contact = [[CNMutableContact alloc] init];
+    [self _updateCNContactWithContactData:contact withData:contactData];
+    
+    [manager saveContact:contact];
+}
+
 - (id)_transformValueToJSValue:(id)value
 {
 	if([value isKindOfClass:[NSArray class]])
@@ -255,6 +264,128 @@ RCT_EXPORT_METHOD(contactsCount:(NSString*)identifier  resolver:(RCTPromiseResol
 	return rv;
 }
 
+-(void) _updateCNContactWithContactData:(CNMutableContact *)contact withData:(NSDictionary *)contactData
+{
+    NSString *givenName = [contactData valueForKey:@"givenName"];
+    NSString *familyName = [contactData valueForKey:@"familyName"];
+    NSString *middleName = [contactData valueForKey:@"middleName"];
+    NSString *company = [contactData valueForKey:@"company"];
+    NSString *jobTitle = [contactData valueForKey:@"jobTitle"];
+
+    NSDictionary *birthday = [contactData valueForKey:@"birthday"];
+
+    contact.givenName = givenName;
+    contact.familyName = familyName;
+    contact.middleName = middleName;
+    contact.organizationName = company;
+    contact.jobTitle = jobTitle;
+
+    if (birthday) {
+        NSDateComponents *components;
+        if (contact.birthday != nil) {
+            components = contact.birthday;
+        } else {
+            components = [[NSDateComponents alloc] init];
+        }
+        if (birthday[@"month"] && birthday[@"day"]) {
+            if (birthday[@"year"]) {
+                components.year = [birthday[@"year"] intValue];
+            }
+            components.month = [birthday[@"month"] intValue] + 1;
+            components.day = [birthday[@"day"] intValue];
+        }
+
+        contact.birthday = components;
+    }
+
+    NSMutableArray *phoneNumbers = [[NSMutableArray alloc]init];
+
+    for (id phoneData in [contactData valueForKey:@"phoneNumbers"]) {
+        NSString *label = [phoneData valueForKey:@"label"];
+        NSString *number = [phoneData valueForKey:@"number"];
+
+        CNLabeledValue *phone;
+        if ([label isEqual: @"main"]){
+            phone = [[CNLabeledValue alloc] initWithLabel:CNLabelPhoneNumberMain value:[[CNPhoneNumber alloc] initWithStringValue:number]];
+        }
+        else if ([label isEqual: @"mobile"]){
+            phone = [[CNLabeledValue alloc] initWithLabel:CNLabelPhoneNumberMobile value:[[CNPhoneNumber alloc] initWithStringValue:number]];
+        }
+        else if ([label isEqual: @"iPhone"]){
+            phone = [[CNLabeledValue alloc] initWithLabel:CNLabelPhoneNumberiPhone value:[[CNPhoneNumber alloc] initWithStringValue:number]];
+        }
+        else{
+            phone = [[CNLabeledValue alloc] initWithLabel:label value:[[CNPhoneNumber alloc] initWithStringValue:number]];
+        }
+
+        [phoneNumbers addObject:phone];
+    }
+    contact.phoneNumbers = phoneNumbers;
+
+
+    NSMutableArray *urls = [[NSMutableArray alloc]init];
+
+    for (id urlData in [contactData valueForKey:@"urlAddresses"]) {
+        NSString *label = [urlData valueForKey:@"label"];
+        NSString *url = [urlData valueForKey:@"url"];
+
+        if(label && url) {
+            [urls addObject:[[CNLabeledValue alloc] initWithLabel:label value:url]];
+        }
+    }
+
+    contact.urlAddresses = urls;
+
+
+    NSMutableArray *emails = [[NSMutableArray alloc]init];
+
+    for (id emailData in [contactData valueForKey:@"emailAddresses"]) {
+        NSString *label = [emailData valueForKey:@"label"];
+        NSString *email = [emailData valueForKey:@"email"];
+
+        if(label && email) {
+            [emails addObject:[[CNLabeledValue alloc] initWithLabel:label value:email]];
+        }
+    }
+
+    contact.emailAddresses = emails;
+
+    NSMutableArray *postalAddresses = [[NSMutableArray alloc]init];
+
+    for (id addressData in [contactData valueForKey:@"postalAddresses"]) {
+        NSString *label = [addressData valueForKey:@"label"];
+        NSString *street = [addressData valueForKey:@"street"];
+        NSString *postalCode = [addressData valueForKey:@"postCode"];
+        NSString *city = [addressData valueForKey:@"city"];
+        NSString *country = [addressData valueForKey:@"country"];
+        NSString *state = [addressData valueForKey:@"state"];
+
+        if(label && street) {
+            CNMutablePostalAddress *postalAddr = [[CNMutablePostalAddress alloc] init];
+            postalAddr.street = street;
+            postalAddr.postalCode = postalCode;
+            postalAddr.city = city;
+            postalAddr.country = country;
+            postalAddr.state = state;
+            [postalAddresses addObject:[[CNLabeledValue alloc] initWithLabel:label value: postalAddr]];
+        }
+    }
+
+    contact.postalAddresses = postalAddresses;
+
+    NSString *imageUrl = [contactData valueForKey:@"imageUrl"];
+
+    if(imageUrl) {
+        contact.imageData = [RCTPagedContactsModule imageDataFromUrl:imageUrl];
+    }
+}
+
++ (NSData*) imageDataFromUrl:(NSString*)sourceUrl
+{
+    NSURL* url = [[NSURL alloc] initWithString:sourceUrl];
+    return [NSData dataWithContentsOfURL:url];
+}
+
 - (NSArray*)_keysToFetchIncludingManadatoryKeys:(NSArray*)keysToFetch
 {
 	NSMutableSet* rvSet = [NSMutableSet setWithArray:keysToFetch];
@@ -297,6 +428,7 @@ RCT_EXPORT_METHOD(getContactsWithIdentifiers:(NSString*)identifier identifiers:(
 	
 	resolve([self _transformCNContactsToContactDatas:contacts keysToFetch:keysToFetch managerForObscureContacts:manager]);
 }
+
 
 + (BOOL)requiresMainQueueSetup
 {

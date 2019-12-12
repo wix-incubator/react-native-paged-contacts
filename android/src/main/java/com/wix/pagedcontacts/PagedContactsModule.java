@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.wix.pagedcontacts.contacts.ContactsProviderFactory;
 import com.wix.pagedcontacts.contacts.Field;
@@ -78,6 +79,11 @@ public class PagedContactsModule extends ReactContextBaseJavaModule {
         QueryParams params = new QueryParams(Collections.toStringList(keysToFetch), Collections.toStringList(identifiers));
         WritableArray contacts = contactProvider.get(uuid).getContactsWithIdentifiers(params);
         promise.resolve(contacts);
+    }
+
+    @ReactMethod
+    public void addContact(ReadableMap contact, String uuid, Promise promise) {
+        contactProvider.get(uuid).saveContact(contact, promise);
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

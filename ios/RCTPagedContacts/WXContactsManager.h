@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface WXContactsManager : NSObject
 
 @property (nonatomic, copy) NSString* nameMatch;
+@property (nonatomic, copy) CNMutableContact* addedContact;
 
 + (CNAuthorizationStatus)authorizationStatus;
 
@@ -24,6 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<CNContact*>*)contactsWithRange:(NSRange)range keysToFetch:(nullable NSArray<NSString*>*)keysToFetch;
 - (NSArray<CNContact*>*)contactsWithIdentifiers:(NSArray<NSString*>*)identifiers keysToFetch:(nullable NSArray<NSString*>*)keysToFetch;
 - (CNContact*)contactWithIdentifier:(NSString*)identifier keysToFetch:(nullable NSArray<NSString*>*)keysToFetch;
+- (void)saveContact:(CNMutableContact*)contact;
 
 @end
 
