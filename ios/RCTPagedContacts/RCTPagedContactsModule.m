@@ -269,40 +269,31 @@ RCT_EXPORT_METHOD(addContact:(NSDictionary*)contactData identifier:(NSString*)id
     NSString *givenName = [contactData valueForKey:@"givenName"];
     NSString *familyName = [contactData valueForKey:@"familyName"];
     NSString *middleName = [contactData valueForKey:@"middleName"];
-    NSString *company = [contactData valueForKey:@"company"];
+    NSString *nickname = [contactData valueForKey:@"nickname"];
+    NSString *namePrefix = [contactData valueForKey:@"namePrefix"];
+    NSString *nameSuffix = [contactData valueForKey:@"nameSuffix"];
+    NSString *departmentName = [contactData valueForKey:@"departmentName"];
+    NSString *organizationName = [contactData valueForKey:@"organizationName"];
     NSString *jobTitle = [contactData valueForKey:@"jobTitle"];
-
-    NSDictionary *birthday = [contactData valueForKey:@"birthday"];
+    NSString *note = [contactData valueForKey:@"note"];
 
     contact.givenName = givenName;
     contact.familyName = familyName;
     contact.middleName = middleName;
-    contact.organizationName = company;
+    contact.namePrefix = namePrefix;
+    contact.nameSuffix = nameSuffix;
+    contact.nickname = nickname;
+    contact.organizationName = organizationName;
+    contact.departmentName = departmentName;
     contact.jobTitle = jobTitle;
+    contact.note = note;
 
-    if (birthday) {
-        NSDateComponents *components;
-        if (contact.birthday != nil) {
-            components = contact.birthday;
-        } else {
-            components = [[NSDateComponents alloc] init];
-        }
-        if (birthday[@"month"] && birthday[@"day"]) {
-            if (birthday[@"year"]) {
-                components.year = [birthday[@"year"] intValue];
-            }
-            components.month = [birthday[@"month"] intValue] + 1;
-            components.day = [birthday[@"day"] intValue];
-        }
-
-        contact.birthday = components;
-    }
 
     NSMutableArray *phoneNumbers = [[NSMutableArray alloc]init];
 
     for (id phoneData in [contactData valueForKey:@"phoneNumbers"]) {
         NSString *label = [phoneData valueForKey:@"label"];
-        NSString *number = [phoneData valueForKey:@"number"];
+        NSString *number = [phoneData valueForKey:@"value"];
 
         CNLabeledValue *phone;
         if ([label isEqual: @"main"]){
@@ -327,7 +318,7 @@ RCT_EXPORT_METHOD(addContact:(NSDictionary*)contactData identifier:(NSString*)id
 
     for (id urlData in [contactData valueForKey:@"urlAddresses"]) {
         NSString *label = [urlData valueForKey:@"label"];
-        NSString *url = [urlData valueForKey:@"url"];
+        NSString *url = [urlData valueForKey:@"value"];
 
         if(label && url) {
             [urls addObject:[[CNLabeledValue alloc] initWithLabel:label value:url]];
@@ -341,7 +332,7 @@ RCT_EXPORT_METHOD(addContact:(NSDictionary*)contactData identifier:(NSString*)id
 
     for (id emailData in [contactData valueForKey:@"emailAddresses"]) {
         NSString *label = [emailData valueForKey:@"label"];
-        NSString *email = [emailData valueForKey:@"email"];
+        NSString *email = [emailData valueForKey:@"value"];
 
         if(label && email) {
             [emails addObject:[[CNLabeledValue alloc] initWithLabel:label value:email]];
@@ -354,12 +345,15 @@ RCT_EXPORT_METHOD(addContact:(NSDictionary*)contactData identifier:(NSString*)id
 
     for (id addressData in [contactData valueForKey:@"postalAddresses"]) {
         NSString *label = [addressData valueForKey:@"label"];
-        NSString *street = [addressData valueForKey:@"street"];
-        NSString *postalCode = [addressData valueForKey:@"postCode"];
-        NSString *city = [addressData valueForKey:@"city"];
-        NSString *country = [addressData valueForKey:@"country"];
-        NSString *state = [addressData valueForKey:@"state"];
 
+        NSString* postalAddressData = [addressData valueForKey:@"value"];
+
+        NSString *street = [postalAddressData valueForKey:@"street"];
+        NSString *postalCode = [postalAddressData valueForKey:@"postCode"];
+        NSString *city = [postalAddressData valueForKey:@"city"];
+        NSString *country = [postalAddressData valueForKey:@"country"];
+        NSString *state = [postalAddressData valueForKey:@"state"];
+        
         if(label && street) {
             CNMutablePostalAddress *postalAddr = [[CNMutablePostalAddress alloc] init];
             postalAddr.street = street;

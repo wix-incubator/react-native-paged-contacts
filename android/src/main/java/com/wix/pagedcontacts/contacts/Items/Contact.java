@@ -1,8 +1,12 @@
 package com.wix.pagedcontacts.contacts.Items;
 
+import android.content.ContentProviderOperation;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.Field;
@@ -33,6 +37,10 @@ public class Contact {
 
     public Contact(String contactId) {
         this.identifier = new Identifier(contactId);
+    }
+
+    public Contact(ReadableMap contactMap) {
+        fillFromContactMap(contactMap);
     }
 
     public WritableMap toMap(QueryParams params) {
@@ -84,10 +92,79 @@ public class Contact {
         return result;
     }
 
+
     private void addStringField(QueryParams params, WritableMap map, Field field, String value) {
         if (params.fetchField(field) && !TextUtils.isEmpty(value)) {
             map.putString(field.getKey(), value);
         }
+    }
+
+    private void fillFromContactMap(ReadableMap contactMap) {
+        this.name = new Name(contactMap);
+        this.organization = new Organization(contactMap);
+        this.note = new Note(contactMap);
+
+        ReadableArray _phoneNumbers = contactMap.hasKey(Field.phoneNumbers.getKey()) ? contactMap.getArray(Field.phoneNumbers.getKey()) : new EmptyReadableArray();
+
+        for (int i = 0; i < _phoneNumbers.size(); i++) {
+            phoneNumbers.add(new PhoneNumber(_phoneNumbers.getMap(i)));
+        }
+
+        ReadableArray _emails = contactMap.hasKey(Field.emailAddresses.getKey()) ? contactMap.getArray(Field.emailAddresses.getKey()) : new EmptyReadableArray();
+
+        for (int i = 0; i < _emails.size(); i++) {
+            emails.add(new Email(_emails.getMap(i)));
+        }
+
+        ReadableArray _urlAddresses = contactMap.hasKey(Field.urlAddresses.getKey()) ? contactMap.getArray(Field.urlAddresses.getKey()): new EmptyReadableArray();
+
+        for (int i = 0; i < _urlAddresses .size(); i++) {
+            urlAddresses.add(new UrlAddress(_urlAddresses.getMap(i)));
+        }
+
+        ReadableArray _postalAddresses = contactMap.hasKey(Field.postalAddresses.getKey()) ? contactMap.getArray(Field.postalAddresses.getKey()): new EmptyReadableArray();
+
+        for (int i = 0; i < _postalAddresses.size(); i++) {
+            postalAddresses.add(new PostalAddress(_postalAddresses.getMap(i)));
+        }
+    }
+
+
+    public ArrayList<ContentProviderOperation> createOps() {
+        ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
+
+        ContentProviderOperation.Builder op = ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null);
+        ops.add(op.build());
+
+
+        name.addCreationOp(ops);
+        organization.addCreationOp(ops);
+        note.addCreationOp(ops);
+
+
+        op.withYieldAllowed(true);
+
+
+        for (PhoneNumber phoneNumber : phoneNumbers) {
+            phoneNumber.addCreationOp(ops);
+        }
+
+        for(Email email: emails) {
+            email.addCreationOp(ops);
+        }
+
+        for(UrlAddress urlAddress: urlAddresses) {
+            urlAddress.addCreationOp(ops);
+        }
+
+        for (PostalAddress postalAddress: postalAddresses) {
+            postalAddress.addCreationOp(ops);
+        }
+
+        return ops;
+
     }
 
     public String getContactId() {
