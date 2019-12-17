@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {PagedContacts} from 'react-native-paged-contacts';
 import {SafeAreaView, FlatList} from 'react-native';
-import {View, Text, LoaderScreen, Colors} from 'react-native-ui-lib';//eslint-disable-line
+import {View, Text, LoaderScreen, Colors,Button} from 'react-native-ui-lib';//eslint-disable-line
+import {exampleContact} from './example-contact';
 
 
 export default class DemoApp extends Component {
@@ -15,21 +16,10 @@ export default class DemoApp extends Component {
     };
 
     this.pagedContacts = new PagedContacts();
+  }
 
-    this.getContacts().then(contacts => {
-      this.contacts = contacts;
-
-      let list = contacts.map(x => {
-        return {
-          key: x.identifier,
-          label: x.displayName
-        }
-      });
-      this.setState({
-        data: list,
-        loading: false
-      });
-    });
+  componentDidMount() {
+    this.getContacts();
   }
 
   async getContacts() {
@@ -48,12 +38,24 @@ export default class DemoApp extends Component {
         this.setState({actualCount: contacts.length});
       }
 
-      return contacts;
-
+      let list = contacts.map(x => {
+        return {
+          key: x.identifier,
+          label: x.displayName,
+        };
+      });
+      this.setState({
+        data: list,
+        loading: false,
+      });
     } else {
       console.warn('Permissions issue');
     }
   }
+
+  addContact = () => {
+    this.pagedContacts.addContact(exampleContact);
+  };
 
   render() {
     const {data} = this.state;
@@ -72,6 +74,9 @@ export default class DemoApp extends Component {
           data={data}
           renderItem={({item}) => <Text>{item.label}</Text>}
         />
+        <View>
+          <Button onPress={this.addContact} label="Add new Contact" />
+        </View>
       </SafeAreaView>
     );
   }

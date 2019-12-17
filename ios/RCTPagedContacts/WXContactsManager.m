@@ -141,4 +141,11 @@
 	return self._chachedIdentifiers.count;
 }
 
+- (void)saveContact:(CNMutableContact *)contact
+{
+    CNSaveRequest *request = [[CNSaveRequest alloc] init];
+    [request addContact: contact toContainerWithIdentifier:nil];
+    [_store executeSaveRequest:request error:nil];
+}
+
 @end

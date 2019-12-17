@@ -1,11 +1,20 @@
 package com.wix.pagedcontacts.contacts;
 
 import android.content.Context;
+import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
+import android.content.ContentResolver;
+
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds;
 
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableArray;
+
 import com.wix.pagedcontacts.contacts.Items.Contact;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 import com.wix.pagedcontacts.contacts.readers.ContactCursorReader;
@@ -140,4 +149,22 @@ public class ContactsProvider {
         }
         return ids;
     }
+
+    public void saveContact(ReadableMap contact, Promise promise) {
+        try {
+
+            ArrayList<ContentProviderOperation> ops = (new Contact(contact)).createOps();
+
+
+            ContentResolver cr = this.context.getContentResolver();
+            ContentProviderResult[] result = cr.applyBatch(ContactsContract.AUTHORITY, ops);
+
+            promise.resolve(null);
+
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+
 }

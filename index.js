@@ -1,6 +1,7 @@
 import {
   NativeModules,
-  Platform
+  Platform,
+  PermissionsAndroid
 } from 'react-native';
 
 const PagedContactsModule = NativeModules.ReactNativePagedContacts;
@@ -119,6 +120,29 @@ export class PagedContacts {
     if (Platform.OS === 'ios') {
       PagedContactsModule.dispose(this._uuid);
     }
+  }
+
+  /**
+   * Creates a Contact on the device.
+   * @param {Object} contact the contact to be added to the device
+   * 
+   * @memberOf PagedContacts
+   */
+  addContact(contact) {
+    if (Platform.OS === 'android') {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
+        {
+          title: 'Contacts',
+          message: 'This would like to write contacts.',
+        },
+      );
+    }
+
+    await PagedContactsModule.addContact(
+      contact,
+      this._uuid,
+    );
   }
 }
 

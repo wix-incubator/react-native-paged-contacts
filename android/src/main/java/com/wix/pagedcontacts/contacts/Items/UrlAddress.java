@@ -1,18 +1,32 @@
 package com.wix.pagedcontacts.contacts.Items;
 
+import android.content.ContentProviderOperation;
 import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Website;
 
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.wix.pagedcontacts.contacts.query.QueryParams;
 
-class UrlAddress extends ContactItem {
+import java.util.ArrayList;
+
+class UrlAddress extends ContactItem implements withCreationOp {
     private String url;
     private String type;
 
     UrlAddress(Cursor cursor) {
         super(cursor);
         fillFromCursor();
+    }
+
+    UrlAddress(ReadableMap urlAddressMap) {
+        super();
+        fillFromUrlAddressMap(urlAddressMap);
+    }
+
+    private void fillFromUrlAddressMap(ReadableMap urlAddressMap) {
+        url = urlAddressMap.getString(("value"));
     }
 
     private void fillFromCursor() {
@@ -50,5 +64,14 @@ class UrlAddress extends ContactItem {
     @Override
     protected void fillMap(WritableMap map, QueryParams params) {
         map.putString(type, url);
+    }
+
+    @Override
+    public void addCreationOp(ArrayList<ContentProviderOperation> ops) {
+        ContentProviderOperation.Builder op = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Website.CONTENT_ITEM_TYPE)
+                .withValue(ContactsContract.CommonDataKinds.Website.URL, url);
+        ops.add(op.build());
     }
 }

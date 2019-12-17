@@ -62,7 +62,9 @@ Paged contacts manager for React Native.
 - `getContactsCount()` — Get the count of the current contacts set.
 - `getContactsWithRange(offset, batchSize, keysToFetch)` — Get contacts within the requested `batchSize`, starting from `offset`. Only the keys requested in `keysToFetch` will be provided (contact identifiers are always provided).
 - `getContactsWithIdentifiers(identifiers, keysToFetch)` — Get contacts with the provided `identifiers`. Only the keys requested in `keysToFetch` will be provided (contact identifiers are always provided).
+- `addContact(contact)` - Add a contact to the device. Fields that can be set are the same as the keys described below. <sup>[[1]](#imageUrl)</sup>
 - `dispose()` — Disposes the native components. Call this method when the manager object is no longer required. Must not call any other methods of the contacts manager after calling `dispose`.
+
 
 #### Authorization Status
 
@@ -247,3 +249,4 @@ This is a very intensive way of obtaining specific keys of all contacts. Instead
   ]
 }
 ```
+<a name="imageUrl">1</a> : Contact's image can be set using an extra `imageUrl` field (iOS only)
