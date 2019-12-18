@@ -128,13 +128,13 @@ export class PagedContacts {
    * 
    * @memberOf PagedContacts
    */
-  addContact(contact) {
+  async addContact(contact) {
     if (Platform.OS === 'android') {
       await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS,
         {
           title: 'Contacts',
-          message: 'This would like to write contacts.',
+          message: 'This App would like to write contacts',
         },
       );
     }

@@ -51,7 +51,11 @@ Paged contacts manager for React Native.
 	```xml
 	<uses-permission android:name="android.permission.READ_CONTACTS" />
 	```
-
+* The `WRITE_CONTACTS` permission is needed to use `addContact` method. and should be added to your build's `AndroidManifest.xml`
+	```xml
+	<uses-permission android:name="android.permission.WRITE_CONTACTS" />
+	```
+	
 ## API
 
 - `new PagedContacts()` — Create a paged contacts manager for all device contacts.
