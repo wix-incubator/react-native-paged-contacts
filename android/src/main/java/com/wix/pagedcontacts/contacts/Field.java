@@ -45,7 +45,8 @@ public enum Field {
     instantMessageAddresses("instantMessageAddresses", Im.CONTENT_ITEM_TYPE, new String[]{Im.DATA, Im.TYPE, Im.LABEL, Im.PROTOCOL}),
     urlAddresses("urlAddresses", Website.CONTENT_ITEM_TYPE, new String[]{Website.URL, Website.TYPE, Website.LABEL}),
     imageData("imageData", Photo.CONTENT_ITEM_TYPE, new String[]{Contactables.PHOTO_URI}),
-    thumbnailImageData("thumbnailImageData", Photo.CONTENT_ITEM_TYPE, new String[]{Contactables.PHOTO_URI, Photo.PHOTO});
+    thumbnailImageData("thumbnailImageData", Photo.CONTENT_ITEM_TYPE, new String[]{Contactables.PHOTO_URI, Photo.PHOTO}),
+    imageUri("imageUri", Photo.CONTENT_ITEM_TYPE, new String[]{Contactables.PHOTO_URI});
 
     private String key;
     private String contentItemType;
