@@ -99,6 +99,7 @@ Paged contacts manager for React Native.
 - `PagedContacts.nonGregorianBirthday` — Non-Gregorian birthday. (**iOS only**)
 - `PagedContacts.note` — Note.
 - `PagedContacts.imageData` — Image data.
+- `PagedContacts.imageUri` — Image uri. (**Android only**)
 - `PagedContacts.thumbnailImageData` — Thumbnail data.
 - `PagedContacts.phoneNumbers` — Phone numbers.
 - `PagedContacts.emailAddresses` — Email addresses.
