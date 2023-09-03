@@ -65,8 +65,13 @@ public class Contact {
         }
         addItemsArray(map, instantMessagingAddresses, Field.instantMessageAddresses, params);
         addItemsArray(map, urlAddresses, Field.urlAddresses, params);
-        addStringField(params, map, Field.imageData, photo.getImageData());
-        addStringField(params, map, Field.thumbnailImageData, photo.getThumbnailImageDate());
+        if (params.fetchField(Field.imageData)) {
+            addStringField(params, map, Field.imageData, photo.getImageData());
+        }
+        if (params.fetchField(Field.thumbnailImageData)){
+            addStringField(params, map, Field.thumbnailImageData, photo.getThumbnailImageDate());
+        }
+        addStringField(params, map, Field.imageUri, photo.getImageUri());
         return map;
     }
 

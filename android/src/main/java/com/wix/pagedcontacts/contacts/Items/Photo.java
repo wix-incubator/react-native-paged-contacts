@@ -44,6 +44,10 @@ class Photo extends ContactItem {
         return thumbnailImageUri != null ? getBase64Photo(thumbnailImageUri) : null;
     }
 
+    String getImageUri() {
+        return imageUri;
+    }
+
     private boolean hasThumbnailBlob() {
         return imageData != null && imageData.length > 0;
     }

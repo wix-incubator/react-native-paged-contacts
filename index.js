@@ -172,6 +172,7 @@ PagedContacts.dates = PagedContactsModule.dates;
 PagedContacts.urlAddresses = PagedContactsModule.urlAddresses;
 PagedContacts.relations = PagedContactsModule.relations;
 PagedContacts.instantMessageAddresses = PagedContactsModule.instantMessageAddresses;
+PagedContacts.imageUri = PagedContactsModule.imageUri;
 
 if (Platform.OS === 'ios') {
   PagedContacts.previousFamilyName = PagedContactsModule.previousFamilyName;
