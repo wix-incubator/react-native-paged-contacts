@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/wix/react-native-paged-contacts.git"
   },
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "React Native Paged Contacts",
   "nativePackage": true,
   "keywords": [
