@@ -41,6 +41,11 @@ public class EmptyReadableArray implements ReadableArray {
         return 0;
     }
 
+    @Override
+    public long getLong(int index) {
+        return 0;
+    }
+
     @Nullable
     @Override
     public String getString(int index) {
